@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="theme-color" content="#292A2F">
+    <!-- Sets the status bar style to transparent -->
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <meta name="title" property="og:title" content="Rubicell EP Shape Previewer">
+    <meta name="author" content="Chul-Hong Park">
+    <meta name="description" property="og:description" content="Shape previewer for EnergyPlus models">
+    <meta property="og:url" content="https://chp-rubicell.github.io/epshape/">
+    <meta name="image" property="og:image" content="https://chp-rubicell.github.io/epshape/resources/imgs/thumbnail.jpg">
+    <meta name="twitter:image" content="https://chp-rubicell.github.io/epshape/resources/imgs/thumbnail.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="627">
+    <meta property="og:type" content="website">
+    <!-- <link rel="icon" href="https://chp-rubicell.github.io/epshape/resources/imgs/favicon.png"> -->
+    <link rel="icon" href="resources/imgs/favicon.png?v=25_0614">
+    <title>Rubicell EP Shape Previewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0614">
+    <script src="./resources/lib/three.js"></script>
+    <script src="./resources/lib/LineMaterial.js"></script>
+    <script src="./resources/lib/LineSegmentsGeometry.js"></script>
+    <script src="./resources/lib/LineGeometry.js"></script>
+    <script src="./resources/lib/LineSegments2.js"></script>
+    <script src="./resources/lib/Line2.js"></script>
+    <script src="./resources/lib/earcut.js"></script>
+    <script src="./resources/lib/iddLibrary.js"></script>
+    <script src="./resources/lib/exampleIDF.js"></script>
+    <script src="./resources/lib/jszip.min.js"></script>
+    <!-- <script src="./resources/scripts.js" defer></script> -->
+    <script src="./resources/scripts-compiled.js?v=25_0614" defer></script>
+</head>
+
+<body>
+
+    <!-- <div class="bg" style="background-image: url('resources/bg.jpg');"></div> -->
+
+    <div id="fileHoverMask" class="bg" style="z-index: 21; display: none;"></div>
+
+
+    <div id="PageWrapper">
+
+        <div id="MainPanel">
+
+            <h2>
+                <!-- <img height="32px" src="resources/imgs/eplogo.png" style="vertical-align: middle;" draggable="false" /> -->
+                <span id="logo">
+                    <object data="resources/imgs/logo.svg" height="30px" style="vertical-align: top;" draggable="false"></object>
+                </span>
+                <span id="logoSigniture">
+                    <svg height="28px" viewBox="0 0 263 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" fill="currentColor"><path id="Rubicell-3" serif:id="Rubicell 3" d="M166.27,85.809c-4.744,1.034 -7.329,1.277 -9.214,0.821c-2.098,-0.517 -7.48,-2.767 -8.332,-3.497c-1.459,-1.217 -5.23,-6.386 -5.868,-8.089c-1.277,-3.345 -1.886,-12.041 -0.973,-14.17c0.273,-0.608 0.729,-1.855 1.064,-2.736c0.304,-0.882 0.851,-2.038 1.247,-2.585c0.395,-0.547 1.277,-2.341 2.006,-4.014c0.73,-1.703 1.764,-3.527 2.311,-4.105c0.548,-0.578 1.521,-2.037 2.129,-3.254c1.672,-3.192 6.386,-7.51 10.217,-9.335c5.565,-2.645 10.643,-0.334 14.565,6.66c1.156,2.037 1.399,2.767 1.642,5.017c0.396,3.284 0.183,4.166 -1.064,4.683c-1.764,0.76 -2.493,0.06 -3.314,-3.132c-0.244,-1.065 -0.761,-1.794 -2.19,-3.163c-2.858,-2.767 -4.804,-3.466 -7.054,-2.524c-1.369,0.578 -5.535,4.744 -6.903,6.903c-0.608,0.943 -1.703,2.524 -2.432,3.558c-0.943,1.277 -1.521,2.463 -1.886,3.861c-0.273,1.095 -0.912,2.737 -1.399,3.589c-0.821,1.49 -0.912,1.854 -1.064,5.807c-0.121,3.649 -0.061,4.501 0.456,6.295c1.065,3.527 2.494,4.196 9.275,4.287c5.017,0.092 10.369,-0.638 12.376,-1.672c0.79,-0.426 2.432,-0.943 3.649,-1.125c1.216,-0.213 2.554,-0.578 2.949,-0.821c0.699,-0.456 0.699,-0.517 0.517,-4.014c-0.122,-2.037 -0.061,-4.744 0.122,-6.416c0.182,-1.581 0.456,-4.044 0.577,-5.473c0.152,-1.43 0.548,-3.345 0.943,-4.258c0.365,-0.912 0.791,-2.098 0.943,-2.645c0.182,-0.578 0.973,-1.551 2.067,-2.493c1.43,-1.247 1.855,-1.825 2.129,-2.95c0.274,-1.034 0.73,-1.703 1.764,-2.645c0.76,-0.7 1.976,-1.855 2.676,-2.555c0.942,-0.973 2.219,-1.703 4.895,-2.888c3.588,-1.551 3.649,-1.551 6.872,-1.582c2.889,-0.03 3.315,0.031 4.105,0.639c0.456,0.365 1.855,1.216 3.041,1.916c1.49,0.821 2.25,1.459 2.342,1.915c0.516,2.281 1.429,9.913 1.277,10.582c-0.092,0.456 -0.7,1.977 -1.399,3.436c-1.004,2.098 -1.49,2.767 -2.585,3.528c-1.277,0.881 -2.037,1.733 -4.895,5.564c-0.7,0.912 -1.703,1.764 -2.646,2.25c-0.851,0.426 -2.068,1.308 -2.706,1.946c-1.034,1.065 -1.338,1.186 -2.646,1.186c-1.581,0 -4.348,1.217 -5.716,2.494c-0.73,0.699 -0.943,2.28 -0.426,3.253c0.608,1.095 3.527,3.041 5.382,3.528c1.794,0.517 1.855,0.517 4.713,-0.244c1.916,-0.547 3.254,-0.729 4.105,-0.608c0.852,0.092 1.551,0 2.22,-0.334c1.186,-0.639 5.838,-1.673 7.359,-1.703c0.76,-0 1.459,-0.274 2.25,-0.912c1.095,-0.852 1.277,-0.912 3.983,-0.912c2.707,-0 2.828,-0.031 3.467,-0.821c0.638,-0.821 0.669,-1.034 0.486,-4.957c-0.121,-2.25 -0.273,-7.906 -0.364,-12.558c-0.152,-7.906 -0.122,-8.606 0.456,-10.491c0.547,-1.733 0.608,-2.798 0.577,-7.207c-0.03,-2.949 0.122,-6.02 0.335,-7.145c0.608,-3.315 1.277,-6.173 1.733,-7.39c0.243,-0.608 0.426,-1.581 0.426,-2.128c-0,-1.46 0.912,-3.74 2.007,-4.926c1.763,-1.946 3.314,-1.216 4.987,2.311c1.246,2.645 1.611,5.352 1.429,10.43c-0.213,5.625 -0.76,12.193 -1.125,13.562c-0.152,0.577 -0.304,2.919 -0.304,5.169c-0,2.25 -0.152,4.591 -0.304,5.169c-0.152,0.608 -0.365,6.477 -0.426,13.076c-0.183,14.23 -0.456,18.579 -1.216,20.069c-0.913,1.763 -1.399,2.128 -2.707,2.128c-1.094,0 -1.429,-0.213 -3.01,-1.763c-1.338,-1.369 -1.764,-2.007 -1.764,-2.676c0,-1.156 -0.547,-3.102 -0.942,-3.345c-0.152,-0.091 -0.609,0.03 -0.973,0.273c-0.365,0.244 -1.217,0.609 -1.886,0.821c-0.669,0.213 -1.733,0.852 -2.372,1.43c-1.52,1.338 -2.28,1.611 -4.713,1.611c-1.125,0 -2.797,0.213 -3.709,0.456c-0.913,0.274 -2.555,0.669 -3.649,0.882c-1.095,0.213 -2.768,0.7 -3.71,1.064c-2.767,1.034 -6.781,0.913 -10.521,-0.304c-4.47,-1.429 -5.778,-2.098 -7.298,-3.679c-0.76,-0.821 -1.642,-1.46 -1.916,-1.46c-0.273,0 -1.642,0.609 -3.041,1.338c-1.702,0.913 -3.253,1.49 -4.682,1.734c-1.156,0.182 -2.646,0.608 -3.254,0.912c-0.608,0.304 -3.071,1.003 -5.473,1.551Zm22.775,-25.543c0.639,0.73 2.554,0.73 4.713,-0.03c1.429,-0.487 2.22,-1.125 6.051,-4.987c6.143,-6.173 7.541,-9.092 5.535,-11.494c-1.703,-2.007 -4.562,-2.615 -7.055,-1.46c-2.068,0.912 -4.5,3.132 -4.926,4.47c-0.183,0.608 -1.004,1.825 -1.794,2.676c-0.791,0.821 -1.521,1.794 -1.612,2.129c-1.52,5.047 -1.824,7.693 -0.912,8.696Zm-55.464,24.813c-0.699,0.517 -0.821,0.486 -1.855,-0.395c-1.216,-1.034 -1.733,-2.251 -2.341,-5.474c-0.274,-1.49 -0.791,-3.679 -1.155,-4.865c-0.852,-2.798 -0.852,-8.453 0.03,-16.268c0.334,-3.102 0.73,-6.933 0.851,-8.514c0.213,-3.376 1.125,-8.15 1.764,-9.396c0.274,-0.487 1.155,-1.49 2.037,-2.281c1.277,-1.155 1.764,-1.399 2.737,-1.399c1.642,0 3.436,1.217 4.257,2.95c0.608,1.247 0.639,1.52 0.304,4.135c-0.182,1.551 -0.395,3.558 -0.486,4.501c-0.092,0.912 -0.517,2.371 -0.913,3.223c-0.395,0.851 -0.79,2.372 -0.912,3.345c-0.121,0.973 -0.395,2.919 -0.608,4.348c-0.213,1.429 -0.578,4.713 -0.76,7.298c-1.064,14.474 -1.581,17.758 -2.95,18.792Zm16.572,-55.95c-0.79,0.79 -4.5,0.152 -5.716,-0.973c-0.912,-0.852 -2.129,-1.247 -5.23,-1.703c-1.946,-0.274 -2.798,-0.274 -5.018,0.152c-2.523,0.486 -2.645,0.486 -3.405,-0.091c-0.426,-0.305 -0.943,-1.034 -1.125,-1.612c-1.49,-4.5 -1.429,-4.105 -0.821,-5.352c0.76,-1.611 2.25,-2.28 5.047,-2.311c1.217,0 2.95,0.183 3.862,0.395c2.95,0.7 6.507,1.855 7.268,2.342c3.649,2.372 6.628,7.663 5.138,9.153Zm110.502,59.629c-1.763,0.943 -5.808,-0.608 -8.331,-3.223c-1.49,-1.581 -4.774,-7.45 -5.565,-10.004c-0.821,-2.646 -1.368,-7.085 -1.733,-13.957c-0.335,-6.234 -0.304,-6.812 0.182,-8.362c0.365,-1.095 0.547,-2.463 0.517,-4.045c0,-1.307 0.183,-3.375 0.426,-4.561c0.243,-1.216 0.456,-2.737 0.456,-3.405c-0,-0.669 0.274,-2.798 0.608,-4.714c0.335,-1.915 0.608,-3.861 0.608,-4.287c0,-0.426 0.426,-1.551 0.912,-2.494c0.7,-1.307 0.913,-2.128 0.913,-3.344c-0,-0.882 0.182,-2.311 0.425,-3.132c0.244,-0.821 0.517,-2.099 0.639,-2.859c0.091,-0.76 0.669,-2.828 1.247,-4.622c0.577,-1.794 1.186,-4.044 1.368,-5.017c0.426,-2.189 0.791,-2.889 2.676,-4.865c0.973,-1.065 1.733,-1.612 2.22,-1.612c1.155,0 2.493,1.034 3.132,2.402c0.638,1.429 0.638,1.338 -0.943,8.758c-0.76,3.497 -0.821,4.196 -0.517,5.321c0.304,1.064 0.274,1.703 -0.122,3.436c-0.243,1.186 -0.669,2.554 -0.942,3.041c-0.243,0.517 -0.487,1.764 -0.548,2.797c-0.06,1.034 -0.304,2.555 -0.577,3.345c-0.396,1.156 -0.487,2.068 -0.304,4.227c0.152,2.372 0.091,3.041 -0.426,4.561c-0.426,1.186 -0.639,2.524 -0.639,4.105c0,1.247 -0.182,4.409 -0.425,6.994c-0.73,7.876 -0.821,10.643 -0.487,13.805c0.183,1.673 0.456,4.744 0.578,6.842c0.304,5.169 1.125,6.842 3.831,8.058c1.703,0.73 2.585,1.885 2.585,3.254c-0.03,1.064 -1.095,3.192 -1.764,3.557Zm-250.043,-1.094c-1.49,1.824 -2.371,1.611 -5.382,-1.156c-2.919,-2.706 -3.497,-4.044 -3.527,-7.906c-0.031,-4.075 0.942,-10.491 2.128,-13.957c1.369,-3.892 1.612,-6.903 0.913,-10.521c-0.761,-3.801 -2.251,-9.548 -3.132,-11.981c-1.186,-3.314 -1.582,-5.26 -1.612,-8.058c-0,-2.463 0.03,-2.554 1.034,-3.558c0.578,-0.577 1.307,-1.033 1.642,-1.033c0.73,-0 3.101,1.824 4.683,3.588c1.186,1.307 2.219,3.132 3.132,5.625c0.669,1.764 1.733,2.706 2.676,2.372c0.334,-0.122 1.064,-1.004 1.581,-1.916c0.486,-0.912 1.551,-2.311 2.341,-3.071c0.882,-0.851 1.885,-2.311 2.585,-3.71c1.003,-2.098 4.044,-6.02 5.139,-6.629c0.243,-0.121 0.973,-1.034 1.642,-2.007c0.638,-1.003 2.432,-2.919 3.953,-4.317c3.253,-2.98 8.301,-5.748 10.521,-5.748c2.737,0 4.591,3.011 3.314,5.443c-0.334,0.669 -1.125,1.186 -3.375,2.159c-5.078,2.22 -10.187,6.599 -12.923,11.099c-0.913,1.46 -2.433,3.558 -3.376,4.592c-1.094,1.216 -1.854,2.372 -2.067,3.162c-0.183,0.7 -0.821,1.764 -1.399,2.402c-1.064,1.217 -1.612,2.524 -3.162,7.633c-0.487,1.581 -1.217,3.77 -1.642,4.865c-1.338,3.497 -1.825,6.416 -1.46,8.423c0.547,2.797 0.76,9.73 0.395,12.254c-0.669,4.774 -2.402,9.275 -4.622,11.951Zm67.506,-0.396c-0.274,0.152 -1.369,0.365 -2.433,0.456c-2.098,0.183 -4.561,-0.486 -7.237,-1.976c-1.825,-1.064 -5.96,-6.72 -6.842,-9.366c-0.699,-2.189 -1.186,-2.554 -2.463,-1.885c-0.365,0.213 -1.003,0.943 -1.368,1.642c-1.095,1.916 -2.524,3.71 -3.984,4.926c-0.729,0.608 -1.642,1.52 -2.007,2.068c-0.395,0.517 -1.307,1.277 -2.007,1.703c-0.699,0.425 -1.763,1.094 -2.341,1.459c-1.155,0.73 -2.706,0.852 -3.74,0.304c-0.365,-0.182 -1.794,-1.368 -3.162,-2.615c-2.311,-2.128 -2.524,-2.432 -3.406,-4.835c-0.912,-2.523 -0.943,-2.736 -0.943,-7.875c0,-3.68 -0.121,-5.778 -0.456,-7.024c-0.669,-2.615 -0.578,-5.352 0.304,-8.332c0.487,-1.581 0.912,-3.923 1.095,-6.203c0.638,-8.15 1.368,-12.072 2.554,-13.745c0.547,-0.79 2.342,-1.429 3.375,-1.186c0.426,0.122 1.065,0.73 1.521,1.49c0.456,0.7 1.125,1.612 1.52,2.038c0.943,1.003 1.946,3.983 1.946,5.716c0,1.156 -0.152,1.49 -1.094,2.403c-0.973,0.912 -1.217,1.429 -1.825,4.074c-0.395,1.673 -0.851,4.896 -1.034,7.207c-0.152,2.28 -0.456,5.443 -0.669,6.994c-0.365,2.706 -0.334,2.919 0.335,4.895c0.395,1.125 0.76,2.707 0.79,3.467c0.122,1.733 0.304,2.037 1.156,2.037c1.672,-0.03 4.531,-2.797 5.595,-5.412c0.243,-0.609 1.095,-1.734 1.855,-2.524c2.706,-2.615 5.99,-6.386 6.416,-7.359c0.517,-1.155 1.459,-4.622 2.889,-10.43c1.277,-5.139 1.794,-6.598 3.496,-9.487c1.794,-3.102 3.589,-4.926 4.835,-4.926c1.247,-0 2.19,0.943 2.19,2.22c0.03,0.517 0.212,1.307 0.456,1.733c0.304,0.517 0.425,1.733 0.456,3.831c-0,2.889 -0.061,3.224 -0.943,4.866c-1.429,2.706 -2.341,6.324 -3.497,13.744c-0.456,2.98 -0.486,3.862 -0.182,6.325c0.456,3.557 1.247,6.02 2.889,8.757c1.824,3.041 2.858,4.014 4.682,4.257c1.703,0.243 3.132,0.76 3.132,1.125c0,0.152 0.122,0.274 0.244,0.274c0.152,-0 0.425,-0.73 0.638,-1.581c0.243,-0.882 0.669,-1.977 1.004,-2.433c0.304,-0.456 0.882,-1.672 1.277,-2.737c0.699,-1.794 0.73,-2.371 0.73,-7.845c-0,-12.102 0.06,-14.2 0.364,-16.268c0.244,-1.49 0.213,-2.797 0,-4.409c-0.243,-1.642 -0.243,-4.318 0.031,-9.7c0.274,-5.869 0.274,-7.906 -0.031,-9.639c-0.212,-1.247 -0.304,-2.737 -0.182,-3.376c0.608,-3.618 0.821,-5.96 1.095,-11.676c0.273,-6.021 0.334,-6.447 1.246,-8.849c0.517,-1.399 1.156,-2.767 1.43,-3.041c0.729,-0.881 2.28,-0.669 3.77,0.456c2.737,2.099 3.011,3.132 3.041,10.765c0.03,3.892 -0.061,5.047 -0.487,6.021c-1.216,2.858 -1.733,6.963 -1.854,14.899c-0.031,4.197 -0,9.609 0.121,12.072c0.213,4.926 0.517,5.717 2.19,5.717c0.699,-0 1.064,-0.304 1.915,-1.581c0.578,-0.882 1.186,-1.977 1.369,-2.433c0.182,-0.456 0.912,-1.247 1.611,-1.733c2.037,-1.399 4.653,-3.649 6.872,-5.869c1.125,-1.125 2.403,-2.189 2.859,-2.341c0.425,-0.183 2.219,-0.456 3.953,-0.669c3.983,-0.426 4.774,-0.152 6.659,2.341c2.098,2.798 2.402,3.345 3.527,6.599c1.521,4.378 1.612,6.172 0.456,10.855c-1.094,4.44 -2.523,7.724 -4.561,10.4c-0.821,1.064 -2.068,2.797 -2.797,3.892c-1.946,2.919 -5.839,6.963 -8.18,8.514c-1.125,0.76 -2.524,1.764 -3.071,2.22c-0.578,0.486 -1.733,1.186 -2.585,1.581c-0.851,0.365 -2.22,1.155 -3.071,1.764c-1.916,1.398 -2.706,1.672 -5.565,2.067c-1.277,0.183 -3.162,0.669 -4.196,1.065c-1.855,0.76 -1.916,0.76 -3.618,0.243c-2.129,-0.608 -4.318,-1.946 -5.17,-3.163l-0.638,-0.881l-0.882,1.824c-0.456,1.004 -1.095,1.977 -1.368,2.098Zm17.119,-11.616c0.517,0.609 1.764,0.426 3.558,-0.577c2.037,-1.156 5.047,-3.315 7.054,-5.048c0.791,-0.699 1.642,-1.368 1.886,-1.52c0.243,-0.122 0.881,-0.913 1.459,-1.764c0.548,-0.821 1.612,-2.25 2.342,-3.132c0.76,-0.912 1.52,-2.068 1.702,-2.585c0.213,-0.547 1.004,-2.28 1.795,-3.861c1.003,-2.007 1.581,-3.649 1.885,-5.322c0.608,-3.375 0.547,-3.983 -0.548,-6.233c-1.337,-2.707 -1.946,-2.767 -4.53,-0.487c-1.065,0.912 -2.311,2.098 -2.828,2.585c-0.487,0.517 -1.46,1.49 -2.129,2.189c-0.669,0.669 -1.824,1.825 -2.584,2.554c-0.761,0.73 -1.855,2.099 -2.433,3.072c-0.578,1.003 -1.703,2.645 -2.524,3.709c-1.703,2.311 -2.28,3.558 -2.676,5.96c-0.152,0.973 -0.547,2.281 -0.851,2.889c-1.216,2.341 -1.49,6.386 -0.578,7.571Z"/></svg>
+                </span>
+                <span class="sm-title">EP Shape Previewer</span>
+                <span class="lg-title">EnergyPlus Shape Previewer</span>
+            </h2>
+            <div style="width: 100%; height: auto; text-align: right; display: block; margin-top: 10px; margin-bottom: 15px;">
+                <div id="fileSelectorTag"></div>
+                &nbsp;
+                <label id="fileSelectorBtn" class="customButton" for="fileSelector">IDF File</label>
+                <input id="fileSelector" type="file" accept=".txt, .idf, .expidf" style="display:none;">
+            </div>
+
+            <div id="CanvasContainer" oncontextmenu="return false;" style="position: relative; background-color: white;" draggable="false">
+
+                <div id="objectDisplay" class="whitemode"></div>
+
+                <div id="fileHover" class="bg" style="background: radial-gradient(#000000a0, #00000000); z-index: 20; display: none;"><p id="fileHoverText">drop to load file</p></div>
+                
+
+                <div class="hoverBtnWrapper" style="right: 0px;">
+                    <button id="HelpBtn" class="hoverBtn glass" title="Help" onclick="panelVisibility(helpPanel, 1); hoverBtnVisibility(-1);"></button>
+                </div>
+                <div class="hoverBtnWrapper" style="right: 40px;">
+                    <button id="SaveBtn" class="hoverBtn glass" title="Save as Image" onclick="exportImage();"></button>
+                    <button id="VisibilityBtn" class="hoverBtn glass" title="Visibility" onclick="panelVisibility(visibilityPanel, 1); hoverBtnVisibility(-1);"></button>
+                    <button id="SettingsBtn" class="hoverBtn glass" title="Settings" onclick="settingsPanelVisibility(1);"></button>
+                </div>
+
+                <div id="VisibilityPanel" data-panel-tag="visibility" class="glass defaultPanel" style="width: 350px;">
+                    <div class="panelTitle">Visibility</div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
+
+                    <div id="VisibilityPanelContent" class="panelContent">
+                        <div id="SettingsPanelBlockVisFilter" class="settingsPanelBlock">
+                            <h5>Filter by</h5>
+                            <center>
+                                <button data-type="zones" class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeVisFilter(this.dataset.type);" disabled>Zones</button>
+                                <button data-type="height" class="settingsPanelButton changeBackgroundColorBtn" onclick="changeVisFilter(this.dataset.type);">Height</button>
+                                <button data-type="both" class="settingsPanelButton changeBackgroundColorBtn" onclick="changeVisFilter(this.dataset.type);">Both</button>
+                            </center>
+                        </div>
+
+                        <div id="VisByZones" class="settingsPanelBlock" style="margin-bottom: 0;">
+                            <h5>Zones</h5>
+                    
+                            <center>
+                                <button class="settingsPanelButton" onclick="changeZoneAll(true);">Show all</button>
+                                <button class="settingsPanelButton" onclick="changeZoneAll(false);">Hide all</button>
+                            </center>
+
+                            <div id="SettingsPanelBlockZones" style="width:100%">
+                            </div>
+                        </div>
+
+                        <div id="VisByHeight" class="settingsPanelBlock" style="display: none;">
+                            <h5>Height Range</h5>
+                    
+                            <center>
+                                <button class="settingsPanelButton" onclick="resetSliderValue();">Reset</button>
+                            </center>
+                            
+                            <div class="RangeSliderContainer">
+                                <div class="SlidersControl">
+                                    <div id="SliderBackground"></div>
+                                    <input id="fromSlider" tabindex="-1" type="range" value="10" min="0" max="100" step="0.01" />
+                                    <input id="toSlider" tabindex="-1" type="range" value="30" min="0" max="100" step="0.01" />
+                                </div>
+                                <div class="FormControl">
+                                    <div>
+                                        <div style="text-align: center;">Min</div>
+                                        <input class="settingsInput" type="number" id="fromInput" value="10" min="0" max="100" />
+                                    </div>
+                                    <div>
+                                        <div style="text-align: center;">Max</div>
+                                        <input class="settingsInput" type="number" id="toInput" value="30" min="0" max="100" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="SettingsPanel" data-panel-tag="settings" class="glass defaultPanel" style="width: 350px;">
+                    <div class="settingsCloseBtn" onclick="settingsPanelVisibility(0);"></div>
+
+                    <div id="SettingsPanelContent" class="panelContent">
+
+                        <div class="settingsPanelBlock">
+                            <h5>Visual</h5>
+                    
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsShading" type="checkbox" onclick="turnOnShading(this.checked);" checked /> Shading</font>
+                            </label>
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparent materials
+                            </label>
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsOverrideMat" type="checkbox" onclick="overrideMaterials(this.checked);" /> Override materials
+                            </label>
+                            <span class="settingsFlexSpan">
+                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
+                                <span style="flex:none;">&nbsp;Window opacity :&nbsp;</span>
+                                <input id="SttgsWinOpac" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                            </span>
+                            <span class="settingsFlexSpan">
+                                <label style="padding-right: 10px;"><input id="SttgsLineThkCheckbox" type="checkbox" onclick="turnOnLineThickness(this.checked);"> Edge thickness :</label>
+                                <input id="SttgsLineThkInputfield" class="settingsInput" type="text" value="-" placeholder="1" step="any" onkeyup="updateLineThicknessInputfield(event, this);" onfocusout="updateLineThicknessInputfield(undefined, this);" disabled />
+                            </span>
+                            <span class="settingsFlexSpan">
+                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
+                                <span style="flex:none;">&nbsp;Hidden objects :&nbsp;</span>
+                                <select id="SttgsHiddenMatType" class="settingsInput" onchange="changeHiddenMatType(this.value);">
+                                    <option value="disable">disable</option>
+                                    <option value="wireframe">wireframe</option>
+                                    <option value="ghost" selected="selected">ghost</option>
+                                </select>
+                            </span>
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsShadow" type="checkbox" onclick="turnOnShadow(this.checked);" /> Shadow</font>
+                            </label>
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsDebug" type="checkbox" onclick="turnOnDebug(this.checked);" /> Debug
+                            </label>
+                    
+                        </div>
+
+                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
+                            <h5>Background</h5>
+                    
+                            <center>
+                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(0, this);">Black</button>
+                                <button class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeBackgroundColor(1, this);" disabled>White</button>
+                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(-1, this);">Transparent</button>
+                            </center>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="HelpPanel" data-panel-tag="help" class="glass defaultPanel" style="width: 500px;">
+                    <div class="panelTitle">Help</div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
+
+                    <div class="panelContent">
+                        <div class="settingsPanelBlock">
+                            <h5>Loading files</h5>
+                            <ul>
+                                <li><b>(file drop) : </b>Load .idf file.</li>
+                                <li><b>shift + (file drop) : </b>Load .idf file with current settings.</li>
+                            </ul>
+                        </div>
+                        <div class="settingsPanelBlock">
+                            <h5>Mouse</h5>
+                            <ul>
+                                <li><b>left mouse : </b>Rotate camera.</li>
+                                <li><b>shift + left mouse : </b>Snap camera angle.</li>
+                                <li><b>right mouse : </b>Pan camera.</li>
+                                <li><b>middle mouse : </b>Pan camera.</li>
+                            </ul>
+                        </div>
+                        <div class="settingsPanelBlock">
+                            <h5>Keyboard</h5>
+                            <ul>
+                                <li><b>r : </b>Reset camera view.</li>
+                                <li><b>s : </b>Export viewport as image.</li>
+                                <li><b>/ : </b>Start command input.</li>
+                                <li><b>ctrl + shift + c : </b>Copy viewport settings.</li>
+                                <li><b>ctrl + shift + v : </b>Paste viewport settings.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="CommandPanel" data-panel-tag="command" class="glass defaultPanel" style="width: 500px;">
+                    <div class="panelTitle">Commands</div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
+
+                    <div class="panelContent">
+                        <div class="settingsPanelBlock">
+                            <h5>Basics</h5>
+                            <ul>
+                                <li><code>help</code><span>See the list of commands.</span></li>
+                                <li><code>↑</code><span>Insert last command.</span></li>
+                            </ul>
+                        </div>
+                        <div class="settingsPanelBlock">
+                            <h5>Camera</h5>
+                            <ul>
+                                <li><code>camerafar (num)</code><span>Set camera frustum far plane to (num).</span></li>
+                                <li><code>maxzoom (num)</code><span>Set max camera zoom distance to (num).</span></li>
+                                <li><code>camerafov (num)</code><span>Set camera fov to (num)°.</span></li>
+                                <li><code>animatecamera (num)(cw/ccw)</code><span>Export (num) animated frames of the camera rotating in (cw/ccw) direction.</span></li>
+                                <li><code>animateheight (num)(up/dn)</code><span>Export (num) animated frames of the building slice from bottom to up (up) or top to bottom (dn).</span></li>
+                            </ul>
+                        </div>
+                        <div class="settingsPanelBlock">
+                            <h5>Shadows</h5>
+                            <ul>
+                                <li><code>shadowalt (num)</code><span>Set shadow altitude to (num)°.</span></li>
+                                <li><code>shadowazm (num)</code><span>Set shadow azimuth to (num)°.</span></li>
+                                <li><code>shadowmapsize (num)</code><span>Set shadow map resolution to (num)×(num).</span></li>
+                                <li><code>shadowradius (num)</code><span>Set shadow blur to (num)×(num).</span></li>
+                                <li><code>shadowheight (num)</code><span>Set shadow plane height to (num)m.</span></li>
+                                <li><code>selfshadow (on/off)</code><span>Toggle self shadow.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="CopyPanel" data-panel-tag="copy" class="glass defaultPanel" style="width: 300px; padding: 60px 0px 60px;">
+                    <div class="panelTitle">Copy settings</div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
+
+                    <div class="panelContent">
+                        <div class="settingsPanelBlock">
+                            <h5>Visual</h5>
+
+                            <center>
+                                <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, true);">Select all</button>
+                                <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, false);">Deselect all</button>
+                            </center>
+                    
+                            <label><input type="checkbox" data-tag="zv" checked> Zone visibility filter type</label>
+                            <label><input type="checkbox" data-tag="sh" checked> Shading visibility</label>
+                            <label><input type="checkbox" data-tag="mt" checked> Material transparency</label>
+                            <label><input type="checkbox" data-tag="om" checked> Override materials</label>
+                            <label><input type="checkbox" data-tag="wo" checked> Window opacity</label>
+                            <label><input type="checkbox" data-tag="et" checked> Edge thickness</label>
+                            <label><input type="checkbox" data-tag="hm" checked> Hidden objects material</label>
+                            <label><input type="checkbox" data-tag="st" checked> Shadow toggle</label>
+                            <label><input type="checkbox" data-tag="ss" checked> Shadow settings</label>
+                            <label><input type="checkbox" data-tag="dg" checked> Debug</label>
+                        </div>
+                        <div class="settingsPanelBlock">
+                            <h5>Camera</h5>
+
+                            <center>
+                                <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, true);">Select all</button>
+                                <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, false);">Deselect all</button>
+                            </center>
+                    
+                            <label><input type="checkbox" data-tag="cp" checked> Camera base position</label>
+                            <label><input type="checkbox" data-tag="ca" checked> Camera altitude</label>
+                            <label><input type="checkbox" data-tag="cz" checked> Camera azimuth</label>
+                            <label><input type="checkbox" data-tag="cr" checked> Camera distance</label>
+                        </div>
+                    </div>
+
+                    <button class="solidPanelButton" onclick="copySettings();">Copy</button>
+                </div>
+
+                <!-- <div id="CommandListener" class="glass"></div> -->
+                <input id="CommandListener" class="glass" type="text" placeholder="help" onkeyup="runCommandInput(event, this);" onfocusout="commandListenerVisibility(0);" />
+
+            </div>
+
+            <div class="panel" style="padding-top: 15px;">
+                <div class="separator"></div>
+                <h4><small>DEVELOPED BY</small><b>&nbsp;&nbsp;Chul-Hong Park</b></h4>
+                <p><small>
+                    <a href="https://chp-rubicell.github.io/" target="_blank" rel="noopener noreferrer">chp-rubicell.github.io</a><b>&nbsp;&nbsp;|&nbsp;&nbsp;</b><a href="mailto:chulhong.park@snu.ac.kr">chulhong.park@snu.ac.kr</a><br>
+                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-06-14</a></b>
+                </small></p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        /*
+        console.log(
+            '%c Rubicell Viewer\n%cEnergyPlus Shape Previewer',
+            'filter: invert(1); font-size: 28px; font-weight: bolder; font-family: "Roboto"; margin-top: 10px; margin-bottom: 8px;',
+            'color: #f76f53; font-size: 16px; font-family: "Roboto"; margin-bottom: 20px;'
+        );
+        */
+
+        const pad = 40;
+        const minWidth = 550;
+        const maxWidth = 1200;
+        const panelWidth = 1280;
+        const panelHeight = 800;
+        let canvMult = 1;
+        if (window.location.hash) {
+            hashStr = window.location.hash.replace('#', '').toLowerCase();
+            hashVal = parseFloat(hashStr);
+            if (!isNaN(hashVal)) {
+                canvMult = hashVal;
+            }
+            if (hashStr.endsWith('c')) {}
+        }
+        console.log('Canvas multiplier: ' + canvMult);
+        const canvWidth = parseInt(panelWidth * canvMult);
+        const canvHeight = parseInt(panelHeight * canvMult);
+
+        const MainPanel = document.getElementById('MainPanel');
+        const CanvasContainer = document.getElementById("CanvasContainer");
+        // const CanvasRenderer = document.getElementById("CanvasRenderer");
+
+        CanvasContainer.style.width = panelWidth+"px";
+        CanvasContainer.style.height = panelHeight+"px";
+        
+        let mainPanelWidth = 0;
+        let mainPanelHeight = 0;
+
+        window.onresize = screenManager;
+
+        function screenManager() {
+            let screenWidth = document.body.clientWidth - pad * 2;
+            let mainPanelLeft = 0;
+
+            if(screenWidth < minWidth) {
+                mainPanelLeft = pad;
+                mainPanelWidth = minWidth;
+            }
+            else if(screenWidth < maxWidth) {
+                mainPanelLeft = pad;
+                mainPanelWidth = screenWidth;
+            }
+            else {
+                mainPanelLeft = pad + (screenWidth - maxWidth) / 2;
+                mainPanelWidth = maxWidth;
+            }
+            mainPanelHeight = parseInt(mainPanelWidth * canvHeight / canvWidth);
+            MainPanel.style.marginLeft = mainPanelLeft + 'px';
+            MainPanel.style.marginRight = mainPanelLeft + 'px';
+            MainPanel.style.width = mainPanelWidth + 'px';
+            CanvasContainer.style.width = mainPanelWidth + 'px';
+            CanvasContainer.style.height = mainPanelHeight + 'px';
+            // CanvasRenderer.style.width = mainPanelWidth + 'px';
+            // CanvasRenderer.style.height = mainPanelWidth * canvHeight / canvWidth + 'px';
+        }
+        screenManager();
+    </script>
+    <script>
+        const hoverBtns = document.getElementsByClassName('hoverBtnWrapper');
+        const hoverBtnMargin = Number(getComputedStyle(hoverBtns[0]).margin.slice(0, -2));
+
+        const settingsPanel = document.getElementById('SettingsPanel');
+        
+        for (const hoverBtn of hoverBtns) {
+            hoverBtn.classList.remove('fadeoutSlide');
+        }
+        hoverBtns[0].style.top = '0px';
+        hoverBtns[0].classList.add('fadeinSlide');
+        
+        function hoverBtnVisibility(toggle) {
+            if (toggle < 0) {
+                // 닫기
+                for (const hoverBtn of hoverBtns) {
+                    hoverBtn.style.top = - hoverBtn.clientHeight - hoverBtnMargin*2 + 'px';
+                    hoverBtn.classList.remove('fadeinSlide');
+                    hoverBtn.classList.add('fadeoutSlide');
+                }
+            }
+            else {
+                // 열기
+                let hoverBtnsToChange = [];
+                if (toggle == 0 && !readSuccess) {
+                    // 오류
+                    hoverBtnsToChange = [hoverBtns[0]];
+                }
+                else {
+                    hoverBtnsToChange = [...hoverBtns];
+                }
+
+                hoverBtnVisibility(-1);
+                for (const hoverBtn of hoverBtnsToChange) {
+                    hoverBtn.style.top = '0px';
+                    hoverBtn.classList.remove('fadeoutSlide');
+                    hoverBtn.classList.add('fadeinSlide');
+                }
+            }
+        }
+        
+        function settingsPanelVisibility(toggle=null) {
+            
+            for (const hoverBtn of hoverBtns) {
+                hoverBtn.blur();
+            }
+
+            if (toggle==undefined || toggle==null) {
+                if (clickable) toggle = 1;
+                else toggle = 0;
+            }
+
+            switch (toggle) {
+                case -1:
+                    // 모두 닫으려고 할 때
+                    clickable = false;
+                    hoverBtnVisibility(-1);
+                    panelVisibility(settingsPanel, -1);
+                    break;
+
+                case 0:
+                    // 창이 열려있을 때
+                    clickable = true;
+                    hoverBtnVisibility(1);
+                    panelVisibility(settingsPanel, -1);
+                    break;
+
+                case 1:
+                    // 창이 닫혀있을 때
+                    clickable = false;
+                    hoverBtnVisibility(-1);
+                    panelVisibility(settingsPanel, 1);
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+
+        const commandPanel = document.getElementById('CommandPanel');
+        const visibilityPanel = document.getElementById('VisibilityPanel');
+        const helpPanel = document.getElementById('HelpPanel');
+        const copyPanel = document.getElementById('CopyPanel');
+        const panels = [commandPanel, visibilityPanel, helpPanel, copyPanel];
+        const panelOn = {
+            'command': 0,
+            'visibility': 0,
+            'settings': 0,
+            'help': 0,
+            'copy': 0
+        };
+
+        settingsPanelVisibility(-1);
+        panelVisibilityAll(-1);
+        
+        function panelVisibility(panel, toggle=0) {
+            if (toggle <= 0) {
+                // 창 닫으려고 할 때
+                panelOn[panel.dataset.panelTag] = 0;
+                panel.style.visibility = 'hidden';
+                panel.style.opacity = 0;
+                panel.classList.remove('fadein');
+                panel.classList.add('fadeout');
+            }
+            else {
+                // 창 열려고 할 때
+                panelOn[panel.dataset.panelTag] = 1;
+                panel.style.visibility = 'visible';
+                panel.style.opacity = 1;
+                panel.classList.remove('fadeout');
+                panel.classList.add('fadein');
+            }
+            const sum = Object.values(panelOn).reduce((acc, curr) => acc + curr, 0);
+            clickable = sum == 0;
+        }
+
+        function panelVisibilityAll(toggle=0) {
+            for (const panel of panels) {
+                panelVisibility(panel, toggle);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

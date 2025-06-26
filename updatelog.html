@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#292A2F" />
+    <meta name="title" property="og:title" content="Rubicell EP Shape Previewer Updatelog" />
+    <meta name="author" content="Chul-Hong Park">
+    <meta name="description" property="og:description" content="Rubicell EP Shape Previewer Updatelog" />
+    <meta property="og:url" content="https://chp-rubicell.github.io/epshape/" />
+    <meta name="image" property="og:image" content="https://chp-rubicell.github.io/epshape/resources/imgs/thumbnail.jpg" />
+    <meta name="twitter:image" content="https://chp-rubicell.github.io/epshape/resources/imgs/thumbnail.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="https://chp-rubicell.github.io/epshape/resources/imgs/favicon.png">
+    <title>Rubicell EP Shape Previewer Updatelog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            position: absolute;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            font-family: 'Roboto', 'Noto Sans KR', sans-serif;
+        }
+        html {
+            background: #292A2F url('./imgs/bg.jpg');;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            overflow-y: auto;
+        }
+        body {
+            padding: 0 min(30px, 5%);
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            display: flex;
+            align-items: safe center; /* vertical */
+            justify-content: center; /* horizontal */
+            overflow-y: auto;
+        }
+        .PageGroup {
+            display: inline-block;
+            /* width: 100%; */
+            height: fit-content;
+            padding: 30px min(30px, 5%);
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            color: white;
+            z-index: 2;
+        }
+        h2 {
+            margin-block-end: 0.4em;
+        }
+        ul {
+            margin-block-start: 0.4em;
+            margin-block-end: 2em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- <div class="bg"></div> -->
+
+    <div class="PageGroup">
+        <h2>2025-06-14</h2>
+        <ul>
+            <li>Added "animateheight" option to the frame animation.</li>
+            <li>Added "both" option to the zone visibility toggle.</li>
+        </ul>
+        <h2>2025-06-06</h2>
+        <ul>
+            <li>Fixed issues regarding .idf files with  inconsistent zone name capitalization.</li>
+        </ul>
+        <h2>2025-06-01</h2>
+        <ul>
+            <li>Added an option to change the look of hidden objects in the settings.</li>
+            <li>Changed the design of the command input field.</li>
+            <li>Added tooltips for floating buttons.</li>
+            <li>Fixed 'viewport settings copy and paste' panel behavior.</li>
+        </ul>
+        <h2>2025-04-04</h2>
+        <ul>
+            <li>Added a new "Visibility" panel.</li>
+            <li>Added zone filtering based on height range.</li>
+        </ul>
+        <h2>2025-03-20</h2>
+        <ul>
+            <li>Added functionality for exporting animated frames in .zip format.</li>
+        </ul>
+        <h2>2025-03-17</h2>
+        <ul>
+            <li>Improved command input UI.</li>
+            <li>Fixed viewport settings paste functionality issues related to shadows.</li>
+        </ul>
+        <h2>2025-02-12</h2>
+        <ul>
+            <li>Added material override.</li>
+            <li>Added camera FOV setting.</li>
+        </ul>
+        <h2>2024-12-13</h2>
+        <ul>
+            <li>Added an example .idf file to preload.</li>
+            <li>Changed default shadow height to 0.</li>
+            <li>Fixed bugs related to the settings panel.</li>
+            <li>Fixed issues when surface boundary condition is a zone.</li>
+        </ul>
+        <h2>2024-11-20</h2>
+        <ul>
+            <li>Added viewport settings copy and paste functions.</li>
+            <li>Improved UI elements.</li>
+        </ul>
+        <h2>2024-10-16</h2>
+        <ul>
+            <li>Excluded shading surfaces from boundary calculation.</li>
+            <li>Fixed a bug related to keyboard inputs.</li>
+            <li>Restructured code.</li>
+        </ul>
+        <h2>2024-10-11</h2>
+        <ul>
+            <li>Improved performance.</li>
+            <li>Added a help screen.</li>
+            <li>Added edge thickness settings.</li>
+            <li>Tweaked existing materials.</li>
+            <li>Various quality of life improvements.</li>
+        </ul>
+        <h2>2024-09-10</h2>
+        <ul>
+            <li>Increased panel max width.</li>
+            <li>Added window material opacity settings.</li>
+            <li>Additional shadow rendering options.</li>
+        </ul>
+        <h2>2024-06-24</h2>
+        <ul>
+            <li>Skipped rendering duplicate surfaces.</li>
+        </ul>
+        <h2>2024-03-11</h2>
+        <ul>
+            <li>Added 's' shortcut for exporting images.</li>
+        </ul>
+        <h2 style="font-weight: normal;">⋯</h2>
+        <h2>2021-12-06</h2>
+        <ul>
+            <li>Initial release.</li>
+        </ul>
+        <!-- <h2>2024-03-12</h2>
+        <ul>
+            <li>Changed the way transparent objects are rendered.</li>
+        </ul> -->
+    </div>
+
+</body>
+</html>
