@@ -1,3 +1,6 @@
+/*
+TODO Add loading icon when opening idf files
+*/
 //+ ------------------------------------------------------------------- +//
 //MARK: Basic Utilities
 
