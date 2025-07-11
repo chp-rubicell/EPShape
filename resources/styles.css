@@ -642,6 +642,7 @@ button.glass:active, .customButton:focus {
     transition: background-color 0.5s, color 0.5s;
 }
 .settingsInput:disabled {
+    opacity: 0.6;
     outline: 2px dashed #112C4460;
 }
 .settingsInput:enabled:not(:focus):hover {
@@ -676,6 +677,36 @@ input[type=number] {
     margin: 3px;
     width: 13px;
     height: 13px;
+}
+
+
+.colorSettings input[type=color],
+.colorSettings input[type=number] {
+    border-radius: 30px;
+}
+.colorSettings input[type=number] {
+    width: 50px;
+    margin-right: 8px;
+    margin-left: auto;
+}
+.colorSettings input[type=color] {
+    width: 30px;
+    margin-left: 0;
+    padding: 0 5px;
+    padding: 0 2px 0 2px;
+}
+@-moz-document url-prefix() {
+    .colorSettings input[type=color] {
+    padding: 2px 2px 2px 2px;
+    }
+}
+.colorSettings input[type=color]::-webkit-color-swatch {
+    border-radius: 20px;
+    border: none;
+}
+.colorSettings input[type=color]::-moz-color-swatch {
+    border-radius: 20px;
+    border: none;
 }
 
 .fadeout {

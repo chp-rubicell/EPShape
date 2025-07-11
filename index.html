@@ -36,8 +36,8 @@
     <script src="./resources/lib/iddLibrary.js"></script>
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
-    <!-- <script src="./resources/scripts.js" defer></script> -->
-    <script src="./resources/scripts-compiled.js?v=25_0614" defer></script>
+    <script src="./resources/scripts.js" defer></script>
+    <!-- <script src="./resources/scripts-compiled.js?v=25_0614" defer></script> -->
 </head>
 
 <body>
@@ -150,12 +150,6 @@
                             <label style="padding-right: 10px;">
                                 <input id="SttgsShading" type="checkbox" onclick="turnOnShading(this.checked);" checked /> Shading</font>
                             </label>
-                            <label style="padding-right: 10px;">
-                                <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparent materials
-                            </label>
-                            <label style="padding-right: 10px;">
-                                <input id="SttgsOverrideMat" type="checkbox" onclick="overrideMaterials(this.checked);" /> Override materials
-                            </label>
                             <span class="settingsFlexSpan">
                                 <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
                                 <span style="flex:none;">&nbsp;Window opacity :&nbsp;</span>
@@ -191,6 +185,27 @@
                                 <button class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeBackgroundColor(1, this);" disabled>White</button>
                                 <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(-1, this);">Transparent</button>
                             </center>
+                        </div>
+
+                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
+                            <h5>Materials</h5>
+                    
+                            <!-- Settings -->
+                            <label style="padding-right: 10px;">
+                                <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparency
+                            </label>
+                            <span class="settingsFlexSpan colorSettings">
+                                <label id="SttgsOverrideMat" style="padding-right: 10px;"><input id="SttgsLineThkCheckbox" type="checkbox" onclick="overrideMaterials(this.checked);"> Override :</label>
+                                <input id="SttgsTEMPTEMPTEMP1" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" disabled />
+                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);" disabled>
+                            </span>
+                            <!-- Materials -->
+                            <span class="settingsFlexSpan colorSettings">
+                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
+                                <span style="flex:none;">&nbsp;Window :&nbsp;</span>
+                                <input id="SttgsTEMPTEMPTEMP2" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
+                            </span>
                         </div>
 
                     </div>
