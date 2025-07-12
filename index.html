@@ -151,16 +151,11 @@
                                 <input id="SttgsShading" type="checkbox" onclick="turnOnShading(this.checked);" checked /> Shading</font>
                             </label>
                             <span class="settingsFlexSpan">
-                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
-                                <span style="flex:none;">&nbsp;Window opacity :&nbsp;</span>
-                                <input id="SttgsWinOpac" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
-                            </span>
-                            <span class="settingsFlexSpan">
                                 <label style="padding-right: 10px;"><input id="SttgsLineThkCheckbox" type="checkbox" onclick="turnOnLineThickness(this.checked);"> Edge thickness :</label>
                                 <input id="SttgsLineThkInputfield" class="settingsInput" type="text" value="-" placeholder="1" step="any" onkeyup="updateLineThicknessInputfield(event, this);" onfocusout="updateLineThicknessInputfield(undefined, this);" disabled />
                             </span>
                             <span class="settingsFlexSpan">
-                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
+                                <span class="liMarker">⬤</span>
                                 <span style="flex:none;">&nbsp;Hidden objects :&nbsp;</span>
                                 <select id="SttgsHiddenMatType" class="settingsInput" onchange="changeHiddenMatType(this.value);">
                                     <option value="disable">disable</option>
@@ -200,12 +195,33 @@
                                 <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);" disabled>
                             </span>
                             <!-- Materials -->
+                            
                             <span class="settingsFlexSpan colorSettings">
-                                <span style="width:19px; flex:none; text-align:center; font-size:8px; line-height:8px; opacity:0.7;">⬤</span>
+                                <span class="liMarker">⬤</span>
                                 <span style="flex:none;">&nbsp;Window :&nbsp;</span>
-                                <input id="SttgsTEMPTEMPTEMP2" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                                <input id="SttgsMat" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
                                 <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
                             </span>
+                            <span class="settingsFlexSpan colorSettings">
+                                <span class="liMarker">⬤</span>
+                                <span style="flex:none;">&nbsp;Window :&nbsp;</span>
+                                <input id="SttgsWinOpac" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
+                            </span>
+                            <p id="SttgGroupMat">
+                                <span data-type="OuterWall" class="settingsFlexSpan colorSettings">
+                                    <span class="liMarker">⬤</span>
+                                    <span style="flex:none;">&nbsp;Outer wall :&nbsp;</span>
+                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
+                                </span>
+                                <span data-type="InnerWall" class="settingsFlexSpan colorSettings">
+                                    <span class="liMarker">⬤</span>
+                                    <span style="flex:none;">&nbsp;Inner wall :&nbsp;</span>
+                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
+                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
+                                </span>
+                            </p>
                         </div>
 
                     </div>

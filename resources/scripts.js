@@ -7,11 +7,11 @@ TODO Add loading icon when opening idf files
 // import earcut from './earcut.js';
 
 // Convert from degrees to radians.
-Math.radians = function(degrees) {
+Math.radians = function (degrees) {
     return degrees * Math.PI / 180;
 }
 // Convert from radians to degrees.
-Math.degrees = function(radians) {
+Math.degrees = function (radians) {
     return radians * 180 / Math.PI;
 }
 // Clamp number between two values with the following line:
@@ -21,7 +21,7 @@ const roundFloat = (num, decplace) => Math.round(num * Math.pow(10, decplace)) /
 
 const THRESHOLD = 10e-5;
 
-const REFRESHRATE = 1/65;
+const REFRESHRATE = 1 / 65;
 
 //? Colors
 
@@ -38,8 +38,8 @@ function hexToRgb(h) {
     let hex = h.slice(1);
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-      return r + r + g + g + b + b;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+        return r + r + g + g + b + b;
     });
 
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -47,11 +47,11 @@ function hexToRgb(h) {
         r: parseInt(result[1], 16) / 255,
         g: parseInt(result[2], 16) / 255,
         b: parseInt(result[3], 16) / 255
-    }: null;
+    } : null;
 }
-function add_white_color_rgb(color, alpha=0.5) {
+function add_white_color_rgb(color, alpha = 0.5) {
     let h_str;
-    if (typeof(color)=='string') {
+    if (typeof (color) == 'string') {
         h_str = color;
     }
     else {
@@ -59,15 +59,15 @@ function add_white_color_rgb(color, alpha=0.5) {
     }
     let rgb = hexToRgb(h_str);
     return Object.fromEntries(
-        Object.entries(rgb).map(([channel, c]) => [channel, c*alpha + (1-alpha)])
+        Object.entries(rgb).map(([channel, c]) => [channel, c * alpha + (1 - alpha)])
     );
 }
-function add_white_color_hex(color, alpha=0.5) {
+function add_white_color_hex(color, alpha = 0.5) {
     return rgbToHex(add_white_color_rgb(color, alpha));
 }
-function add_black_color_rgb(color, alpha=0.5) {
+function add_black_color_rgb(color, alpha = 0.5) {
     let h_str;
-    if (typeof(color)=='string') {
+    if (typeof (color) == 'string') {
         h_str = color;
     }
     else {
@@ -75,100 +75,11 @@ function add_black_color_rgb(color, alpha=0.5) {
     }
     let rgb = hexToRgb(h_str);
     return Object.fromEntries(
-        Object.entries(rgb).map(([channel, c]) => [channel, c*alpha])
+        Object.entries(rgb).map(([channel, c]) => [channel, c * alpha])
     );
 }
-function add_black_color_hex(color, alpha=0.5) {
+function add_black_color_hex(color, alpha = 0.5) {
     return rgbToHex(add_black_color_rgb(color, alpha));
-}
-
-//+ ------------------------------------------------------------------- +//
-//MARK: Materials
-
-const matEdge = new THREE.LineBasicMaterial({
-    color: 0x000000,
-    linewidth: 1,
-});
-const matEdge2 = new LineMaterial({
-    color: '#000000',
-    linewidth: 1, 
-    alphaToCoverage: false,
-    // worldUnits: true,
-});
-
-const axisLength = 10;
-const axisXObjTemplate = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(axisLength, 0, 0),
-    ]),
-    new THREE.LineBasicMaterial({color: 0xff0000})
-);
-const axisYObjTemplate = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, axisLength, 0),
-    ]),
-    new THREE.LineBasicMaterial({color: 0x00ff00})
-);
-const axisZObjTemplate = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, axisLength),
-    ]),
-    new THREE.LineBasicMaterial({color: 0x0000ff})
-);
-const axisTrueNorthObjTemplate = new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, axisLength, 0),
-    ]),
-    new THREE.LineDashedMaterial({
-        color: 0x00ff00,
-        linewidth: 2,
-        dashSize: 1.5,
-        gapSize: 1
-    })
-);
-axisTrueNorthObjTemplate.computeLineDistances();
-
-let axisXObject = null;
-let axisYObject = null;
-let axisZObject = null;
-let axisTrueNorthObject = null;
-
-const shadowCatcherMat = new THREE.ShadowMaterial();
-shadowCatcherMat.opacity = 0.5;
-
-const matGhost = new THREE.MeshBasicMaterial({
-    color: 0x000000,
-    side: THREE.DoubleSide,
-    transparent: true,
-    blending: THREE.AdditiveBlending
-});
-
-const matDefault = {
-    'Adiabatic': new THREE.MeshPhongMaterial({color: '#f24b91', side: THREE.DoubleSide, opacity: 0.8}),
-    'Default': new THREE.MeshPhongMaterial({color: '#f5f5f5', side: THREE.DoubleSide}),
-    // 'Roof': new THREE.MeshPhongMaterial({color: '#a82525', side: THREE.DoubleSide, opacity: 0.5}),
-    'Roof': new THREE.MeshPhongMaterial({color: add_black_color_hex('#a82525', 0.7), side: THREE.DoubleSide, opacity:0.85}),
-    'OuterWall': new THREE.MeshLambertMaterial({color: '#ffe16b', side: THREE.DoubleSide}),
-    // 'OuterWall': new THREE.MeshLambertMaterial({color: '#ffe16b'}),
-    'InnerSurf': new THREE.MeshPhongMaterial({color: '#444444', side: THREE.DoubleSide, opacity: 0.5}),
-    'OuterSurf': new THREE.MeshPhongMaterial({color: '#444444', side: THREE.DoubleSide, opacity: 0.8}),
-    // 'InnerSurf': new THREE.MeshPhongMaterial({color: '#444444', opacity: 0.5}),
-    'Window': new THREE.MeshPhongMaterial({color: '#47dcff', side: THREE.DoubleSide, opacity: 0.3}),
-    'Door': new THREE.MeshPhongMaterial({color: '#1747d4', side: THREE.DoubleSide, opacity: 0.3}),
-    'Shading': new THREE.MeshPhongMaterial({color: '#624285', side: THREE.DoubleSide, opacity: 0.7}),
-    'Ground': new THREE.MeshLambertMaterial({color: '#555555', side: THREE.DoubleSide}),
-    'Disabled': new THREE.MeshPhongMaterial({color: '#bbbbbb', side: THREE.DoubleSide, opacity: 0.2}),
-}
-for (const mat in matDefault) {
-    if (matDefault[mat].opacity < 1) {
-        matDefault[mat].transparent = true;
-        //* matDefault[mat].depthWrite = false;
-    }
-    // matDefault[mat].shadowSide = THREE.FrontSide;
 }
 
 //+ ------------------------------------------------------------------- +//
@@ -184,6 +95,19 @@ DEFAULTS = {
     lineThicknessOn: false,
     lineThickness: 1,
     hiddenMatType: 'ghost',
+    materials: {
+        'Adiabatic': { color: '#f24b91', opacity: 0.8 },
+        'Default': { color: '#f5f5f5', opacity: 1.0 },
+        'Roof': { color: add_black_color_hex('#a82525', 0.7), opacity: 0.85 },
+        'OuterWall': { color: '#ffe16b', opacity: 1.0 },
+        'InnerSurf': { color: '#444444', opacity: 0.5 },
+        'OuterSurf': { color: '#444444', opacity: 0.8 },
+        'Window': { color: '#47dcff', opacity: 0.3 },
+        'Door': { color: '#1747d4', opacity: 0.3 },
+        'Shading': { color: '#624285', opacity: 0.7 },
+        'Ground': { color: '#555555', opacity: 1.0 },
+        'Disabled': { color: '#bbbbbb', opacity: 0.2 },
+    },
     // visibility panel
     visFilterType: 'zones',
     // shadow properties
@@ -214,7 +138,94 @@ let sceneObjects = Object.fromEntries(DEFAULTS.sceneObjectKeys.map(k => [k, []])
 
 let shadowCatcher = null;
 
+//+ ------------------------------------------------------------------- +//
+//MARK: Materials
 
+const matEdge = new THREE.LineBasicMaterial({
+    color: 0x000000,
+    linewidth: 1,
+});
+const matEdge2 = new LineMaterial({
+    color: '#000000',
+    linewidth: 1,
+    alphaToCoverage: false,
+    // worldUnits: true,
+});
+
+const axisLength = 10;
+const axisXObjTemplate = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(axisLength, 0, 0),
+    ]),
+    new THREE.LineBasicMaterial({ color: 0xff0000 })
+);
+const axisYObjTemplate = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, axisLength, 0),
+    ]),
+    new THREE.LineBasicMaterial({ color: 0x00ff00 })
+);
+const axisZObjTemplate = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, axisLength),
+    ]),
+    new THREE.LineBasicMaterial({ color: 0x0000ff })
+);
+const axisTrueNorthObjTemplate = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, axisLength, 0),
+    ]),
+    new THREE.LineDashedMaterial({
+        color: 0x00ff00,
+        linewidth: 2,
+        dashSize: 1.5,
+        gapSize: 1
+    })
+);
+axisTrueNorthObjTemplate.computeLineDistances();
+
+let axisXObject = null;
+let axisYObject = null;
+let axisZObject = null;
+let axisTrueNorthObject = null;
+
+const shadowCatcherMat = new THREE.ShadowMaterial();
+shadowCatcherMat.opacity = 0.5;
+
+const matGhost = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    side: THREE.DoubleSide,
+    transparent: true,
+    blending: THREE.AdditiveBlending
+});
+
+let matSettings = { ...DEFAULTS.materials };
+
+const matDefault = {
+    'Adiabatic': new THREE.MeshPhongMaterial(matSettings['Adiabatic']),
+    'Default': new THREE.MeshPhongMaterial(matSettings['Default']),
+    'Roof': new THREE.MeshPhongMaterial(matSettings['Roof']),
+    'OuterWall': new THREE.MeshLambertMaterial(matSettings['OuterWall']),
+    'InnerSurf': new THREE.MeshPhongMaterial(matSettings['InnerSurf']),
+    'OuterSurf': new THREE.MeshPhongMaterial(matSettings['OuterSurf']),
+    'Window': new THREE.MeshPhongMaterial(matSettings['Window']),
+    'Door': new THREE.MeshPhongMaterial(matSettings['Door']),
+    'Shading': new THREE.MeshPhongMaterial(matSettings['Shading']),
+    'Ground': new THREE.MeshLambertMaterial(matSettings['Ground']),
+    'Disabled': new THREE.MeshPhongMaterial(matSettings['Disabled']),
+}
+for (const mat in matDefault) {
+    matDefault[mat].side = THREE.DoubleSide; // double side settings to materials
+    if (matDefault[mat].opacity < 1) {
+        matDefault[mat].transparent = true;
+        //* matDefault[mat].depthWrite = false;
+    }
+    // matDefault[mat].shadowSide = THREE.FrontSide;
+}
 
 //+ ------------------------------------------------------------------- +//
 //MARK: Scene Setup
@@ -252,7 +263,7 @@ const lightShadowTarget = new THREE.Object3D();
 
 //? DEV MODE
 let DEV = false;
-const matDev = new THREE.MeshPhongMaterial({color: 0xffff00});
+const matDev = new THREE.MeshPhongMaterial({ color: 0xffff00 });
 const geomDev = new THREE.SphereGeometry(3, 8, 4);
 const objDev = new THREE.Mesh(geomDev, matDev);
 
@@ -272,7 +283,7 @@ Infinity: shadowObject (그림자 만드는 오브젝트)
 // const renderer = new THREE.WebGLRenderer();
 // const renderer = new THREE.WebGLRenderer({alpha: true});
 //? 배경 투명하게
-const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true, preserveDrawingBuffer: true});
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
 // const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
 renderer.setClearColor(0xffffff, 0);
 //? 배경 하얗게
@@ -308,7 +319,7 @@ document.getElementById('CanvasContainer').appendChild(labelRenderer.domElement)
 // const CanvasRenderer = document.getElementById('CanvasRenderer');
 const CanvasRenderer = renderer.domElement;
 
-function exportImage(fname='') {
+function exportImage(fname = '') {
     console.log('exporting image...');
 
     if (fname == '') {
@@ -346,48 +357,7 @@ let shadingOn = DEFAULTS.shadingOn;
 function turnOnShading(on) {
     shadingOn = on;
     sttgsShading.checked = on;
-    updateModel(force=true, source='turnOnShading');
-}
-
-//? 투명도 설정
-let transparencyOn = DEFAULTS.transparencyOn;
-function turnOnTransparentMat(on) {
-    transparencyOn = on;
-    sttgsMatTrans.checked = on;
-    updateModel(force=true, source='turnOnTransparentMat');
-}
-
-//? 재질 강제
-let overrideMatOn = DEFAULTS.overrideMatOn;
-function overrideMaterials(on) {
-    overrideMatOn = on;
-    sttgsOverrideMat.checked = on;
-    updateModel(force=true, source='overrideMaterials');
-}
-
-//? 창문 투명도 설정
-let windowOpacity = DEFAULTS.windowOpacity;
-sttgsWinOpac.value = windowOpacity;
-function updateWindowOpacity(opacity) {
-    if (!isNaN(opacity)) {
-        opacity = clamp(opacity, 0, 1);
-        windowOpacity = opacity;
-    }
-    sttgsWinOpac.value = windowOpacity;
-    sttgsWinOpac.blur();
-    matDefault.Window.opacity = windowOpacity;
-    matDefault.Door.opacity = windowOpacity;
-    updateModel(force=true, source='updateWindowOpacity');
-}
-function updateWindowOpacityInputfield (e, inputfield) {
-    const inputOpacity = parseFloat(inputfield.value);
-    if (e === undefined || e.key === 'Escape') {
-        inputfield.value = windowOpacity;
-        inputfield.blur();
-    }
-    else if (e === true || e.key === 'Enter') {
-        updateWindowOpacity(inputOpacity);
-    }
+    updateModel(force = true, source = 'turnOnShading');
 }
 
 //? 그림자 설정
@@ -399,11 +369,11 @@ function turnOnShadow(on) {
     renderer.shadowMap.enabled = on;
     lightShadow.castShadow = on;
     if (shadowOn) updateShadowProperties();
-    updateModel(force=true, source='turnOnShadow');
+    updateModel(force = true, source = 'turnOnShadow');
 }
 function turnOnSelfShadow(on) {
     selfShadow = on;
-    
+
     if (selfShadow) {
         lightShadow.shadow.normalBias = -0.1;  // 그림자 줄무늬 방지
     }
@@ -415,10 +385,10 @@ function turnOnSelfShadow(on) {
         surfMesh.receiveShadow = selfShadow;  // 자체 그림자
     }
 
-    updateModel(force=true, source='turnOnSelfShadow');
+    updateModel(force = true, source = 'turnOnSelfShadow');
 }
 function updateShadowProperties() {
-    updateCamera(force=true, source='updateShadowProperties');  // 그림자 속성 업데이트를 위해 한 번 렌더링
+    updateCamera(force = true, source = 'updateShadowProperties');  // 그림자 속성 업데이트를 위해 한 번 렌더링
     lightShadow.shadow.radius = shadowRadius;
     lightShadow.shadow.mapSize.width = shadowMapSize;
     lightShadow.shadow.mapSize.height = shadowMapSize;
@@ -434,7 +404,7 @@ let debugOn = DEFAULTS.debugOn;
 function turnOnDebug(on) {
     debugOn = on;
     sttgsDebug.checked = on;
-    updateModel(force=true, source='turnOnDebug');
+    updateModel(force = true, source = 'turnOnDebug');
 }
 
 //? 선 두께 설정
@@ -455,7 +425,7 @@ function turnOnLineThickness(on) {
         sttgsLineThkInputfield.type = 'text';
         sttgsLineThkInputfield.value = '-';
     }
-    updateModel(force=true, source='turnOnLineThickness');
+    updateModel(force = true, source = 'turnOnLineThickness');
 }
 function updateAbsoluteLineThickness() {
     absoluteLineThickness = lineThickness * bldgRadius / camera.radius * 1.4;
@@ -472,7 +442,7 @@ function updateLineThickness(thickness) {
         sttgsLineThkInputfield.blur();
         updateAbsoluteLineThickness();
     }
-    updateModel(force=true, source='updateLineThickness');
+    updateModel(force = true, source = 'updateLineThickness');
 }
 function updateLineThicknessInputfield(e, inputfield) {
     const inputLineThickness = parseFloat(inputfield.value);
@@ -497,8 +467,70 @@ function changeHiddenMatType(matType) {
     sttgsHiddenMatType.value = matType;
     sttgsHiddenMatType.blur();
     hiddenMatType = matType;
-    updateModel(force=true, source='changeHiddenMatType');
+    updateModel(force = true, source = 'changeHiddenMatType');
 }
+
+//+ ------------------------------------------------------------------- +//
+//MARK: Materials
+
+const sttgsGroupMat = document.getElementById('SttgGroupMat');
+document.querySelector('#SttgGroupMat')
+
+const sttgsMat = Object.fromEntries(
+    Array.from(sttgsGroupMat.children)
+    .filter(child => child.tagName === 'SPAN' && child.dataset.type)
+    .map(childSpan => [
+        childSpan.dataset.type,
+        Object.fromEntries(
+            Array.from(childSpan.querySelectorAll('input'))
+            .map((inputElement, idx) => [['color', 'opacity'][idx], inputElement])
+        )
+    ])
+);
+
+//? 투명도 설정
+let transparencyOn = DEFAULTS.transparencyOn;
+function turnOnTransparentMat(on) {
+    transparencyOn = on;
+    sttgsMatTrans.checked = on;
+    updateModel(force = true, source = 'turnOnTransparentMat');
+}
+
+//? 재질 강제
+let overrideMatOn = DEFAULTS.overrideMatOn;
+function overrideMaterials(on) {
+    overrideMatOn = on;
+    sttgsOverrideMat.checked = on;
+    updateModel(force = true, source = 'overrideMaterials');
+}
+
+//? 창문 투명도 설정
+let windowOpacity = DEFAULTS.windowOpacity;
+sttgsWinOpac.value = windowOpacity;
+function updateWindowOpacity(opacity) {
+    if (!isNaN(opacity)) {
+        opacity = clamp(opacity, 0, 1);
+        windowOpacity = opacity;
+    }
+    sttgsWinOpac.value = windowOpacity;
+    sttgsWinOpac.blur();
+    matDefault.Window.opacity = windowOpacity;
+    matDefault.Door.opacity = windowOpacity;
+    updateModel(force = true, source = 'updateWindowOpacity');
+}
+function updateWindowOpacityInputfield(e, inputfield) {
+    const inputOpacity = parseFloat(inputfield.value);
+    if (e === undefined || e.key === 'Escape') {
+        inputfield.value = windowOpacity;
+        inputfield.blur();
+    }
+    else if (e === true || e.key === 'Enter') {
+        updateWindowOpacity(inputOpacity);
+    }
+}
+
+//? 재질 설정
+function updateMaterial() { }
 
 /** 모델 불러올 때 설정 초기화 */
 function resetSettings() {
@@ -518,14 +550,14 @@ function resetSettings() {
 }
 
 let lastModelUpdated = Date.now();
-function updateModel(force=false, source=null) {
+function updateModel(force = false, source = null) {
     //? throttle refresh rate
     let newTime = Date.now();
-    if (force || (newTime-lastModelUpdated)/1000 > REFRESHRATE) {
+    if (force || (newTime - lastModelUpdated) / 1000 > REFRESHRATE) {
         lastModelUpdated = newTime;
         resetScene();
         renderModel();
-        if (DEV) console.log(`model updated - ${source||'?'}, ${force}`)
+        if (DEV) console.log(`model updated - ${source || '?'}, ${force}`)
     }
 }
 
@@ -533,7 +565,7 @@ function updatePanels() {
 
     settingsPanelContent.scrollTo(0, 0);
     visibilityPanelContent.scrollTo(0, 0);
-    
+
     // innerHTML = '<label><input type="checkbox" checked> Opacity</label>';
     //? Zone Visibility
     let innerHTML = '';
@@ -564,13 +596,13 @@ function polarCoord(alt, azm) {
     let azmR = Math.radians(- azm - 90);
 
     return new THREE.Vector3(Math.cos(altR) * Math.cos(azmR),
-                             Math.cos(altR) * Math.sin(azmR),
-                             Math.sin(altR));
+        Math.cos(altR) * Math.sin(azmR),
+        Math.sin(altR));
 }
 
 let maxZoom = 950;
 let lastRendered = Date.now();
-function updateCamera(force=false, source=null) {
+function updateCamera(force = false, source = null) {
     // if (camera.alt > 90) camera.alt = 90;
     // if (camera.alt < -90) camera.alt = -90;
     camera.alt = clamp(camera.alt, -90, 90);
@@ -588,21 +620,21 @@ function updateCamera(force=false, source=null) {
     if (Math.abs(camera.alt) == 90) {
         camera.rotation.z = Math.radians(-Math.sign(camera.alt) * displayAzm);
     }
-    
-    lightDirect.position.copy(polarCoord(camera.alt, displayAzm+45).add(camera.base));
+
+    lightDirect.position.copy(polarCoord(camera.alt, displayAzm + 45).add(camera.base));
     lightDirectTarget.position.copy(camera.base);
-    lightShadow.position.copy(polarCoord(shadowOffset[0], displayAzm+shadowOffset[1]).multiplyScalar(camera.radius).add(bldgCenter));
+    lightShadow.position.copy(polarCoord(shadowOffset[0], displayAzm + shadowOffset[1]).multiplyScalar(camera.radius).add(bldgCenter));
     // lightShadow.position.copy(polarCoord(45, displayAzm+90).multiplyScalar(10).add(camera.base));
     // lightShadowTarget.position.copy(camera.base);
 
-    objDev.position.copy(polarCoord(45, displayAzm+90).multiplyScalar(10).add(camera.base));
+    objDev.position.copy(polarCoord(45, displayAzm + 90).multiplyScalar(10).add(camera.base));
 
     //? throttle refresh rate
     let newTime = Date.now();
-    if (force || (newTime-lastRendered)/1000 > REFRESHRATE) {
+    if (force || (newTime - lastRendered) / 1000 > REFRESHRATE) {
         lastRendered = newTime;
         renderer.render(scene, camera);
-        if (DEV) console.log(`refreshed - ${source||'?'}, ${force}`)
+        if (DEV) console.log(`refreshed - ${source || '?'}, ${force}`)
     }
     //TODO labelRenderer.render(scene, camera);
 }
@@ -627,7 +659,7 @@ let pressedKeys = {};
 // window.onkeydown = function(e) { pressedKeys[e.keyCode] = true; }
 
 //? Mouse input
-CanvasContainer.ondragstart = function() {
+CanvasContainer.ondragstart = function () {
     return false;
 }
 function customOnMouseMove(event) {
@@ -646,25 +678,25 @@ function customOnMouseMove(event) {
     else if (mouseMiddle) {
         let altR = Math.radians(camera.alt);
         // let azmR = Math.radians(-camera.azm-90-90);
-        let azmR = -Math.radians(camera.azm+180);
+        let azmR = -Math.radians(camera.azm + 180);
         // let multX = dX/panelWidth*10;
         // let multY = dY/panelHeight*10;
-        let multX = dX/panelWidth*camera.radius/2;
-        let multY = dY/panelWidth*camera.radius/2;
+        let multX = dX / panelWidth * camera.radius / 2;
+        let multY = dY / panelWidth * camera.radius / 2;
         let offsetVec = new THREE.Vector3(
-            Math.cos(azmR)*multX + Math.sin(altR)*Math.sin(azmR)*multY,
-            Math.sin(azmR)*multX - Math.sin(altR)*Math.cos(azmR)*multY,
-            Math.cos(altR)*multY,
+            Math.cos(azmR) * multX + Math.sin(altR) * Math.sin(azmR) * multY,
+            Math.sin(azmR) * multX - Math.sin(altR) * Math.cos(azmR) * multY,
+            Math.cos(altR) * multY,
         );
         camera.base.add(offsetVec);
     }
-    updateCamera(force=false, source='customOnMouseMove');
+    updateCamera(force = false, source = 'customOnMouseMove');
     startX = newX;
     startY = newY;
 }
 CanvasContainer.onmousedown = function (event) {
     // event.preventDefault();
-    
+
     if (clickable && event.target.tagName.toLowerCase() !== 'button') {
         startX = event.pageX;
         startY = event.pageY;
@@ -681,7 +713,7 @@ CanvasContainer.onmousedown = function (event) {
         }
 
         document.addEventListener('mousemove', customOnMouseMove);
-        document.onmouseup = function(event) {
+        document.onmouseup = function (event) {
             // event = event || window.event;
             // event.preventDefault();
             mouseLeft = false;
@@ -694,7 +726,7 @@ CanvasContainer.onmousedown = function (event) {
     //     settingsPanelVisibility();
     // }
 }
-document.addEventListener('onmouseleave', function() {
+document.addEventListener('onmouseleave', function () {
     document.removeEventListener('mousemove', customOnMouseMove);
 })
 // CanvasContainer.onmouseup = function(event) {
@@ -705,12 +737,12 @@ CanvasContainer.onwheel = function (event) {
     if (clickable) {
         camera.radius -= event.wheelDeltaY / 100 * clamp((camera.radius / 50) ** 1.2, 1, Infinity);
         // camera.zoom = event.wheelDeltaY / 210;
-        updateCamera(force=true, source='onwheel');
+        updateCamera(force = true, source = 'onwheel');
     }
 }
 document.getElementById('PageWrapper').onwheel = function (event) {
     event = event || window.event;  //! deprecated?
-    if (event.target.id == 'CanvasRenderer'  && clickable) {
+    if (event.target.id == 'CanvasRenderer' && clickable) {
         return false;
     }
 }
@@ -730,21 +762,21 @@ document.onkeydown = function (event) {
     if (event.shiftKey) shiftKey = true;
     if (mouseLeft && event.shiftKey) {
         camStepped = true;
-        updateCamera(force=true, source='onkeydown');
+        updateCamera(force = true, source = 'onkeydown');
     }
     if (!commandOn && event.target.tagName.toLowerCase() != 'input') {
-        if (idfName !== '' && code=='KeyS') {
+        if (idfName !== '' && code == 'KeyS') {
             exportImage();
         }
-        if (code=='KeyR') {
+        if (code == 'KeyR') {
             centerCamera();
         }
-        if (idfName !== '' && event.ctrlKey && event.shiftKey && (code=='KeyC' || code=='KeyV')) {
+        if (idfName !== '' && event.ctrlKey && event.shiftKey && (code == 'KeyC' || code == 'KeyV')) {
             event.preventDefault();
-            if (code=='KeyC') {
+            if (code == 'KeyC') {
                 panelVisibility(copyPanel, 1);
             }
-            if (code=='KeyV') {
+            if (code == 'KeyV') {
                 loadSettings();
             }
         }
@@ -761,7 +793,7 @@ document.onkeyup = function (event) {
         case 'Shift':
             shiftKey = false;
             camStepped = false;
-            updateCamera(force=true, source='onkeyup(shift)');
+            updateCamera(force = true, source = 'onkeyup(shift)');
             break;
         case '/':
             if (!commandOn) {
@@ -822,16 +854,16 @@ window.onscroll() = function () {
 //MARK: Object Selection
 
 const raycaster = new THREE.Raycaster();
-raycaster.layers.set(1); 
+raycaster.layers.set(1);
 const pointer = new THREE.Vector2();
 const objectDisplay = document.getElementById('objectDisplay');
 let lastHighlightedObj = null;
 let lastHighlightedObjMat = null;
-const matHighlighted = new THREE.MeshPhongMaterial({color: '#ff0000', side: THREE.DoubleSide, opacity: 0.7, transparent: true});
+const matHighlighted = new THREE.MeshPhongMaterial({ color: '#ff0000', side: THREE.DoubleSide, opacity: 0.7, transparent: true });
 let highlightedObjDisplayText = '';
 let lastSelectedObj = null;
 let lastSelectedObjMat = null;
-const matSelected = new THREE.MeshPhongMaterial({color: '#ff0000', side: THREE.DoubleSide, opacity: 0.8, transparent: true});
+const matSelected = new THREE.MeshPhongMaterial({ color: '#ff0000', side: THREE.DoubleSide, opacity: 0.8, transparent: true });
 let selectedObjDisplayText = '';
 
 function objectHighlight(event) {
@@ -841,11 +873,11 @@ function objectHighlight(event) {
     const x = event.pageX - rect.left;
     const y = event.pageY - rect.top;
     // (-1 to +1) for both components
-    const offsetX = clamp(x/mainPanelWidth, 0, 1) * 2 - 1;
-    const offsetY = -clamp(y/mainPanelHeight, 0, 1) * 2 + 1;
+    const offsetX = clamp(x / mainPanelWidth, 0, 1) * 2 - 1;
+    const offsetY = -clamp(y / mainPanelHeight, 0, 1) * 2 + 1;
     pointer.x = offsetX;
     pointer.y = offsetY;
-    
+
     // update the picking ray with the camera and pointer position
     raycaster.setFromCamera(pointer, camera);
 
@@ -877,7 +909,7 @@ function objectHighlight(event) {
         objectDisplay.innerHTML = '';
         lastHighlightedObj = null;
     }
-    else if (lastHighlightedObj !== intersects[0].object){
+    else if (lastHighlightedObj !== intersects[0].object) {
         let obj = intersects[0].object;
         // obj.material.color.set(0xff0000);
         lastHighlightedObj = obj;
@@ -888,12 +920,12 @@ function objectHighlight(event) {
         let objName = obj.sourceObjName;
         let objType = obj.sourceObjType;
         let objProp = {};
-        
+
         let displayText = '<b>[Name]</b> ' + objName;
         switch (objType) {
             case 'surface':
                 objProp = surfList[objName];
-                if (objProp.OutsideBCObj!==undefined && objProp.OutsideBCObj!='') {
+                if (objProp.OutsideBCObj !== undefined && objProp.OutsideBCObj != '') {
                     displayText += ` (${objProp.OutsideBCObj.toLowerCase()})`;
                 }
                 displayText += `<br><b>[Type]</b> ${objType} (${objProp.SurfaceType})`;
@@ -903,7 +935,7 @@ function objectHighlight(event) {
                 break;
             case 'fenestration':
                 objProp = fenList[objName];
-                if (objProp.OutsideBCObj!==undefined && objProp.OutsideBCObj!='') {
+                if (objProp.OutsideBCObj !== undefined && objProp.OutsideBCObj != '') {
                     displayText += ` (${objProp.OutsideBCObj.toLowerCase()})`;
                 }
                 displayText += `<br><b>[Type]</b> ${objType} (${objProp.SurfaceType})`;
@@ -920,16 +952,16 @@ function objectHighlight(event) {
         displayText = displayText.replaceAll(' ', '&nbsp;')
         objectDisplay.innerHTML = displayText;
         highlightedObjDisplayText = displayText;
-        
+
     }
-    
-    updateCamera(force=true, source='objectHighlight');
+
+    updateCamera(force = true, source = 'objectHighlight');
 }
 // CanvasContainer.addEventListener('pointermove', objectHighlight);
-CanvasRenderer.addEventListener('pointerleave', function() {
+CanvasRenderer.addEventListener('pointerleave', function () {
     if (lastHighlightedObj !== null) {
         lastHighlightedObj.material = lastHighlightedObjMat;
-        updateCamera(force=true, source='pointerleave');
+        updateCamera(force = true, source = 'pointerleave');
     }
     objectDisplay.innerHTML = '';
 })
@@ -989,7 +1021,7 @@ function resetCamera() {
     camera.alt = 20;
     camera.azm = -30;  // 0 = south
     camera.radius = 10;
-    updateCamera(force=true, source='resetCamera');
+    updateCamera(force = true, source = 'resetCamera');
 }
 resetCamera();
 
@@ -998,7 +1030,7 @@ function centerCamera() {
     resetCamera();
     camera.base.copy(bldgCenter);
     camera.radius = bldgRadius * 1.5;
-    updateCamera(force=true, source='centerCamera');
+    updateCamera(force = true, source = 'centerCamera');
 }
 
 function resetScene() {
@@ -1024,7 +1056,7 @@ resetScene();
 //MARK: Triangulate Surface
 
 //? 수평한 점 리스트로부터 triangulate된 리스트 생성
-function triangulateSurfacefromFlatVertlist(vertList, holes=null) {
+function triangulateSurfacefromFlatVertlist(vertList, holes = null) {
     let vertTriangulated = [];
     earcut(vertList.flat(), holes, 3).forEach(vIdx => {
         vertTriangulated.push(vertList[vIdx]);
@@ -1033,11 +1065,11 @@ function triangulateSurfacefromFlatVertlist(vertList, holes=null) {
 }
 
 //? 점 리스트로부터 triangulate된 서피스 생성
-function triangulatedSurfacefromVertlist(vertList, holes=null) {
+function triangulatedSurfacefromVertlist(vertList, holes = null) {
 
     const unitX = new THREE.Vector3(1, 0, 0);
     const unitZ = new THREE.Vector3(0, 0, 1);
-    
+
     //? 면의 법선 벡터 계산
     // (첫 번째 점 -> 두 번째 점) 벡터와 (첫 번째 점 -> n 번째 점) 벡터의 cross product 계산 (법선 벡터)
     let surf_normvec = new THREE.Vector3();  // surface의 법선 벡터
@@ -1072,7 +1104,7 @@ function triangulatedSurfacefromVertlist(vertList, holes=null) {
         // 수평이 아닐 때
         let quaternion = new THREE.Quaternion();  // 평면을 회전시킬 quaternion
         quaternion.setFromUnitVectors(surf_normvec, unitZ);
-        
+
         let vertListHor = [];
         vertList.forEach(v => {
             let vec = new THREE.Vector3(...v);
@@ -1105,7 +1137,7 @@ function loadExampleFile() {
 }
 window.onload = loadExampleFile;
 
-function readFile (fileList) {
+function readFile(fileList) {
     if (fileList.length > 0) {
         const idfFile = fileList[0];
         if (idfFile.name.endsWith('.idf')) {
@@ -1124,7 +1156,7 @@ function readFile (fileList) {
     }
 }
 
-function loadFile (code) {
+function loadFile(code) {
     CanvasRenderer.removeEventListener('pointermove', objectHighlight);
     // CanvasRenderer.removeEventListener('pointerdown', objSelectionPointerDown);
     settingsPanelVisibility(0);
@@ -1137,7 +1169,7 @@ function loadFile (code) {
     resetBldgInfo();
     parseIDF(code);
     hoverBtnVisibility(0);
-    fileSelectorTag.innerHTML = (idfName=='') ? '' : idfName+idfExt;
+    fileSelectorTag.innerHTML = (idfName == '') ? '' : idfName + idfExt;
     addModel();
     updatePanels();
     // 높이 슬라이더 업데이트
@@ -1147,7 +1179,7 @@ function loadFile (code) {
 }
 
 const reader = new FileReader();
-reader.onload = function () {loadFile(reader.result)};
+reader.onload = function () { loadFile(reader.result) };
 
 const fileSelector = document.getElementById('fileSelector');
 const fileSelectorTag = document.getElementById('fileSelectorTag');
@@ -1156,7 +1188,7 @@ fileSelector.addEventListener('change', (event) => {
     readFile(fileList);
 });
 
-document.body.addEventListener('drop', function(e) {
+document.body.addEventListener('drop', function (e) {
     e.stopPropagation();
     e.preventDefault();
     clickable = true;
@@ -1169,7 +1201,7 @@ document.body.addEventListener('drop', function(e) {
 const fileHoverMask = document.getElementById('fileHoverMask');  // drag&drop 받기 위한 object
 const fileHover = document.getElementById('fileHover');  // drag&drop 설명 object
 const fileHoverText = document.getElementById('fileHoverText');  // drag&drop 설명 text
-document.body.addEventListener('dragover', function(e) {
+document.body.addEventListener('dragover', function (e) {
     e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
@@ -1185,7 +1217,7 @@ document.body.addEventListener('dragover', function(e) {
         fileHoverText.style.textShadow = '#fff 0 0 10px, #80daff 0 0 20px, #000 0 0 30px';
     }
 });
-fileHoverMask.addEventListener('dragleave', function(e) {
+fileHoverMask.addEventListener('dragleave', function (e) {
     // console.log(e.target)
     camFixed = false;
     clickable = true;
@@ -1243,7 +1275,7 @@ function parseIDF(code) {
     //? Zone, Construction 관련
     objectList.forEach(obj => {
         if (!obj.toLowerCase().startsWith('Zone'.toLowerCase())
-                && !obj.toLowerCase().startsWith('Construction'.toLowerCase())) {
+            && !obj.toLowerCase().startsWith('Construction'.toLowerCase())) {
             return;
         }
         let objSplit = obj.split(',');
@@ -1255,13 +1287,13 @@ function parseIDF(code) {
 
                 if (!(objName in zoneList)) {
                     zoneList[objName] = {
-                        'Surfaces'   : [],
-                        'Origin'     : [Number(objSplit[iddInfo.indexOf('x origin')]),
-                                        Number(objSplit[iddInfo.indexOf('y origin')]),
-                                        Number(objSplit[iddInfo.indexOf('z origin')])],
-                        'NDirection' : [],  //TODO zone 원점과 방향이 다를 때 반영
-                        'Visible'    : true,
-                        'ZBoundary'  : [Infinity, -Infinity]
+                        'Surfaces': [],
+                        'Origin': [Number(objSplit[iddInfo.indexOf('x origin')]),
+                        Number(objSplit[iddInfo.indexOf('y origin')]),
+                        Number(objSplit[iddInfo.indexOf('z origin')])],
+                        'NDirection': [],  //TODO zone 원점과 방향이 다를 때 반영
+                        'Visible': true,
+                        'ZBoundary': [Infinity, -Infinity]
                     };
                 }
                 break;
@@ -1277,9 +1309,9 @@ function parseIDF(code) {
     objectList.forEach(obj => {
         //? Wall, Window로 정의되어 있는지 검사
         if (obj.toLowerCase().startsWith('Wall,'.toLowerCase())
-                || obj.toLowerCase().startsWith('Wall:'.toLowerCase())
-                || obj.toLowerCase().startsWith('Window,'.toLowerCase())
-                || obj.toLowerCase().startsWith('Window:'.toLowerCase())) {
+            || obj.toLowerCase().startsWith('Wall:'.toLowerCase())
+            || obj.toLowerCase().startsWith('Window,'.toLowerCase())
+            || obj.toLowerCase().startsWith('Window:'.toLowerCase())) {
             if (!alerted) {
                 alerted = true;
                 idfName = '';
@@ -1291,8 +1323,8 @@ function parseIDF(code) {
 
         //? Surface, FenSurf, Shading 관련
         if (!obj.toLowerCase().startsWith('BuildingSurface:Detailed'.toLowerCase())
-                && !obj.toLowerCase().startsWith('FenestrationSurface:Detailed'.toLowerCase())
-                && !obj.toLowerCase().startsWith('Shading:Building:Detailed'.toLowerCase())) {
+            && !obj.toLowerCase().startsWith('FenestrationSurface:Detailed'.toLowerCase())
+            && !obj.toLowerCase().startsWith('Shading:Building:Detailed'.toLowerCase())) {
             return;
         }
         let objSplit = obj.split(',');
@@ -1311,14 +1343,14 @@ function parseIDF(code) {
 
                 // var vertNum = objSplit[10];  // 점 개수
                 let vCoordStart = iddInfo.indexOf('vertex 1 x-coordinate');
-                let vertNum = parseInt((objSplit.length-vCoordStart) / 3);  // 점 개수
+                let vertNum = parseInt((objSplit.length - vCoordStart) / 3);  // 점 개수
                 let surfVertices = [];  // 점 좌표 리스트
                 let minZ = Infinity;  // 가장 작은 z값 (shadow object 생성 시 필요)
                 let maxZ = -Infinity;  // 가장 큰 z값 (shadow object 생성 시 필요)
-                for (let v=0; v<vertNum; v++) {
+                for (let v = 0; v < vertNum; v++) {
                     let vCoord = [];  // 점 하나 좌표
-                    for (let axis=0; axis<3; axis++) {
-                        let coordRelative = Number(objSplit[vCoordStart + v*3 + axis]);  // 현재 좌푯값
+                    for (let axis = 0; axis < 3; axis++) {
+                        let coordRelative = Number(objSplit[vCoordStart + v * 3 + axis]);  // 현재 좌푯값
                         let coord = zoneCoord[axis] + coordRelative;  // zone 기준점 반영한 좌푯값
                         // boundary 양쪽 끝 점 업데이트
                         if (coord < boundary[0][axis]) boundary[0][axis] = coord;
@@ -1336,15 +1368,15 @@ function parseIDF(code) {
                 if (objName in surfList) fens = surfList[objName].Fenestrations;
 
                 surfList[objName] = {
-                    'SurfaceType'  : objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
-                    'Construction' : objSplit[iddInfo.indexOf('construction name')],
-                    'ZoneName'     : zoneName,
-                    'OutsideBC'    : objSplit[iddInfo.indexOf('outside boundary condition')].toLowerCase(),
-                    'OutsideBCObj' : objSplit[iddInfo.indexOf('outside boundary condition object')],
+                    'SurfaceType': objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
+                    'Construction': objSplit[iddInfo.indexOf('construction name')],
+                    'ZoneName': zoneName,
+                    'OutsideBC': objSplit[iddInfo.indexOf('outside boundary condition')].toLowerCase(),
+                    'OutsideBCObj': objSplit[iddInfo.indexOf('outside boundary condition object')],
                     'VerticeNumber': vertNum,
-                    'Vertices'     : surfVertices,
+                    'Vertices': surfVertices,
                     'Fenestrations': fens,
-                    'ZBoundary'    : [minZ, maxZ]
+                    'ZBoundary': [minZ, maxZ]
                 }
 
                 zoneList[zoneName].Surfaces.push(objName);
@@ -1354,7 +1386,7 @@ function parseIDF(code) {
                 if (zoneList[zoneName].ZBoundary[1] < maxZ) {
                     zoneList[zoneName].ZBoundary[1] = maxZ;
                 }
-                
+
                 break;
             }
 
@@ -1368,12 +1400,12 @@ function parseIDF(code) {
 
                 // var vertNum = objSplit[9];  // 점 개수
                 let vCoordStart = iddInfo.indexOf('vertex 1 x-coordinate');
-                let vertNum = parseInt((objSplit.length-vCoordStart) / 3);  // 점 개수
+                let vertNum = parseInt((objSplit.length - vCoordStart) / 3);  // 점 개수
                 let surfVertices = [];  // 점 좌표 리스트
-                for (let v=0; v<vertNum; v++) {
+                for (let v = 0; v < vertNum; v++) {
                     let vCoord = [];  // 점 하나 좌표
-                    for (let axis=0; axis<3; axis++) {
-                        let coordRelative = Number(objSplit[vCoordStart + v*3 + axis]);  // 현재 좌푯값
+                    for (let axis = 0; axis < 3; axis++) {
+                        let coordRelative = Number(objSplit[vCoordStart + v * 3 + axis]);  // 현재 좌푯값
                         let coord = zoneCoord[axis] + coordRelative;  // zone 기준점 반영한 좌푯값
                         // boundary 양쪽 끝 점 업데이트
                         if (coord < boundary[0][axis]) boundary[0][axis] = coord;
@@ -1385,12 +1417,12 @@ function parseIDF(code) {
                     // surfVertices.push(new THREE.Vector3(vCoord[0], vCoord[1], vCoord[2]));
                 }
                 fenList[objName] = {
-                    'SurfaceType'  : objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
-                    'Construction' : objSplit[iddInfo.indexOf('construction name')],
-                    'SurfaceName'  : surfName,
-                    'OutsideBCObj' : objSplit[iddInfo.indexOf('outside boundary condition object')],
+                    'SurfaceType': objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
+                    'Construction': objSplit[iddInfo.indexOf('construction name')],
+                    'SurfaceName': surfName,
+                    'OutsideBCObj': objSplit[iddInfo.indexOf('outside boundary condition object')],
                     'VerticeNumber': vertNum,
-                    'Vertices'     : surfVertices,
+                    'Vertices': surfVertices,
                 }
 
                 if (surfName in surfList) {
@@ -1414,14 +1446,14 @@ function parseIDF(code) {
                 let iddInfo = iddInfoLibrary['Shading:Building:Detailed'.toLowerCase()];
 
                 let vCoordStart = iddInfo.indexOf('vertex 1 x-coordinate');
-                let vertNum = parseInt((objSplit.length-vCoordStart) / 3);  // 점 개수
+                let vertNum = parseInt((objSplit.length - vCoordStart) / 3);  // 점 개수
                 let surfVertices = [];  // 점 좌표 리스트
                 let minZ = Infinity;  // 가장 작은 z값 (shadow object 생성 시 필요)
                 let maxZ = -Infinity;  // 가장 큰 z값 (shadow object 생성 시 필요)
-                for (let v=0; v<vertNum; v++) {
+                for (let v = 0; v < vertNum; v++) {
                     let vCoord = [];  // 점 하나 좌표
-                    for (let axis=0; axis<3; axis++) {
-                        let coord = Number(objSplit[vCoordStart + v*3 + axis]);  // 현재 좌푯값
+                    for (let axis = 0; axis < 3; axis++) {
+                        let coord = Number(objSplit[vCoordStart + v * 3 + axis]);  // 현재 좌푯값
                         // boundary 양쪽 끝 점 업데이트
                         /*
                         ? shading은 boundary 산정에서 제외
@@ -1439,8 +1471,8 @@ function parseIDF(code) {
                 }
                 shadeList[objName] = {
                     'VerticeNumber': vertNum,
-                    'Vertices'     : surfVertices,
-                    'ZBoundary'    : [minZ, maxZ]
+                    'Vertices': surfVertices,
+                    'ZBoundary': [minZ, maxZ]
                 }
 
                 break;
@@ -1454,7 +1486,7 @@ function parseIDF(code) {
     //? 건물 boundary 및 중심 업데이트
     let center = [];
     let radius = 0;
-    for (let axis=0; axis<3; axis++) {
+    for (let axis = 0; axis < 3; axis++) {
         center.push((boundary[0][axis] + boundary[1][axis]) / 2);
         radius += Math.pow(boundary[1][axis] - boundary[0][axis], 2);
     }
@@ -1503,12 +1535,12 @@ function addModel() {
 
     let shadowCatcherGeom = new THREE.BufferGeometry();
     let shadowCatcherVerts = new Float32Array([
-        boundary[0][0]-shadCatPadX, boundary[0][1]-shadCatPadY, minZ,
-        boundary[1][0]+shadCatPadX, boundary[0][1]-shadCatPadY, minZ,
-        boundary[1][0]+shadCatPadX, boundary[1][1]+shadCatPadY, minZ,
-        boundary[0][0]-shadCatPadX, boundary[0][1]-shadCatPadY, minZ,
-        boundary[1][0]+shadCatPadX, boundary[1][1]+shadCatPadY, minZ,
-        boundary[0][0]-shadCatPadX, boundary[1][1]+shadCatPadY, minZ,
+        boundary[0][0] - shadCatPadX, boundary[0][1] - shadCatPadY, minZ,
+        boundary[1][0] + shadCatPadX, boundary[0][1] - shadCatPadY, minZ,
+        boundary[1][0] + shadCatPadX, boundary[1][1] + shadCatPadY, minZ,
+        boundary[0][0] - shadCatPadX, boundary[0][1] - shadCatPadY, minZ,
+        boundary[1][0] + shadCatPadX, boundary[1][1] + shadCatPadY, minZ,
+        boundary[0][0] - shadCatPadX, boundary[1][1] + shadCatPadY, minZ,
     ]);
     shadowCatcherGeom.setAttribute('position', new THREE.BufferAttribute(shadowCatcherVerts, 3));
     shadowCatcherGeom.computeVertexNormals();
@@ -1523,15 +1555,15 @@ function addModel() {
     lightShadow.shadow.camera = new THREE.OrthographicCamera(-shadCatPad, shadCatPad, shadCatPad, -shadCatPad, 0.5, 1000);
 
     //? axis object 생성
-    let axisOffset = new THREE.Vector3(boundary[0][0]-bldgRadius*0.1, boundary[0][1]-bldgRadius*0.1, 0);
+    let axisOffset = new THREE.Vector3(boundary[0][0] - bldgRadius * 0.1, boundary[0][1] - bldgRadius * 0.1, 0);
     axisXObject = axisXObjTemplate.clone();
-    axisXObject.translateX(axisOffset.x);  axisXObject.translateY(axisOffset.y);
+    axisXObject.translateX(axisOffset.x); axisXObject.translateY(axisOffset.y);
     axisYObject = axisYObjTemplate.clone();
-    axisYObject.translateX(axisOffset.x);  axisYObject.translateY(axisOffset.y);
+    axisYObject.translateX(axisOffset.x); axisYObject.translateY(axisOffset.y);
     axisZObject = axisZObjTemplate.clone();
-    axisZObject.translateX(axisOffset.x);  axisZObject.translateY(axisOffset.y);
+    axisZObject.translateX(axisOffset.x); axisZObject.translateY(axisOffset.y);
     axisTrueNorthObject = axisTrueNorthObjTemplate.clone();
-    axisTrueNorthObject.translateX(axisOffset.x);  axisTrueNorthObject.translateY(axisOffset.y);
+    axisTrueNorthObject.translateX(axisOffset.x); axisTrueNorthObject.translateY(axisOffset.y);
     axisTrueNorthObject.rotateZ(Math.radians(northAxis));
 
     //? Surface(Fenestration 제외) 테두리 및 면 생성
@@ -1567,7 +1599,7 @@ function addModel() {
         surfList[surfName].EdgeObjects = new THREE.Line(edgeGeom, matEdge);
         //? pipe로 그릴 때
         let edgeGeom2 = new LineGeometry();
-		edgeGeom2.setPositions(positions);
+        edgeGeom2.setPositions(positions);
         surfList[surfName].EdgeObjects2 = new Line2(edgeGeom2, matEdge2);
         surfList[surfName].EdgeObjects2.renderOrder = 0;
 
@@ -1592,7 +1624,7 @@ function addModel() {
         fenGeom.computeVertexNormals();
 
         fenList[fenName].Geometries = fenGeom;
-        
+
         //? Fenestration 테두리 생성
         let points = [];
         let positions = [];
@@ -1607,7 +1639,7 @@ function addModel() {
         fenList[fenName].EdgeObjects = new THREE.Line(edgeGeom, matEdge);
         //? pipe로 그릴 때
         let edgeGeom2 = new LineGeometry();
-		edgeGeom2.setPositions(positions);
+        edgeGeom2.setPositions(positions);
         fenList[fenName].EdgeObjects2 = new Line2(edgeGeom2, matEdge2);
         fenList[fenName].EdgeObjects2.renderOrder = 0;
     }
@@ -1619,7 +1651,7 @@ function addModel() {
         shadeGeom.computeVertexNormals();
 
         shadeList[shadeName].Geometries = shadeGeom;
-        
+
         //? Shading 테두리 생성
         let points = [];
         shadeProp.Vertices.forEach(v => {
@@ -1631,7 +1663,7 @@ function addModel() {
         shadeList[shadeName].EdgeObjects = new THREE.Line(edgeGeom, matEdge);
         //? pipe로 그릴 때
         // var edgeGeom = 
-        
+
         let shadeShadGeom = triangulatedSurfacefromVertlist(shadeProp.Vertices);
         let shadoeShadObj = new THREE.Mesh(shadeShadGeom, matGhost);
         shadoeShadObj.castShadow = true;
@@ -1693,7 +1725,7 @@ function renderModel() {
                             matSurf = matDefault.OuterSurf;
                             break;
                     }
-                    
+
                     break;
 
                 case 'adiabatic':
@@ -1703,7 +1735,7 @@ function renderModel() {
                 case 'ground':
                     matSurf = matDefault.Ground;
                     break;
-            
+
                 default:
                     break;
             }
@@ -1743,7 +1775,7 @@ function renderModel() {
                     // matSurf.color = add_black_color_rgb(matSurf.color, matSurf.opacity);
                     matSurf.color = add_white_color_rgb(
                         add_black_color_hex(matSurf.color, matSurf.opacity),
-                        1-(1-matSurf.opacity)/2.5
+                        1 - (1 - matSurf.opacity) / 2.5
                     );
                     matSurf.opacity = 1;
                 }
@@ -1762,7 +1794,7 @@ function renderModel() {
             surfMesh.sourceObjName = surfName;
             surfMesh.sourceObjType = 'surface';
             if (selfShadow) surfMesh.receiveShadow = true;  // 자체 그림자
-            
+
             scene.add(surfMesh);  //!!!!!
             sceneObjects.surfMesh.push(surfMesh);
 
@@ -1807,7 +1839,7 @@ function renderModel() {
                     surfMesh.layers.enable(2);  // disable mouse selection
                     scene.add(surfMesh);  //!!!!!
                     break;
-            
+
                 default:
                     break;
             }
@@ -1849,8 +1881,8 @@ function renderModel() {
 
         matFen = matFen.clone();
         matFen.color = add_white_color_rgb(
-            add_black_color_hex(matFen.color, clamp(1+0.3-windowOpacity, 0, 1)),
-            1 - clamp(windowOpacity-0.3, 0, 1) / 2.5
+            add_black_color_hex(matFen.color, clamp(1 + 0.3 - windowOpacity, 0, 1)),
+            1 - clamp(windowOpacity - 0.3, 0, 1) / 2.5
         );
         /*
         if (!transparencyOn) {
@@ -1872,7 +1904,7 @@ function renderModel() {
         fenMesh.layers.enable(1);  // for mouse selection
         fenMesh.sourceObjName = fenName;
         fenMesh.sourceObjType = 'fenestration';
-        
+
         scene.add(fenMesh);  //!!!!!
 
         //? EdgeObjects
@@ -1886,7 +1918,7 @@ function renderModel() {
     for (const [shadeName, shadeProp] of Object.entries(shadeList)) {
 
         let shadeGeom = shadeProp.Geometries;
-        
+
         let matShade = matDefault.Shading.clone();
 
         if (shadingOn && isInsideHeightRange(shadeProp.ZBoundary)) {
@@ -1896,7 +1928,7 @@ function renderModel() {
                     // matShade.color = add_white_color_rgb(matShade.color, matShade.opacity);
                     matShade.color = add_white_color_rgb(
                         add_black_color_hex(matShade.color, matShade.opacity),
-                        1-(1-matShade.opacity)/2.2
+                        1 - (1 - matShade.opacity) / 2.2
                     );
                     matShade.opacity = 1;
                 }
@@ -1908,7 +1940,7 @@ function renderModel() {
             shadeMesh.sourceObjName = shadeName;
             shadeMesh.sourceObjType = 'shading';
             // shadeMesh.castShadow = true;
-            
+
             scene.add(shadeMesh);  //!!!!!
             scene.add(shadeProp.EdgeObjects);
 
@@ -1929,7 +1961,7 @@ function renderModel() {
                     shadeMesh.layers.enable(2);  // disable mouse selection
                     scene.add(shadeMesh);  //!!!!!
                     break;
-            
+
                 default:
                     break;
             }
@@ -1945,7 +1977,7 @@ function renderModel() {
 
     // scene.add(new THREE.CameraHelper(lightShadow.shadow.camera));
 
-    updateCamera(force=true, source='renderModel');
+    updateCamera(force = true, source = 'renderModel');
 }
 
 /*
@@ -1958,7 +1990,7 @@ TODO
 //+ ------------------------------------------------------------------- +//
 //MARK: Background Color
 
-function changeBackgroundColor(color=-1, eventBtn=null) {
+function changeBackgroundColor(color = -1, eventBtn = null) {
     Array.from(document.querySelectorAll('#SettingsPanelBlockBackground .changeBackgroundColorBtn')).forEach((btn) => {
         btn.classList.remove('changeBgColorBtnHighlighted');
         btn.disabled = false;
@@ -2014,22 +2046,22 @@ function changeVisFilter(type) {
             visByZones.style.display = 'block';
             visByHeight.style.display = 'none';
             break;
-    
+
         case 'height':
             visByZones.style.display = 'none';
             visByHeight.style.display = 'block';
             break;
-    
+
         case 'both':
             visByZones.style.display = 'none';
             visByHeight.style.display = 'none';
             break;
-    
+
         default:
             break;
     }
 
-    updateModel(force=true, source='changeVisFilter');
+    updateModel(force = true, source = 'changeVisFilter');
 }
 
 function isZoneVisible(zoneName) {
@@ -2063,11 +2095,11 @@ function changeZoneAll(visible) {
     for (const chkbox of settingsPanelBlockZones.querySelectorAll('input[type=checkbox]')) {
         chkbox.checked = visible;
     }
-    updateModel(force=true, source='changeZoneAll');
+    updateModel(force = true, source = 'changeZoneAll');
 }
 function changeZoneVisibility(zoneCheckbox) {
     zoneList[zoneCheckbox.dataset.zone].Visible = zoneCheckbox.checked;
-    updateModel(force=true, source='changeZoneVisibility');
+    updateModel(force = true, source = 'changeZoneVisibility');
 }
 
 //? Height 조절
@@ -2080,14 +2112,14 @@ const heightSliderGroup = [fromSlider, toSlider, fromInput, toInput, 0, sliderBa
 resetSliderValue();
 
 fromSlider.oninput = () => updateFromValue(fromSlider.value, heightSliderGroup);
-fromSlider.onmouseup = () => updateModel(force=true, source='fromSliderMouseUp');
+fromSlider.onmouseup = () => updateModel(force = true, source = 'fromSliderMouseUp');
 toSlider.oninput = () => updateToValue(toSlider.value, heightSliderGroup);
-toSlider.onmouseup = () => updateModel(force=true, source='toSliderMouseUp');
+toSlider.onmouseup = () => updateModel(force = true, source = 'toSliderMouseUp');
 fromInput.oninput = () => updateFromValue(fromInput.value, heightSliderGroup, true);
 toInput.oninput = () => updateToValue(toInput.value, heightSliderGroup, true);
 
-fromInput.addEventListener('focusout', () => {fromInput.value = getSliderValues(heightSliderGroup)[0];});
-toInput.addEventListener('focusout', () => {toInput.value = getSliderValues(heightSliderGroup)[1];});
+fromInput.addEventListener('focusout', () => { fromInput.value = getSliderValues(heightSliderGroup)[0]; });
+toInput.addEventListener('focusout', () => { toInput.value = getSliderValues(heightSliderGroup)[1]; });
 
 
 function resetSliderValue() {
@@ -2114,7 +2146,7 @@ function getSliderValues(sliderGroup) {
         parseFloat(sliderGroup[1].value)
     ];
 }
-function updateFromValue(fromVal, sliderGroup, forceUpdate=false) {
+function updateFromValue(fromVal, sliderGroup, forceUpdate = false) {
     let from = parseFloat(fromVal);
     if (isNaN(from)) return;
     let to = parseFloat(sliderGroup[1].value);
@@ -2123,7 +2155,7 @@ function updateFromValue(fromVal, sliderGroup, forceUpdate=false) {
     }
     updateSliderValue(from, to, sliderGroup, forceUpdate);
 }
-function updateToValue(toVal, sliderGroup, forceUpdate=false) {
+function updateToValue(toVal, sliderGroup, forceUpdate = false) {
     let to = parseFloat(toVal);
     if (isNaN(to)) return;
     let from = parseFloat(sliderGroup[0].value);
@@ -2132,7 +2164,7 @@ function updateToValue(toVal, sliderGroup, forceUpdate=false) {
     }
     updateSliderValue(from, to, sliderGroup, forceUpdate);
 }
-function updateSliderValue(from, to, sliderGroup, forceUpdate=false) {
+function updateSliderValue(from, to, sliderGroup, forceUpdate = false) {
     from = roundFloat(from, 2);
     to = roundFloat(to, 2);
     sliderGroup[0].value = from;
@@ -2150,8 +2182,8 @@ function updateSliderValue(from, to, sliderGroup, forceUpdate=false) {
     const rangeDistance = sliderMax - sliderMin;
     const fromPosition = from - sliderMin;
     const toPosition = to - sliderMin;
-    fillSlider(fromPosition/rangeDistance, toPosition/rangeDistance, sliderGroup[5]);
-    updateModel(force=forceUpdate, source='updateSliderValue');
+    fillSlider(fromPosition / rangeDistance, toPosition / rangeDistance, sliderGroup[5]);
+    updateModel(force = forceUpdate, source = 'updateSliderValue');
 }
 function fillSlider(fromNormalized, toNormalized, sliderBackground) {
     const sliderColor = '#112C4460';
@@ -2172,8 +2204,8 @@ function fillSlider(fromNormalized, toNormalized, sliderBackground) {
 const commandListener = document.getElementById('CommandListener');
 commandListenerVisibility(0);
 
-function commandListenerVisibility(toggle=0) {
-    switch (toggle){
+function commandListenerVisibility(toggle = 0) {
+    switch (toggle) {
         case 0:
             // 닫을 때
             commandOn = false;
@@ -2211,7 +2243,7 @@ function runCommandInput(event) {
     }
 }
 
-function runCommand(command='') {
+function runCommand(command = '') {
     command = command.toLowerCase();
     lastCommand = command;
     commandListener.classList.add('CommandSuccess');
@@ -2248,7 +2280,7 @@ function runCommand(command='') {
                     if (commandVal < 1000) commandVal = 1000;
                     camera.far = commandVal;
                     camera.updateProjectionMatrix();
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'maxzoom':
                     commandVal = parseFloat(commandVal);
@@ -2258,9 +2290,9 @@ function runCommand(command='') {
                     }
                     if (commandVal < 950) commandVal = 950;
                     maxZoom = commandVal;
-                    camera.far = commandVal+50;
+                    camera.far = commandVal + 50;
                     camera.updateProjectionMatrix();
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'camerafov':
                     commandVal = parseFloat(commandVal);
@@ -2271,7 +2303,7 @@ function runCommand(command='') {
                     commandVal = clamp(commandVal, 10, 170);
                     camera.fov = commandVal;
                     camera.updateProjectionMatrix();
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'animatecamera':
                     totalFrames = parseInt(commandVal);
@@ -2320,7 +2352,7 @@ function runCommand(command='') {
                         return;
                     }
                     shadowOffset[0] = commandVal;
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'shadowazm':
                     commandVal = parseFloat(commandVal);
@@ -2329,7 +2361,7 @@ function runCommand(command='') {
                         return;
                     }
                     shadowOffset[1] = commandVal;
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'shadowmapsize':
                     shadowMapSize = parseInt(commandVal);
@@ -2338,7 +2370,7 @@ function runCommand(command='') {
                         return;
                     }
                     if (shadowOn) updateShadowProperties();
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'shadowradius':
                     shadowRadius = parseFloat(commandVal);
@@ -2347,7 +2379,7 @@ function runCommand(command='') {
                         return;
                     }
                     if (shadowOn) updateShadowProperties();
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'shadowheight':
                     commandVal = parseFloat(commandVal);
@@ -2356,7 +2388,7 @@ function runCommand(command='') {
                         return;
                     }
                     shadowCatcher.translateZ(commandVal - shadowCatcher.position.z);
-                    updateCamera(force=true, source='runCommand');
+                    updateCamera(force = true, source = 'runCommand');
                     break;
                 case 'selfshadow':
                     selfShadow = commandVal == 'on';
@@ -2384,7 +2416,7 @@ function toggleCopyCheckboxes(block, select) {
     }
 }
 
-function settingsCode(tag, code=undefined) {
+function settingsCode(tag, code = undefined) {
     switch (tag) {
         //? Zone visibility filter type
         case 'zv':
@@ -2600,22 +2632,22 @@ function loadSettings() {
     // const clipboardCode = '##EPPrevSttgs##;mt:0;wo:0.8;et:3;st:1;ss:45/90/1024/1/3/0;cp:10/0/0;';  //! for test
     // const clipboardCode = '##EPPrevSttgs##;mt:1;wo:0.3;et:5;st:0;ss:45/90/1024/1/0/0;dg:0;cp:24.9555/16.6369/5.9436;ca:20;cz:-30;cr:91.72790319951721;';  //! for test
     navigator.clipboard.readText()
-    .then(clipboardCode => {
-        if (clipboardCode.startsWith('##EPPrevSttgs##;')) {
-            for (const codepair of clipboardCode.split(';')) {
-                if (codepair != '##EPPrevSttgs##' && codepair != '') {
-                    const [tag, code] = codepair.split(':');
-                    settingsCode(tag, code);
+        .then(clipboardCode => {
+            if (clipboardCode.startsWith('##EPPrevSttgs##;')) {
+                for (const codepair of clipboardCode.split(';')) {
+                    if (codepair != '##EPPrevSttgs##' && codepair != '') {
+                        const [tag, code] = codepair.split(':');
+                        settingsCode(tag, code);
+                    }
                 }
+                updateModel(force = true, source = 'loadSettings');
+                panelVisibilityAll(-1);
+                console.log('Settings pasted!')
             }
-            updateModel(force=true, source='loadSettings');
-            panelVisibilityAll(-1);
-            console.log('Settings pasted!')
-        }
-    })
-    .catch(err => {
-        console.error('Failed to read clipboard contents: ', err);
-    });
+        })
+        .catch(err => {
+            console.error('Failed to read clipboard contents: ', err);
+        });
 
 }
 
@@ -2629,8 +2661,8 @@ function loadSettings() {
  * @param {...any} animateFuncArgs additional inputs for the animationFunc
  * @returns 
  */
-function animateFrame(totalFrames=60, animationFunc, ...animateFuncArgs) {
-    
+function animateFrame(totalFrames = 60, animationFunc, ...animateFuncArgs) {
+
     if (idfName == '') {
         return;
     }
@@ -2656,7 +2688,7 @@ function animateFrame(totalFrames=60, animationFunc, ...animateFuncArgs) {
             frames.push(frame);
             // animate the camera using the given animationFunc function
             animationFunc(currentFrame, totalFrames, ...animateFuncArgs)
-            updateCamera(force=true, source='animateCameraHorizontal');
+            updateCamera(force = true, source = 'animateCameraHorizontal');
             setTimeout(generateFrames, 25);
             currentFrame++;
         } else {
