@@ -88,13 +88,12 @@ function add_black_color_hex(color, alpha = 0.5) {
 DEFAULTS = {
     // settings panel
     shadingOn: true,
-    transparencyOn: true,
-    overrideMatOn: false,
-    windowOpacity: 0.3,
     debugOn: false,
     lineThicknessOn: false,
     lineThickness: 1,
     hiddenMatType: 'ghost',
+    transparencyOn: true,
+    overrideMatOn: false,
     materials: {
         'Adiabatic': { color: '#f24b91', opacity: 0.8 },
         'Default': { color: '#f5f5f5', opacity: 1.0 },
@@ -344,9 +343,6 @@ const visibilityPanelContent = document.getElementById('VisibilityPanelContent')
 const settingsPanelBlockZones = document.getElementById('SettingsPanelBlockZones');
 
 const sttgsShading = document.getElementById('SttgsShading');
-const sttgsMatTrans = document.getElementById('SttgsMatTrans');
-const sttgsOverrideMat = document.getElementById('SttgsOverrideMat');
-const sttgsWinOpac = document.getElementById('SttgsWinOpac');
 const sttgsLineThkCheckbox = document.getElementById('SttgsLineThkCheckbox');
 const sttgsLineThkInputfield = document.getElementById('SttgsLineThkInputfield');
 const sttgsHiddenMatType = document.getElementById('SttgsHiddenMatType');
@@ -474,9 +470,43 @@ function changeHiddenMatType(matType) {
 //+ ------------------------------------------------------------------- +//
 //MARK: Materials
 
-const sttgsGroupMat = document.getElementById('SttgGroupMat');
+const sttgsMatTrans = document.getElementById('SttgsMatTrans');
+const sttgsOverrideMat = document.getElementById('SttgsOverrideMat');
 
+const sttgsGroupMat = document.getElementById('SttgGroupMat');
+const sttsMatTemplate = document.getElementById('MatSettings');
+
+const matKeys = {
+    'OuterWall': 'Outer wall',
+    'InnerSurf': 'Inner surface',
+    'OuterSurf': 'Outer surface',
+    'Roof': 'Roof',
+    'Ground': 'Ground',
+    'Adiabatic': 'Adiabatic',
+    'Window': 'Window',
+    'Door': 'Door',
+    'Shading': 'Shading',
+};
 const sttgsMat = {};
+for (const [matType, matName] of Object.entries(matKeys)) {
+    const matSetting = sttsMatTemplate.content.cloneNode(true);
+    matSetting.querySelector('.settingsFlexSpan').dataset.type = matType;
+    matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName} :&nbsp;`
+
+    const inputs = Object.fromEntries(
+        Array.from(matSetting.querySelectorAll('input'))
+        .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
+    );
+    // apply default material settings
+    const defaultMatSetting = DEFAULTS.materials[matType];
+    inputs.opacity.value = defaultMatSetting.opacity;
+    inputs.opacity.placeholder = defaultMatSetting.opacity;
+    inputs.color.value = defaultMatSetting.color;
+    // add input children to object
+    sttgsMat[matType] = inputs;
+    sttgsGroupMat.appendChild(matSetting);
+}
+/*
 Array.from(sttgsGroupMat.children).forEach(childSpan => {
     if (childSpan.tagName === 'SPAN' && childSpan.dataset.type) {
         const matType = childSpan.dataset.type;
@@ -493,6 +523,7 @@ Array.from(sttgsGroupMat.children).forEach(childSpan => {
         sttgsMat[matType] = inputs;
     }
 });
+*/
 
 function updateMatOpacity(e, inputfield) {
     const matType = inputfield.parentElement.dataset.type;
@@ -512,9 +543,8 @@ function updateMatOpacity(e, inputfield) {
 function updateMatColor(inputElement) {
     const matType = inputElement.parentElement.dataset.type;
     const inputColorHex = inputElement.value;
-    console.log(inputColorHex)
     matSettings[matType].color = inputColorHex;
-    matDefault[matType].color = new THREE.Color(inputColorHex).convertSRGBToLinear();
+    matDefault[matType].color = hexToRgb(inputColorHex);
     updateModel(force = true, source = 'updateMatColor');
 }
 
@@ -534,31 +564,6 @@ function overrideMaterials(on) {
     updateModel(force = true, source = 'overrideMaterials');
 }
 
-//? 창문 투명도 설정
-let windowOpacity = DEFAULTS.windowOpacity;
-sttgsWinOpac.value = windowOpacity;
-function updateWindowOpacity(opacity) {
-    if (!isNaN(opacity)) {
-        opacity = clamp(opacity, 0, 1);
-        windowOpacity = opacity;
-    }
-    sttgsWinOpac.value = windowOpacity;
-    sttgsWinOpac.blur();
-    matDefault.Window.opacity = windowOpacity;
-    matDefault.Door.opacity = windowOpacity;
-    updateModel(force = true, source = 'updateWindowOpacity');
-}
-function updateWindowOpacityInputfield(e, inputfield) {
-    const inputOpacity = parseFloat(inputfield.value);
-    if (e === undefined || e.key === 'Escape') {
-        inputfield.value = windowOpacity;
-        inputfield.blur();
-    }
-    else if (e === true || e.key === 'Enter') {
-        updateWindowOpacity(inputOpacity);
-    }
-}
-
 //? 재질 설정
 function updateMaterial() { }
 
@@ -567,7 +572,6 @@ function resetSettings() {
     turnOnShading(DEFAULTS.shadingOn);
     turnOnTransparentMat(DEFAULTS.transparencyOn);
     overrideMaterials(DEFAULTS.overrideMatOn);
-    updateWindowOpacity(DEFAULTS.windowOpacity);
     turnOnDebug(DEFAULTS.debugOn);
     turnOnLineThickness(DEFAULTS.lineThicknessOn);
     updateLineThickness(DEFAULTS.lineThickness);
@@ -1911,8 +1915,8 @@ function renderModel() {
 
         matFen = matFen.clone();
         matFen.color = add_white_color_rgb(
-            add_black_color_hex(matFen.color, clamp(1 + 0.3 - windowOpacity, 0, 1)),
-            1 - clamp(windowOpacity - 0.3, 0, 1) / 2.5
+            add_black_color_hex(matFen.color, clamp(1 + 0.3 - matFen.opacity, 0, 1)),
+            1 - clamp(matFen.opacity - 0.3, 0, 1) / 2.5
         );
         /*
         if (!transparencyOn) {

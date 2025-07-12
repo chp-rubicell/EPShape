@@ -195,26 +195,15 @@
                                 <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);" disabled>
                             </span>
                             <!-- Materials -->
-                            
-                            <span class="settingsFlexSpan colorSettings">
-                                <span class="liMarker">⬤</span>
-                                <span style="flex:none;">&nbsp;Window :&nbsp;</span>
-                                <input id="SttgsMat" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
-                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
-                            </span>
-                            <span class="settingsFlexSpan colorSettings">
-                                <span class="liMarker">⬤</span>
-                                <span style="flex:none;">&nbsp;Window :&nbsp;</span>
-                                <input id="SttgsWinOpac" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
-                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
-                            </span>
                             <p id="SttgGroupMat">
-                                <span data-type="OuterWall" class="settingsFlexSpan colorSettings">
-                                    <span class="liMarker">⬤</span>
-                                    <span style="flex:none;">&nbsp;Outer wall :&nbsp;</span>
-                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
-                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
-                                </span>
+                                <template id="MatSettings">
+                                    <span data-type="OuterWall" class="settingsFlexSpan colorSettings">
+                                        <span class="liMarker">⬤</span>
+                                        <span class="matTypeTag" style="flex:none;">&nbsp;Outer wall :&nbsp;</span>
+                                        <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
+                                        <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
+                                    </span>
+                                </template>
                             </p>
                         </div>
 
