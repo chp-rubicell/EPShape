@@ -689,7 +689,7 @@ input[type=number] {
 
 /*+ -------------------------------------------------------------- +*/
 
-#SttgGroupMat {
+.sttgGroupMat {
     margin-block-start: 0;
     margin-block-end: 0;
 }

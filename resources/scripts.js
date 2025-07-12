@@ -1,4 +1,5 @@
 /*
+TODO Materials by construction
 TODO Add loading icon when opening idf files
 */
 //+ ------------------------------------------------------------------- +//
@@ -202,7 +203,7 @@ const matGhost = new THREE.MeshBasicMaterial({
     blending: THREE.AdditiveBlending
 });
 
-let matSettings = { ...DEFAULTS.materials };
+let matSettings = structuredClone(DEFAULTS.materials);
 
 const matDefault = {
     'Adiabatic': new THREE.MeshPhongMaterial(matSettings['Adiabatic']),
@@ -473,8 +474,8 @@ function changeHiddenMatType(matType) {
 const sttgsMatTrans = document.getElementById('SttgsMatTrans');
 const sttgsOverrideMat = document.getElementById('SttgsOverrideMat');
 
-const sttgsGroupMat = document.getElementById('SttgGroupMat');
-const sttsMatTemplate = document.getElementById('MatSettings');
+const sttgsGroupMat = document.getElementById('SttgGroupMatbyType');
+const sttsMatTemplate = document.getElementById('MatSettingsbyType');
 
 const matKeys = {
     'Default': 'Default', // material override
@@ -488,22 +489,23 @@ const matKeys = {
     'Door': 'Door',
     'Shading': 'Shading',
 };
+const matKeysNotOverridden = ['Window', 'Door', 'Shading'];
+
 const sttgsMat = {};
 for (const [matType, matName] of Object.entries(matKeys)) {
     let matSetting;
     if (matType == 'Default') {
-        matSetting = sttgsOverrideMat.parentElement;
-        console.log(matSetting)
+        matSetting = sttgsOverrideMat.parentElement.parentElement;
     }
     else {
         matSetting = sttsMatTemplate.content.cloneNode(true);
         matSetting.querySelector('.settingsFlexSpan').dataset.type = matType;
-        matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName} :&nbsp;`;
+        matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName}`;
     }
 
     const inputs = Object.fromEntries(
         Array.from(matSetting.querySelectorAll('.settingsInput'))
-        .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
+            .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
     );
     // apply default material settings
     const defaultMatSetting = DEFAULTS.materials[matType];
@@ -512,8 +514,20 @@ for (const [matType, matName] of Object.entries(matKeys)) {
     inputs.color.value = defaultMatSetting.color;
     // add input children to object
     sttgsMat[matType] = inputs;
-    
+
     if (matType != 'Default') sttgsGroupMat.appendChild(matSetting);
+}
+
+function resetMaterials() {
+    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
+        const defaultMatSetting = DEFAULTS.materials[matType];
+        matInputs.opacity.value = defaultMatSetting.opacity;
+        matInputs.color.value = defaultMatSetting.color;
+        const material = matDefault[matType];
+        material.opacity = defaultMatSetting.opacity;
+        material.color = hexToRgb(defaultMatSetting.color);
+    }
+    updateModel(force = true, source = 'resetMaterials');
 }
 
 function updateMatOpacity(e, inputfield) {
@@ -544,10 +558,7 @@ let transparencyOn = DEFAULTS.transparencyOn;
 function turnOnTransparentMat(on) {
     transparencyOn = on;
     sttgsMatTrans.checked = on;
-    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
-        if (matType == 'Window' || matType == 'Door') continue;
-        matInputs.opacity.disabled = !on;
-    }
+    updateColorInputToggle();
     updateModel(force = true, source = 'turnOnTransparentMat');
 }
 
@@ -556,20 +567,54 @@ let overrideMatOn = DEFAULTS.overrideMatOn;
 function overrideMaterials(on) {
     overrideMatOn = on;
     sttgsOverrideMat.checked = on;
-    for (const input of Object.values(sttgsMat['Default'])) {
-        input.disabled = !on;
-    }
+    updateColorInputToggle();
     updateModel(force = true, source = 'overrideMaterials');
+}
+
+function updateColorInputToggle() {
+    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
+        let [opacityOn, colorOn] = [true, true];
+        if (overrideMatOn) {
+            if (matType == 'Default') {
+                opacityOn = transparencyOn;
+                colorOn = true;
+            }
+            else {
+                if (matKeysNotOverridden.includes(matType)) {
+                    opacityOn = true;
+                    colorOn = true;
+                }
+                else {
+                    opacityOn = false;
+                    colorOn = false;
+                }
+            }
+        }
+        else {
+            if (matType == 'Default') {
+                opacityOn = false;
+                colorOn = false;
+            }
+            else {
+                if (matKeysNotOverridden.includes(matType)) opacityOn = true;
+                else opacityOn = transparencyOn;
+                colorOn = true;
+            }
+        }
+        matInputs.opacity.disabled = !opacityOn;
+        matInputs.color.disabled = !colorOn;
+    }
 }
 
 /** 모델 불러올 때 설정 초기화 */
 function resetSettings() {
     turnOnShading(DEFAULTS.shadingOn);
-    turnOnTransparentMat(DEFAULTS.transparencyOn);
-    overrideMaterials(DEFAULTS.overrideMatOn);
     turnOnDebug(DEFAULTS.debugOn);
     turnOnLineThickness(DEFAULTS.lineThicknessOn);
     updateLineThickness(DEFAULTS.lineThickness);
+    turnOnTransparentMat(DEFAULTS.transparencyOn);
+    overrideMaterials(DEFAULTS.overrideMatOn);
+    resetMaterials();
     changeVisFilter(DEFAULTS.visFilterType);
     selfShadow = DEFAULTS.selfShadow;
     shadowRadius = DEFAULTS.shadowRadius;
