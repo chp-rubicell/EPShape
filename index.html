@@ -144,6 +144,16 @@
 
                     <div id="SettingsPanelContent" class="panelContent">
 
+                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
+                            <h5>Background</h5>
+                    
+                            <center>
+                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(0, this);">Black</button>
+                                <button class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeBackgroundColor(1, this);" disabled>White</button>
+                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(-1, this);">Transparent</button>
+                            </center>
+                        </div>
+
                         <div class="settingsPanelBlock">
                             <h5>Visual</h5>
                     
@@ -169,32 +179,25 @@
                             <label style="padding-right: 10px;">
                                 <input id="SttgsDebug" type="checkbox" onclick="turnOnDebug(this.checked);" /> Debug
                             </label>
-                    
-                        </div>
 
-                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
-                            <h5>Background</h5>
-                    
-                            <center>
-                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(0, this);">Black</button>
-                                <button class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeBackgroundColor(1, this);" disabled>White</button>
-                                <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(-1, this);">Transparent</button>
-                            </center>
-                        </div>
-
-                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
-                            <h5>Materials</h5>
-                    
-                            <!-- Settings -->
                             <label style="padding-right: 10px;">
                                 <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparency
                             </label>
-                            <span class="settingsFlexSpan colorSettings">
+                            <span data-type="Default" class="settingsFlexSpan colorSettings">
                                 <label id="SttgsOverrideMat" style="padding-right: 10px;"><input id="SttgsLineThkCheckbox" type="checkbox" onclick="overrideMaterials(this.checked);"> Override :</label>
-                                <input id="SttgsTEMPTEMPTEMP1" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" disabled />
-                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);" disabled>
+                                <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
+                                <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                             </span>
-                            <!-- Materials -->
+                    
+                        </div>
+
+                        <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
+                            <h5>Materials (by type)</h5>
+
+                            <center>
+                                <button class="settingsPanelButton" onclick="changeZoneAll(true);">Reset</button>
+                            </center>
+
                             <p id="SttgGroupMat">
                                 <template id="MatSettings">
                                     <span data-type="OuterWall" class="settingsFlexSpan colorSettings">

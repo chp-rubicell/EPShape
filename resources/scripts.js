@@ -477,6 +477,7 @@ const sttgsGroupMat = document.getElementById('SttgGroupMat');
 const sttsMatTemplate = document.getElementById('MatSettings');
 
 const matKeys = {
+    'Default': 'Default', // material override
     'OuterWall': 'Outer wall',
     'InnerSurf': 'Inner surface',
     'OuterSurf': 'Outer surface',
@@ -489,12 +490,19 @@ const matKeys = {
 };
 const sttgsMat = {};
 for (const [matType, matName] of Object.entries(matKeys)) {
-    const matSetting = sttsMatTemplate.content.cloneNode(true);
-    matSetting.querySelector('.settingsFlexSpan').dataset.type = matType;
-    matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName} :&nbsp;`
+    let matSetting;
+    if (matType == 'Default') {
+        matSetting = sttgsOverrideMat.parentElement;
+        console.log(matSetting)
+    }
+    else {
+        matSetting = sttsMatTemplate.content.cloneNode(true);
+        matSetting.querySelector('.settingsFlexSpan').dataset.type = matType;
+        matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName} :&nbsp;`;
+    }
 
     const inputs = Object.fromEntries(
-        Array.from(matSetting.querySelectorAll('input'))
+        Array.from(matSetting.querySelectorAll('.settingsInput'))
         .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
     );
     // apply default material settings
@@ -504,26 +512,9 @@ for (const [matType, matName] of Object.entries(matKeys)) {
     inputs.color.value = defaultMatSetting.color;
     // add input children to object
     sttgsMat[matType] = inputs;
-    sttgsGroupMat.appendChild(matSetting);
+    
+    if (matType != 'Default') sttgsGroupMat.appendChild(matSetting);
 }
-/*
-Array.from(sttgsGroupMat.children).forEach(childSpan => {
-    if (childSpan.tagName === 'SPAN' && childSpan.dataset.type) {
-        const matType = childSpan.dataset.type;
-        const inputs = Object.fromEntries(
-            Array.from(childSpan.querySelectorAll('input'))
-            .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
-        );
-        // apply default material settings
-        const defaultMatSetting = DEFAULTS.materials[matType];
-        inputs.opacity.value = defaultMatSetting.opacity;
-        inputs.opacity.placeholder = defaultMatSetting.opacity;
-        inputs.color.value = defaultMatSetting.color;
-        // add input children to object
-        sttgsMat[matType] = inputs;
-    }
-});
-*/
 
 function updateMatOpacity(e, inputfield) {
     const matType = inputfield.parentElement.dataset.type;
@@ -553,19 +544,23 @@ let transparencyOn = DEFAULTS.transparencyOn;
 function turnOnTransparentMat(on) {
     transparencyOn = on;
     sttgsMatTrans.checked = on;
+    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
+        if (matType == 'Window' || matType == 'Door') continue;
+        matInputs.opacity.disabled = !on;
+    }
     updateModel(force = true, source = 'turnOnTransparentMat');
 }
 
-//? 재질 강제
+//? 재질 오버라이드
 let overrideMatOn = DEFAULTS.overrideMatOn;
 function overrideMaterials(on) {
     overrideMatOn = on;
     sttgsOverrideMat.checked = on;
+    for (const input of Object.values(sttgsMat['Default'])) {
+        input.disabled = !on;
+    }
     updateModel(force = true, source = 'overrideMaterials');
 }
-
-//? 재질 설정
-function updateMaterial() { }
 
 /** 모델 불러올 때 설정 초기화 */
 function resetSettings() {
