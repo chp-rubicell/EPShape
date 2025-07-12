@@ -220,10 +220,11 @@ const matDefault = {
 }
 for (const mat in matDefault) {
     matDefault[mat].side = THREE.DoubleSide; // double side settings to materials
-    if (matDefault[mat].opacity < 1) {
-        matDefault[mat].transparent = true;
-        //* matDefault[mat].depthWrite = false;
-    }
+    matDefault[mat].transparent = true;
+    // if (matDefault[mat].opacity < 1) {
+    //     matDefault[mat].transparent = true;
+    //     //* matDefault[mat].depthWrite = false;
+    // }
     // matDefault[mat].shadowSide = THREE.FrontSide;
 }
 
@@ -474,19 +475,48 @@ function changeHiddenMatType(matType) {
 //MARK: Materials
 
 const sttgsGroupMat = document.getElementById('SttgGroupMat');
-document.querySelector('#SttgGroupMat')
 
-const sttgsMat = Object.fromEntries(
-    Array.from(sttgsGroupMat.children)
-    .filter(child => child.tagName === 'SPAN' && child.dataset.type)
-    .map(childSpan => [
-        childSpan.dataset.type,
-        Object.fromEntries(
+const sttgsMat = {};
+Array.from(sttgsGroupMat.children).forEach(childSpan => {
+    if (childSpan.tagName === 'SPAN' && childSpan.dataset.type) {
+        const matType = childSpan.dataset.type;
+        const inputs = Object.fromEntries(
             Array.from(childSpan.querySelectorAll('input'))
-            .map((inputElement, idx) => [['color', 'opacity'][idx], inputElement])
-        )
-    ])
-);
+            .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
+        );
+        // apply default material settings
+        const defaultMatSetting = DEFAULTS.materials[matType];
+        inputs.opacity.value = defaultMatSetting.opacity;
+        inputs.opacity.placeholder = defaultMatSetting.opacity;
+        inputs.color.value = defaultMatSetting.color;
+        // add input children to object
+        sttgsMat[matType] = inputs;
+    }
+});
+
+function updateMatOpacity(e, inputfield) {
+    const matType = inputfield.parentElement.dataset.type;
+    if (e === undefined || e.key === 'Escape') {
+        inputfield.value = matSettings[matType].opacity;
+        inputfield.blur();
+    }
+    else if (e === true || e.key === 'Enter') {
+        const inputOpacity = clamp(parseFloat(inputfield.value), 0, 1);
+        inputfield.value = inputOpacity;
+        matSettings[matType].opacity = inputOpacity;
+        matDefault[matType].opacity = inputOpacity;
+        inputfield.blur();
+        updateModel(force = true, source = 'updateMatOpacity');
+    }
+}
+function updateMatColor(inputElement) {
+    const matType = inputElement.parentElement.dataset.type;
+    const inputColorHex = inputElement.value;
+    console.log(inputColorHex)
+    matSettings[matType].color = inputColorHex;
+    matDefault[matType].color = new THREE.Color(inputColorHex).convertSRGBToLinear();
+    updateModel(force = true, source = 'updateMatColor');
+}
 
 //? 투명도 설정
 let transparencyOn = DEFAULTS.transparencyOn;

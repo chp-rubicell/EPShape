@@ -212,14 +212,8 @@
                                 <span data-type="OuterWall" class="settingsFlexSpan colorSettings">
                                     <span class="liMarker">⬤</span>
                                     <span style="flex:none;">&nbsp;Outer wall :&nbsp;</span>
-                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
-                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
-                                </span>
-                                <span data-type="InnerWall" class="settingsFlexSpan colorSettings">
-                                    <span class="liMarker">⬤</span>
-                                    <span style="flex:none;">&nbsp;Inner wall :&nbsp;</span>
-                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateWindowOpacityInputfield(event, this);" onfocusout="updateWindowOpacityInputfield(undefined, this);" />
-                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="changeHighlightColor(this.value);">
+                                    <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
+                                    <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                 </span>
                             </p>
                         </div>
