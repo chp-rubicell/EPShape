@@ -720,9 +720,9 @@ function initializeMatByConst() {
     for (const [surfConst, matSetting] of Object.entries(matSettings.byConst)) {
         let matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
         matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = surfConst;
-        const matTypeTag = matSettingItem.querySelector('.matTypeTag');
-        matTypeTag.title = surfConst;
-        matTypeTag.innerHTML = `&nbsp;${surfConst}`;
+        const constTag = matSettingItem.querySelector('.constTag');
+        constTag.title = surfConst;
+        constTag.innerHTML = `&nbsp;${surfConst}`;
         /*
         const inputs = Object.fromEntries(
             Array.from(matSettingItem.querySelectorAll('.settingsInput'))
@@ -2178,7 +2178,7 @@ function renderModel() {
 
         let shadeGeom = shadeProp.Geometries;
 
-        let matShade = materials.Shading.clone();
+        let matShade = materials.byType.Shading.clone();
 
         if (shadingOn && isInsideHeightRange(shadeProp.ZBoundary)) {
             if (!transparencyOn) {

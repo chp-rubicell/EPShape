@@ -228,12 +228,19 @@
                             </center>
 
                             <p id="SttgGroupMatbyConst" class="sttgGroupMat">
+                                <span data-by="byConst" data-tag="DefaultOpaque" class="settingsFlexSpan colorSettings">
+                                    <span class="liMarker">⬤</span>
+                                    <span class="constTag" style="flex:none;">&nbsp;Default&nbsp;</span>
+                                    <input name="" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
+                                    <input name="" class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
+                                </span>
+
                                 <template id="MatSettingsbyConst">
                                     <span data-by="byConst" data-tag="" class="settingsFlexSpan colorSettings">
                                         <label style="width: fit-content; flex:none">
                                             <input class="matToggle" type="checkbox" onclick="overrideMaterials(this.checked);">
                                         </label>
-                                        <span title="" class="matTypeTag" style="flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: clip;">&nbsp;Outer wall :&nbsp;</span>
+                                        <span title="" class="constTag" style="flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: clip;">&nbsp;Outer wall :&nbsp;</span>
                                         <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                         <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                     </span>
