@@ -94,19 +94,35 @@ DEFAULTS = {
     lineThickness: 1,
     hiddenMatType: 'ghost',
     transparencyOn: true,
+    // materials
+    materialBy: 'byType',
     overrideMatOn: false,
-    materials: {
-        'Adiabatic': { color: '#f24b91', opacity: 0.8 },
-        'Default': { color: '#f5f5f5', opacity: 1.0 },
-        'Roof': { color: add_black_color_hex('#a82525', 0.7), opacity: 0.85 },
-        'OuterWall': { color: '#ffe16b', opacity: 1.0 },
-        'InnerSurf': { color: '#444444', opacity: 0.5 },
-        'OuterSurf': { color: '#444444', opacity: 0.8 },
-        'Window': { color: '#47dcff', opacity: 0.3 },
-        'Door': { color: '#1747d4', opacity: 0.3 },
-        'Shading': { color: '#624285', opacity: 0.7 },
-        'Ground': { color: '#555555', opacity: 1.0 },
-        'Disabled': { color: '#bbbbbb', opacity: 0.2 },
+    matSettings: {
+        'templates': {
+            'Opaque': { color: '#f5f5f5', opacity: 1.0 },
+            'Tranparent': { color: '#47dcff', opacity: 0.5 }
+        },
+        'byType': {
+            'Adiabatic': { color: '#f24b91', opacity: 0.8 },
+            'Override': { color: '#f5f5f5', opacity: 1.0 },
+            'Roof': { color: add_black_color_hex('#a82525', 0.7), opacity: 0.85 },
+            'OuterWall': { color: '#ffe16b', opacity: 1.0 },
+            'InnerSurf': { color: '#444444', opacity: 0.5 },
+            'OuterSurf': { color: '#444444', opacity: 0.8 },
+            'Window': { color: '#47dcff', opacity: 0.3 },
+            'Door': { color: '#1747d4', opacity: 0.3 },
+            'Shading': { color: '#624285', opacity: 0.7 },
+            'Ground': { color: '#555555', opacity: 1.0 }
+        },
+        'byConst': {}
+    },
+    matTemplates: {
+        'Disabled': new THREE.MeshPhongMaterial({
+            color: '#bbbbbb',
+            opacity: 0.2,
+            side: THREE.DoubleSide,
+            transparent: true
+        })
     },
     // visibility panel
     visFilterType: 'zones',
@@ -203,29 +219,36 @@ const matGhost = new THREE.MeshBasicMaterial({
     blending: THREE.AdditiveBlending
 });
 
-let matSettings = structuredClone(DEFAULTS.materials);
+let matSettings = {
+    'byType': structuredClone(DEFAULTS.matSettings.byType)
+};
 
-const matDefault = {
-    'Adiabatic': new THREE.MeshPhongMaterial(matSettings['Adiabatic']),
-    'Default': new THREE.MeshPhongMaterial(matSettings['Default']),
-    'Roof': new THREE.MeshPhongMaterial(matSettings['Roof']),
-    'OuterWall': new THREE.MeshLambertMaterial(matSettings['OuterWall']),
-    'InnerSurf': new THREE.MeshPhongMaterial(matSettings['InnerSurf']),
-    'OuterSurf': new THREE.MeshPhongMaterial(matSettings['OuterSurf']),
-    'Window': new THREE.MeshPhongMaterial(matSettings['Window']),
-    'Door': new THREE.MeshPhongMaterial(matSettings['Door']),
-    'Shading': new THREE.MeshPhongMaterial(matSettings['Shading']),
-    'Ground': new THREE.MeshLambertMaterial(matSettings['Ground']),
-    'Disabled': new THREE.MeshPhongMaterial(matSettings['Disabled']),
+const materials = {
+    'byType': {
+        'Adiabatic': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Adiabatic']),
+        'Override': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Override']),
+        'Roof': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Roof']),
+        'OuterWall': new THREE.MeshLambertMaterial(DEFAULTS.matSettings.byType['OuterWall']),
+        'InnerSurf': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['InnerSurf']),
+        'OuterSurf': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['OuterSurf']),
+        'Window': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Window']),
+        'Door': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Door']),
+        'Shading': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Shading']),
+        'Ground': new THREE.MeshLambertMaterial(DEFAULTS.matSettings.byType['Ground'])
+    },
+    'byConst': {}
 }
-for (const mat in matDefault) {
-    matDefault[mat].side = THREE.DoubleSide; // double side settings to materials
-    matDefault[mat].transparent = true;
-    // if (matDefault[mat].opacity < 1) {
-    //     matDefault[mat].transparent = true;
-    //     //* matDefault[mat].depthWrite = false;
-    // }
-    // matDefault[mat].shadowSide = THREE.FrontSide;
+for (const matGroup of Object.values(materials)) {
+    for (const mat of Object.values(matGroup)) {
+        console.log(mat)
+        mat.side = THREE.DoubleSide; // double side settings to materials
+        mat.transparent = true;
+        // if (mat.opacity < 1) {
+        //     mat.transparent = true;
+        //     //* mat.depthWrite = false;
+        // }
+        // mat.shadowSide = THREE.FrontSide;
+    }
 }
 
 //+ ------------------------------------------------------------------- +//
@@ -276,7 +299,7 @@ const objDev = new THREE.Mesh(geomDev, matDev);
 0: EdgeObject2 (두께 있는 테두리)
 1: 일반 서피스 (surfMesh)
 2: shadowCatcher
-3: 숨김 처리된 서피스 (matDefault.Disabled)
+3: 숨김 처리된 서피스 (DEFAULTS.matTemplates.Disabled)
 Infinity: shadowObject (그림자 만드는 오브젝트)
 */
 
@@ -474,11 +497,49 @@ function changeHiddenMatType(matType) {
 const sttgsMatTrans = document.getElementById('SttgsMatTrans');
 const sttgsOverrideMat = document.getElementById('SttgsOverrideMat');
 
-const sttgsGroupMat = document.getElementById('SttgGroupMatbyType');
-const sttsMatTemplate = document.getElementById('MatSettingsbyType');
+//? Material by
+let materialBy = DEFAULTS.materialBy;
 
-const matKeys = {
-    'Default': 'Default', // material override
+const sttgsBlockMatbyType = document.getElementById('SettingsPanelBlockMatbyType');
+const sttgsBlockMatbyConst = document.getElementById('SettingsPanelBlockMatbyConst');
+
+function changeMaterialBy(matBy) {
+    Array.from(document.querySelectorAll('#SettingsPanelBlockMatBy .changeBackgroundColorBtn')).forEach((btn) => {
+        if (btn.dataset.type == matBy) {
+            btn.classList.add('changeBgColorBtnHighlighted');
+            btn.disabled = true;
+        }
+        else {
+            btn.classList.remove('changeBgColorBtnHighlighted');
+            btn.disabled = false;
+        }
+    });
+
+    // materialBy = matBy;
+
+    switch (matBy) {
+        case 'byType':
+            sttgsBlockMatbyType.style.display = 'block';
+            sttgsBlockMatbyConst.style.display = 'none';
+            break;
+
+        case 'byConst':
+            sttgsBlockMatbyType.style.display = 'none';
+            sttgsBlockMatbyConst.style.display = 'block';
+            break;
+
+        default:
+            break;
+    }
+
+    updateModel(force = true, source = 'changeMaterialBy');
+}
+
+const sttgsGroupMatbyType = document.getElementById('SttgGroupMatbyType');
+const sttgsMatTemplatebyType = document.getElementById('MatSettingsbyType');
+
+const matKeysbyType = {
+    'Override': 'Override', // material override
     'OuterWall': 'Outer wall',
     'InnerSurf': 'Inner surface',
     'OuterSurf': 'Outer surface',
@@ -491,91 +552,103 @@ const matKeys = {
 };
 const matKeysNotOverridden = ['Window', 'Door', 'Shading'];
 
-const sttgsMat = {};
-for (const [matType, matName] of Object.entries(matKeys)) {
-    let matSetting;
-    if (matType == 'Default') {
-        matSetting = sttgsOverrideMat.parentElement.parentElement;
+const sttgsMat = {
+    'byType': {},
+    'byConst': {}
+};
+//? initialize byType
+for (const [matType, matName] of Object.entries(matKeysbyType)) {
+    let matSettingItem;
+    if (matType == 'Override') {
+        matSettingItem = sttgsOverrideMat.parentElement.parentElement;
     }
     else {
-        matSetting = sttsMatTemplate.content.cloneNode(true);
-        matSetting.querySelector('.settingsFlexSpan').dataset.type = matType;
-        matSetting.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName}`;
+        matSettingItem = sttgsMatTemplatebyType.content.cloneNode(true);
+        matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = matType;
+        matSettingItem.querySelector('.matTypeTag').innerHTML = `&nbsp;${matName}`;
     }
 
     const inputs = Object.fromEntries(
-        Array.from(matSetting.querySelectorAll('.settingsInput'))
-            .map((inputElement, idx) => [['opacity', 'color'][idx], inputElement])
+        Array.from(matSettingItem.querySelectorAll('.settingsInput'))
+        .map((inputElement, idx) => {
+            inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
+            return [['opacity', 'color'][idx], inputElement];
+        })
     );
     // apply default material settings
-    const defaultMatSetting = DEFAULTS.materials[matType];
+    const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
     inputs.opacity.value = defaultMatSetting.opacity;
     inputs.opacity.placeholder = defaultMatSetting.opacity;
     inputs.color.value = defaultMatSetting.color;
     // add input children to object
-    sttgsMat[matType] = inputs;
+    sttgsMat.byType[matType] = inputs;
 
-    if (matType != 'Default') sttgsGroupMat.appendChild(matSetting);
+    if (matType != 'Override') sttgsGroupMatbyType.appendChild(matSettingItem);
 }
 
-function resetMaterials() {
-    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
-        const defaultMatSetting = DEFAULTS.materials[matType];
-        matInputs.opacity.value = defaultMatSetting.opacity;
-        matInputs.color.value = defaultMatSetting.color;
-        const material = matDefault[matType];
-        material.opacity = defaultMatSetting.opacity;
-        material.color = hexToRgb(defaultMatSetting.color);
+function resetMaterials(matBy) {
+    let resetByType = false;
+    let resetByConst = false;
+
+    if (matBy == 'all') {
+        resetByType = true;
+        resetByConst = true;
+    }
+    else if (matBy == 'byType') resetByType = true;
+    else if (matBy == 'byConst') resetByConst = true;
+    else {
+        console.error(`"${matBy}" is not a valid option for material show type!`);
+        return;
+    }
+
+    if (resetByType) {
+        for (const [matType, matInputs] of Object.entries(sttgsMat.byType)) {
+            const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
+            matInputs.opacity.value = defaultMatSetting.opacity;
+            matInputs.color.value = defaultMatSetting.color;
+            const material = materials.byType[matType];
+            material.opacity = defaultMatSetting.opacity;
+            material.color = hexToRgb(defaultMatSetting.color);
+        }
+    }
+    if (resetByConst) {
+        //reset materials
     }
     updateModel(force = true, source = 'resetMaterials');
 }
 
 function updateMatOpacity(e, inputfield) {
-    const matType = inputfield.parentElement.dataset.type;
+    const matBy = inputfield.parentElement.dataset.by;
+    const matTag = inputfield.parentElement.dataset.tag;
     if (e === undefined || e.key === 'Escape') {
-        inputfield.value = matSettings[matType].opacity;
+        inputfield.value = matSettings[matBy][matTag].opacity;
         inputfield.blur();
     }
     else if (e === true || e.key === 'Enter') {
         const inputOpacity = clamp(parseFloat(inputfield.value), 0, 1);
         inputfield.value = inputOpacity;
-        matSettings[matType].opacity = inputOpacity;
-        matDefault[matType].opacity = inputOpacity;
+        matSettings[matBy][matTag].opacity = inputOpacity;
+        materials[matBy][matTag].opacity = inputOpacity;
         inputfield.blur();
         updateModel(force = true, source = 'updateMatOpacity');
     }
 }
+
 function updateMatColor(inputElement) {
-    const matType = inputElement.parentElement.dataset.type;
+    const matBy = inputElement.parentElement.dataset.by;
+    const matTag = inputElement.parentElement.dataset.tag;
     const inputColorHex = inputElement.value;
-    matSettings[matType].color = inputColorHex;
-    matDefault[matType].color = hexToRgb(inputColorHex);
+    matSettings[matBy][matTag].color = inputColorHex;
+    materials[matBy][matTag].color = hexToRgb(inputColorHex);
     updateModel(force = true, source = 'updateMatColor');
 }
 
-//? 투명도 설정
-let transparencyOn = DEFAULTS.transparencyOn;
-function turnOnTransparentMat(on) {
-    transparencyOn = on;
-    sttgsMatTrans.checked = on;
-    updateColorInputToggle();
-    updateModel(force = true, source = 'turnOnTransparentMat');
-}
-
-//? 재질 오버라이드
-let overrideMatOn = DEFAULTS.overrideMatOn;
-function overrideMaterials(on) {
-    overrideMatOn = on;
-    sttgsOverrideMat.checked = on;
-    updateColorInputToggle();
-    updateModel(force = true, source = 'overrideMaterials');
-}
-
 function updateColorInputToggle() {
-    for (const [matType, matInputs] of Object.entries(sttgsMat)) {
+    //? byType
+    for (const [matType, matInputs] of Object.entries(sttgsMat.byType)) {
         let [opacityOn, colorOn] = [true, true];
         if (overrideMatOn) {
-            if (matType == 'Default') {
+            if (matType == 'Override') {
                 opacityOn = transparencyOn;
                 colorOn = true;
             }
@@ -591,7 +664,7 @@ function updateColorInputToggle() {
             }
         }
         else {
-            if (matType == 'Default') {
+            if (matType == 'Override') {
                 opacityOn = false;
                 colorOn = false;
             }
@@ -604,27 +677,113 @@ function updateColorInputToggle() {
         matInputs.opacity.disabled = !opacityOn;
         matInputs.color.disabled = !colorOn;
     }
+    //? byConst
 }
+
+//? 투명도 설정
+let transparencyOn = DEFAULTS.transparencyOn;
+function turnOnTransparentMat(on) {
+    transparencyOn = on;
+    sttgsMatTrans.checked = on;
+    updateColorInputToggle();
+    updateModel(force = true, source = 'turnOnTransparentMat');
+}
+
+//MARK: Material by Type
+
+//? 재질 오버라이드
+let overrideMatOn = DEFAULTS.overrideMatOn;
+function overrideMaterials(on) {
+    overrideMatOn = on;
+    sttgsOverrideMat.checked = on;
+    updateColorInputToggle();
+    updateModel(force = true, source = 'overrideMaterials');
+}
+
+//MARK: Material by Const
+
+//? reset byConst
+function resetMatByConst() {
+    matSettings.byConst = DEFAULTS.matSettings.byConst;
+    materials.byConst = {
+        'Default': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byConst['Default'])
+    };
+    sttgsMat.byConst = {};
+}
+
+//? initialize byConst
+
+const sttgsGroupMatbyConst = document.getElementById('SttgGroupMatbyConst');
+const sttgsMatTemplatebyConst = document.getElementById('MatSettingsbyConst');
+
+function initializeMatByConst() {
+    for (const [surfConst, matSetting] of Object.entries(matSettings.byConst)) {
+        let matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
+        matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = surfConst;
+        const matTypeTag = matSettingItem.querySelector('.matTypeTag');
+        matTypeTag.title = surfConst;
+        matTypeTag.innerHTML = `&nbsp;${surfConst}`;
+        /*
+        const inputs = Object.fromEntries(
+            Array.from(matSettingItem.querySelectorAll('.settingsInput'))
+            .map((inputElement, idx) => {
+                inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
+                return [['opacity', 'color'][idx], inputElement];
+            })
+        );
+        // apply default material settings
+        const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
+        inputs.opacity.value = defaultMatSetting.opacity;
+        inputs.opacity.placeholder = defaultMatSetting.opacity;
+        inputs.color.value = defaultMatSetting.color;
+        // add input children to object
+        sttgsMat.byType[matType] = inputs;
+        */
+
+        sttgsGroupMatbyConst.appendChild(matSettingItem);
+    }
+}
+
+
+function toggleMatByConstAll(visible) {
+    /*
+    TODO
+    for (const [zoneName, zoneProp] of Object.entries(zoneList)) {
+        zoneProp.Visible = visible;
+    }
+    for (const chkbox of settingsPanelBlockZones.querySelectorAll('input[type=checkbox]')) {
+        chkbox.checked = visible;
+    }
+    updateModel(force = true, source = 'changeZoneAll');
+    */
+}
+function updateColorInputByConstToggle() {}
 
 /** 모델 불러올 때 설정 초기화 */
 function resetSettings() {
+    updateModelLock = true;
     turnOnShading(DEFAULTS.shadingOn);
     turnOnDebug(DEFAULTS.debugOn);
     turnOnLineThickness(DEFAULTS.lineThicknessOn);
     updateLineThickness(DEFAULTS.lineThickness);
     turnOnTransparentMat(DEFAULTS.transparencyOn);
     overrideMaterials(DEFAULTS.overrideMatOn);
-    resetMaterials();
+    resetMaterials('all');
     changeVisFilter(DEFAULTS.visFilterType);
     selfShadow = DEFAULTS.selfShadow;
     shadowRadius = DEFAULTS.shadowRadius;
     shadowMapSize = DEFAULTS.shadowMapSize;
     shadowOffset = [...DEFAULTS.shadowOffset];  // 얕은 복사
     turnOnShadow(DEFAULTS.shadowOn);
+    updateModelLock = false;
+    updateModel(force = true, source = 'resetSettings');
 }
 
+let updateModelLock = false;
 let lastModelUpdated = Date.now();
 function updateModel(force = false, source = null) {
+    //? if locked
+    if (updateModelLock) return;
     //? throttle refresh rate
     let newTime = Date.now();
     if (force || (newTime - lastModelUpdated) / 1000 > REFRESHRATE) {
@@ -1087,6 +1246,7 @@ function resetBldgInfo() {
     shadeList = {};
     sceneObjects = Object.fromEntries(DEFAULTS.sceneObjectKeys.map(k => [k, []]));
     shadowCatcher = null;
+    resetMatByConst();
 }
 
 function resetCamera() {
@@ -1373,7 +1533,7 @@ function parseIDF(code) {
                 break;
 
             case 'Construction'.toLowerCase():
-                constList.push(objName);
+                // constList.push(objName);
                 break;
         }
     });
@@ -1441,9 +1601,14 @@ function parseIDF(code) {
                 let fens = [];
                 if (objName in surfList) fens = surfList[objName].Fenestrations;
 
+                const surfConst = objSplit[iddInfo.indexOf('construction name')];
+                if (!(surfConst in matSettings.byConst)) {
+                    matSettings.byConst[surfConst] = {...DEFAULTS.matSettings.templates.Opaque};
+                }
+
                 surfList[objName] = {
                     'SurfaceType': objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
-                    'Construction': objSplit[iddInfo.indexOf('construction name')],
+                    'Construction': surfConst,
                     'ZoneName': zoneName,
                     'OutsideBC': objSplit[iddInfo.indexOf('outside boundary condition')].toLowerCase(),
                     'OutsideBCObj': objSplit[iddInfo.indexOf('outside boundary condition object')],
@@ -1581,6 +1746,20 @@ function parseIDF(code) {
     //         surfNameSet.delete(surfName);
     //     }
     // }
+
+    //? 재질 업데이트
+    materials.byConst = Object.fromEntries(
+        Object.entries(matSettings.byConst).map(([surfConst, matSetting]) => [
+            surfConst,
+            new THREE.MeshPhongMaterial({
+                ...matSetting,
+                side: THREE.DoubleSide,
+                transparent: true
+            })
+        ])
+    );
+    initializeMatByConst();
+
     console.log(constList);
     console.log(surfList);
     console.log(fenList);
@@ -1781,40 +1960,43 @@ function renderModel() {
         let surfGeom = surfProp.Geometries;  // 면 geometry 불러옴
 
         // 면 재질 설정
-        let matSurf = matDefault.InnerSurf;
-        if (overrideMatOn) matSurf = matDefault.Default;
-        else {
-            switch (surfProp.OutsideBC) {
-                case 'outdoors':
+        let matSurf;
+        if (materialBy == 'byType') {
+            matSurf = materials.byType.InnerSurf;
+            if (overrideMatOn) matSurf = materials.byType.Override;
+            else {
+                switch (surfProp.OutsideBC) {
+                    case 'outdoors':
 
-                    switch (surfProp.SurfaceType) {
-                        case 'wall':
-                            matSurf = matDefault.OuterWall;
-                            break;
-                        case 'roof':
-                            matSurf = matDefault.Roof;
-                            break;
-                        case 'floor':
-                            //!!!!! Need evaluation
-                            matSurf = matDefault.OuterSurf;
-                            break;
-                    }
+                        switch (surfProp.SurfaceType) {
+                            case 'wall':
+                                matSurf = materials.byType.OuterWall;
+                                break;
+                            case 'roof':
+                                matSurf = materials.byType.Roof;
+                                break;
+                            case 'floor':
+                                //!!!!! Need evaluation
+                                matSurf = materials.byType.OuterSurf;
+                                break;
+                        }
 
-                    break;
+                        break;
 
-                case 'adiabatic':
-                    matSurf = matDefault.Adiabatic;
-                    break;
+                    case 'adiabatic':
+                        matSurf = materials.byType.Adiabatic;
+                        break;
 
-                case 'ground':
-                    matSurf = matDefault.Ground;
-                    break;
+                    case 'ground':
+                        matSurf = materials.byType.Ground;
+                        break;
 
-                default:
-                    break;
-            }
-            if (surfName.toLowerCase() == surfProp.OutsideBCObj.toLowerCase()) {
-                matSurf = matDefault.Adiabatic;
+                    default:
+                        break;
+                }
+                if (surfName.toLowerCase() == surfProp.OutsideBCObj.toLowerCase()) {
+                    matSurf = materials.byType.Adiabatic;
+                }
             }
         }
         /*
@@ -1908,7 +2090,7 @@ function renderModel() {
                     break;
 
                 case 'ghost':
-                    const surfMesh = new THREE.Mesh(surfGeom, matDefault.Disabled);
+                    const surfMesh = new THREE.Mesh(surfGeom, DEFAULTS.matTemplates.Disabled);
                     surfMesh.renderOrder = 3;
                     surfMesh.layers.enable(2);  // disable mouse selection
                     scene.add(surfMesh);  //!!!!!
@@ -1943,14 +2125,17 @@ function renderModel() {
 
         let fenGeom = fenProp.Geometries;
 
-        let matFen = matDefault.Window;
-        switch (fenProp.SurfaceType) {
-            case 'door':
-                matFen = matDefault.Door;
-                break;
-            case 'glassdoor':
-                matFen = matDefault.Door;
-                break;
+        let matFen;
+        if (materialBy == 'byType') {
+            matFen = materials.byType.Window;
+            switch (fenProp.SurfaceType) {
+                case 'door':
+                    matFen = materials.byType.Door;
+                    break;
+                case 'glassdoor':
+                    matFen = materials.byType.Door;
+                    break;
+            }
         }
 
         matFen = matFen.clone();
@@ -1993,7 +2178,7 @@ function renderModel() {
 
         let shadeGeom = shadeProp.Geometries;
 
-        let matShade = matDefault.Shading.clone();
+        let matShade = materials.Shading.clone();
 
         if (shadingOn && isInsideHeightRange(shadeProp.ZBoundary)) {
             if (!transparencyOn) {
@@ -2030,7 +2215,7 @@ function renderModel() {
                     break;
 
                 case 'ghost':
-                    const shadeMesh = new THREE.Mesh(shadeGeom, matDefault.Disabled);
+                    const shadeMesh = new THREE.Mesh(shadeGeom, DEFAULTS.matTemplates.Disabled);
                     shadeMesh.renderOrder = 3;
                     shadeMesh.layers.enable(2);  // disable mouse selection
                     scene.add(shadeMesh);  //!!!!!

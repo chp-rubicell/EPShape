@@ -36,8 +36,8 @@
     <script src="./resources/lib/iddLibrary.js"></script>
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
-    <!-- <script src="./resources/scripts.js" defer></script> -->
-    <script src="./resources/scripts-compiled.js?v=25_0712" defer></script>
+    <script src="./resources/scripts.js" defer></script>
+    <!-- <script src="./resources/scripts-compiled.js?v=25_0712" defer></script> -->
 </head>
 
 <body>
@@ -177,21 +177,30 @@
                                 <input id="SttgsShadow" type="checkbox" onclick="turnOnShadow(this.checked);" /> Shadow</font>
                             </label>
                             <label style="padding-right: 10px;">
+                                <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparency
+                            </label>
+                            <label style="padding-right: 10px;">
                                 <input id="SttgsDebug" type="checkbox" onclick="turnOnDebug(this.checked);" /> Debug
                             </label>
                         </div>
 
+                        
+                        <div id="SettingsPanelBlockMatBy" class="settingsPanelBlock">
+                            <h5>Materials by</h5>
+                            <center>
+                                <button data-type="byType" class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeMaterialBy(this.dataset.type);" disabled>Surface type</button>
+                                <button data-type="byConst" class="settingsPanelButton changeBackgroundColorBtn" onclick="changeMaterialBy(this.dataset.type);">Construction</button>
+                            </center>
+                        </div>
+
                         <div id="SettingsPanelBlockMatbyType" class="settingsPanelBlock">
-                            <h5>Materials</h5>
+                            <h5>Surface types</h5>
 
                             <center>
-                                <button class="settingsPanelButton" onclick="resetMaterials();">Reset</button>
+                                <button class="settingsPanelButton" onclick="resetMaterials('byType');">Reset</button>
                             </center>
-                            
-                            <label style="padding-right: 10px;">
-                                <input id="SttgsMatTrans" type="checkbox" onclick="turnOnTransparentMat(this.checked);" checked /> Transparency
-                            </label>
-                            <span data-type="Default" class="settingsFlexSpan colorSettings">
+
+                            <span data-by="byType" data-tag="Override" class="settingsFlexSpan colorSettings">
                                 <label style="padding-right: 10px;"><input id="SttgsOverrideMat" type="checkbox" onclick="overrideMaterials(this.checked);"> Override</label>
                                 <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                 <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
@@ -199,28 +208,32 @@
 
                             <p id="SttgGroupMatbyType" class="sttgGroupMat">
                                 <template id="MatSettingsbyType">
-                                    <span data-type="OuterWall" class="settingsFlexSpan colorSettings">
+                                    <span data-by="byType" data-tag="OuterWall" class="settingsFlexSpan colorSettings">
                                         <span class="liMarker">⬤</span>
                                         <span class="matTypeTag" style="flex:none;">&nbsp;Outer wall&nbsp;</span>
-                                        <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
-                                        <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
+                                        <input name="" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
+                                        <input name="" class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                     </span>
                                 </template>
                             </p>
                         </div>
 
                         <div id="SettingsPanelBlockMatbyConst" class="settingsPanelBlock" style="display: none;">
-                            <h5>Materials (by construction)</h5>
-
+                            <h5>Constructions</h5>
+                    
                             <center>
-                                <button class="settingsPanelButton" onclick="changeZoneAll(true);">Reset</button>
+                                <button class="settingsPanelButton" onclick="resetMaterials('byConst');">Reset</button>
+                                <button class="settingsPanelButton" onclick="toggleMatByConstAll(true);">Select all</button>
+                                <button class="settingsPanelButton" onclick="toggleMatByConstAll(false);">Diselect all</button>
                             </center>
 
                             <p id="SttgGroupMatbyConst" class="sttgGroupMat">
                                 <template id="MatSettingsbyConst">
-                                    <span data-const="" class="settingsFlexSpan colorSettings">
-                                        <span class="liMarker">⬤</span>
-                                        <span class="matTypeTag" style="flex:none;">&nbsp;Outer wall :&nbsp;</span>
+                                    <span data-by="byConst" data-tag="" class="settingsFlexSpan colorSettings">
+                                        <label style="width: fit-content; flex:none">
+                                            <input class="matToggle" type="checkbox" onclick="overrideMaterials(this.checked);">
+                                        </label>
+                                        <span title="" class="matTypeTag" style="flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: clip;">&nbsp;Outer wall :&nbsp;</span>
                                         <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                         <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                     </span>
