@@ -228,19 +228,19 @@
                             </center>
 
                             <p id="SttgGroupMatbyConstDefault" class="sttgGroupMat">
-                                <span data-by="byConstDefault" data-tag="DefaultOpaque" data-template="Opaque" class="settingsFlexSpan colorSettings">
+                                <span data-by="byConstDefault" data-tag="DefaultOpaque" data-template="DefaultOpaque" class="settingsFlexSpan colorSettings">
                                     <span class="liMarker">⬤</span>
                                     <span class="constTag" style="flex:none;">&nbsp;Opaque&nbsp;</span>
                                     <input name="" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                     <input name="" class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                 </span>
-                                <span data-by="byConstDefault" data-tag="DefaultTransparent" data-template="Transparent" class="settingsFlexSpan colorSettings">
+                                <span data-by="byConstDefault" data-tag="DefaultTransparent" data-template="DefaultTransparent" class="settingsFlexSpan colorSettings">
                                     <span class="liMarker">⬤</span>
                                     <span class="constTag" style="flex:none;">&nbsp;Transparent&nbsp;</span>
                                     <input name="" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                     <input name="" class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                 </span>
-                                <span data-by="byConstDefault" data-tag="DefaultShading" data-template="Shading" class="settingsFlexSpan colorSettings">
+                                <span data-by="byConstDefault" data-tag="Shading" data-template="Shading" class="settingsFlexSpan colorSettings">
                                     <span class="liMarker">⬤</span>
                                     <span class="constTag" style="flex:none;">&nbsp;Shading&nbsp;</span>
                                     <input name="" class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
@@ -250,12 +250,16 @@
 
                             <p id="SttgGroupMatbyConst" class="sttgGroupMat">
 
+                                <template id="MatSettingsbyConstSeparator">
+                                    <div class="settingsPanelSeparator"></div>
+                                </template>
+
                                 <template id="MatSettingsbyConst">
                                     <span data-by="byConst" data-tag="" data-template="Opaque" class="settingsFlexSpan colorSettings">
                                         <label style="width: fit-content; flex:none">
-                                            <input class="matToggle" type="checkbox" onclick="updateMatEnabled(this);">
+                                            <input id="" class="matToggle" type="checkbox" onclick="updateMatbyConstToggle(this);">
                                         </label>
-                                        <span title="" class="constTag" style="flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: clip;">&nbsp;Outer wall :&nbsp;</span>
+                                        <label for="" title="" class="constTag" style="flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: clip;">&nbsp;Outer wall :&nbsp;</label>
                                         <input class="settingsInput" type="number" value="0.3" placeholder="0.3" step="any" onkeyup="updateMatOpacity(event, this);" onfocusout="updateMatOpacity(undefined, this);" />
                                         <input class="settingsInput" type="color" value="#9ee3ff" oninput="updateMatColor(this);">
                                     </span>

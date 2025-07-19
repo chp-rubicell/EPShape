@@ -591,6 +591,16 @@ button.glass:active, .customButton:focus {
     color: rgba(240,245,247,0.7);
 }
 
+.settingsPanelSeparator {
+    width: 80px;
+    height: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-block-start: 8px;
+    margin-block-end: 8px;
+    background-color: #112C4460;
+}
+
 .solidPanelButton {
     position: absolute;
     bottom: 15px;

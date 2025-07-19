@@ -99,8 +99,10 @@ DEFAULTS = {
     overrideMatOn: false,
     matSettings: {
         'templates': {
-            'Opaque': { color: '#f5f5f5', opacity: 1.0 },
-            'Transparent': { color: '#47dcff', opacity: 0.5 },
+            'DefaultOpaque': { color: '#f5f5f5', opacity: 1.0 },
+            'DefaultTransparent': { color: '#47dcff', opacity: 0.5 },
+            'Opaque': { color: '#f72568', opacity: 1.0 },
+            'Transparent': { color: '#f72568', opacity: 0.5 },
             'Shading': { color: '#f5f5f5', opacity: 0.8 }
         },
         'byType': {
@@ -147,7 +149,6 @@ let bldgRadius = 0;
 let bldgCenter = new THREE.Vector3();
 
 let zoneList = [];
-let constList = [];
 let surfList = {};
 let fenList = {};
 let shadeList = {};
@@ -756,6 +757,7 @@ function overrideMaterials(on) {
 
 const sttgsGroupMatbyConst = document.getElementById('SttgGroupMatbyConst');
 const sttgsMatTemplatebyConst = document.getElementById('MatSettingsbyConst');
+const sttgsMatTemplatebyConstSeparator = document.getElementById('MatSettingsbyConstSeparator');
 
 //? initialize byConst Defaults
 const sttgGroupMatbyConstDefault = document.getElementById('SttgGroupMatbyConstDefault');
@@ -764,7 +766,7 @@ for (const matSettingItem of Array.from(sttgGroupMatbyConstDefault.querySelector
     const inputs = Object.fromEntries(
         Array.from(matSettingItem.querySelectorAll('.settingsInput'))
         .map((inputElement, idx) => {
-            inputElement.name = `input${tag}${['Opacity', 'Color'][idx]}`;
+            inputElement.name = `inputMatByType${tag}${['Opacity', 'Color'][idx]}`;
             return [['opacity', 'color'][idx], inputElement];
         })
     );
@@ -792,36 +794,47 @@ function resetMatByConst() {
 }
 
 //? add color inputs
+function addMatByConstSeparator() {
+    const separator = sttgsMatTemplatebyConstSeparator.content.cloneNode(true);
+    sttgsGroupMatbyConst.appendChild(separator);
+}
 function addMatByConst(constName, constNamePopup, opaque=true) {
     const matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
     const matSettingSpan = matSettingItem.querySelector('.settingsFlexSpan');
     matSettingSpan.dataset.tag = constName;
     matSettingSpan.dataset.template = opaque ? 'Opaque' : 'Transparent';
-    const constTag = matSettingItem.querySelector('.constTag');
-    constTag.title = constNamePopup;
-    constTag.innerHTML = `&nbsp;${constName}`;
     
     const inputs = Object.fromEntries(
         Array.from(matSettingItem.querySelectorAll('input'))
         .map((inputElement, idx) => {
-            inputElement.name = `input${constName}${['Checkbox', 'Opacity', 'Color'][idx]}`;
+            inputElement.name = `inputMatByConst${constName}${['Checkbox', 'Opacity', 'Color'][idx]}`;
             return [['checkbox', 'opacity', 'color'][idx], inputElement];
         })
     );
+
+    // connect label with checkbox
+    const checkboxID = inputs.checkbox.name.replace(/[.#:\[\]>]/g, '-');
+    inputs.checkbox.id = checkboxID;
+    const constTag = matSettingItem.querySelector('.constTag');
+    constTag.title = constNamePopup;
+    constTag.innerHTML = `&nbsp;${constName}`;
+    constTag.setAttribute('for', checkboxID);
+
     // apply default material settings
     inputs.checkbox.checked = false;
     const matSetting = matSettings.byConst[constName];
     inputs.opacity.value = matSetting.opacity;
     inputs.opacity.placeholder = matSetting.opacity;
     inputs.color.value = matSetting.color;
+
     // add input children to object
     sttgsMat.byConst[constName] = inputs;
 
     sttgsGroupMatbyConst.appendChild(matSettingItem);
 }
 
-//? update material enabled
-function updateMatEnabled(checkbox) {
+//? update material by const toggle
+function updateMatbyConstToggle(checkbox) {
     const constName = checkbox.parentElement.parentElement.dataset.tag;
     matSettings.byConst[constName].enabled = checkbox.checked;
     updateColorInputToggle('byConst');
@@ -1320,7 +1333,6 @@ function resetBldgInfo() {
     bldgRadius = 0;
     bldgCenter = new THREE.Vector3();
     zoneList = {};
-    constList = [];
     surfList = {};
     fenList = {};
     shadeList = {};
@@ -1821,6 +1833,7 @@ function parseIDF(code) {
     //? 재질 업데이트
     
     //? Surfaces
+    addMatByConstSeparator();
     const surfToSkip = [];
     for (const [surfName, surfProp] of Object.entries(surfList)) {
         if (surfName in surfToSkip) continue;
@@ -1873,6 +1886,7 @@ function parseIDF(code) {
     }
 
     //? Fenestrations
+    addMatByConstSeparator();
     const fenToSkip = [];
     for (const [fenName, fenProp] of Object.entries(fenList)) {
         if (fenName in fenToSkip) continue;
@@ -1921,7 +1935,8 @@ function parseIDF(code) {
         addMatByConst(constNameToUse, constNamePopup, false);
     }
 
-    console.log(constList);
+    updateColorInputToggle('all');
+
     console.log(surfList);
     console.log(fenList);
     console.log("Done!");
@@ -2362,7 +2377,7 @@ function renderModel() {
             matShade = materials.byType.Shading.clone();
         }
         else if (materialBy == 'byConst') {
-            matShade = materials.byConstDefault.DefaultShading;
+            matShade = materials.byConstDefault.Shading;
         }
         
         matShade = matShade.clone();
@@ -2592,7 +2607,9 @@ function getSliderValues(sliderGroup) {
     ];
 }
 function updateFromValue(fromVal, sliderGroup, forceUpdate = false) {
+    console.log(fromVal)
     let from = parseFloat(fromVal);
+    console.log(from)
     if (isNaN(from)) return;
     let to = parseFloat(sliderGroup[1].value);
     if (from > to - sliderGroup[4]) {
