@@ -240,7 +240,6 @@ const materials = {
 }
 for (const matGroup of Object.values(materials)) {
     for (const mat of Object.values(matGroup)) {
-        console.log(mat)
         mat.side = THREE.DoubleSide; // double side settings to materials
         mat.transparent = true;
         // if (mat.opacity < 1) {
@@ -702,6 +701,9 @@ function overrideMaterials(on) {
 
 //MARK: Material by Const
 
+const sttgsGroupMatbyConst = document.getElementById('SttgGroupMatbyConst');
+const sttgsMatTemplatebyConst = document.getElementById('MatSettingsbyConst');
+
 //? reset byConst
 function resetMatByConst() {
     matSettings.byConst = DEFAULTS.matSettings.byConst;
@@ -709,41 +711,8 @@ function resetMatByConst() {
         'Default': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byConst['Default'])
     };
     sttgsMat.byConst = {};
+    sttgsGroupMatbyConst.innerHTML = '';
 }
-
-//? initialize byConst
-
-const sttgsGroupMatbyConst = document.getElementById('SttgGroupMatbyConst');
-const sttgsMatTemplatebyConst = document.getElementById('MatSettingsbyConst');
-
-function initializeMatByConst() {
-    for (const [surfConst, matSetting] of Object.entries(matSettings.byConst)) {
-        let matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
-        matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = surfConst;
-        const constTag = matSettingItem.querySelector('.constTag');
-        constTag.title = surfConst;
-        constTag.innerHTML = `&nbsp;${surfConst}`;
-        /*
-        const inputs = Object.fromEntries(
-            Array.from(matSettingItem.querySelectorAll('.settingsInput'))
-            .map((inputElement, idx) => {
-                inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
-                return [['opacity', 'color'][idx], inputElement];
-            })
-        );
-        // apply default material settings
-        const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
-        inputs.opacity.value = defaultMatSetting.opacity;
-        inputs.opacity.placeholder = defaultMatSetting.opacity;
-        inputs.color.value = defaultMatSetting.color;
-        // add input children to object
-        sttgsMat.byType[matType] = inputs;
-        */
-
-        sttgsGroupMatbyConst.appendChild(matSettingItem);
-    }
-}
-
 
 function toggleMatByConstAll(visible) {
     /*
@@ -1531,10 +1500,6 @@ function parseIDF(code) {
                     };
                 }
                 break;
-
-            case 'Construction'.toLowerCase():
-                // constList.push(objName);
-                break;
         }
     });
     let zoneNamesLowercase = Object.keys(zoneList).map(v => v.toLowerCase());  // surface쪽 zone 이름과 대소문자가 다른 경우 교정하기 위한 임시 리스트
@@ -1601,14 +1566,9 @@ function parseIDF(code) {
                 let fens = [];
                 if (objName in surfList) fens = surfList[objName].Fenestrations;
 
-                const surfConst = objSplit[iddInfo.indexOf('construction name')];
-                if (!(surfConst in matSettings.byConst)) {
-                    matSettings.byConst[surfConst] = {...DEFAULTS.matSettings.templates.Opaque};
-                }
-
                 surfList[objName] = {
                     'SurfaceType': objSplit[iddInfo.indexOf('surface type')].toLowerCase(),
-                    'Construction': surfConst,
+                    'Construction': objSplit[iddInfo.indexOf('construction name')],
                     'ZoneName': zoneName,
                     'OutsideBC': objSplit[iddInfo.indexOf('outside boundary condition')].toLowerCase(),
                     'OutsideBCObj': objSplit[iddInfo.indexOf('outside boundary condition object')],
@@ -1748,17 +1708,79 @@ function parseIDF(code) {
     // }
 
     //? 재질 업데이트
-    materials.byConst = Object.fromEntries(
-        Object.entries(matSettings.byConst).map(([surfConst, matSetting]) => [
-            surfConst,
-            new THREE.MeshPhongMaterial({
-                ...matSetting,
-                side: THREE.DoubleSide,
-                transparent: true
+    
+    // const surfConst = objSplit[iddInfo.indexOf('construction name')];
+    // if (!(surfConst in matSettings.byConst)) {
+    //     matSettings.byConst[surfConst] = {...DEFAULTS.matSettings.templates.Opaque};
+    // }
+    const surfToSkip = [];
+    for (const [surfName, surfProp] of Object.entries(surfList)) {
+        if (surfName in surfToSkip) continue;
+
+        const constName = surfProp.Construction;
+
+        if (constName in materials.byConst) continue;
+
+        let [constNameToUse, constNameNotUsed] = ['', ''];
+        let constNamePopup = '';
+        if (surfProp.OutsideBC == 'surface') {
+            // if there is adjacent surface
+            const adjSurfName = surfProp.OutsideBCObj;
+            surfToSkip.push(adjSurfName);
+            const adjConstName = surfList[adjSurfName.toLowerCase()].Construction;
+            if (constName.toLowerCase() == adjConstName.toLowerCase()) {
+                constNameToUse = constName;
+                constNamePopup = constName;
+            }
+            else {
+                // constName에 reversed가 들어있지 않는 한 constName을 대표로 사용
+                [constNameToUse, constNameNotUsed]
+                    = constName.toLowerCase().includes('reverse') ?
+                        [adjConstName, constName] : [constName, adjConstName];
+                constNamePopup = `${constNameToUse} / ${constNameNotUsed}`;
+            }
+        }
+        else {
+            constNameToUse = constName;
+            constNamePopup = constName;
+        }
+
+        const matSetting = {...DEFAULTS.matSettings.templates.Opaque};
+        matSettings.byConst[constNameToUse] = matSetting
+
+        materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
+            ...matSetting,
+            side: THREE.DoubleSide,
+            transparent: true
+        })
+        if (constNameNotUsed != '')
+            materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];  // add as a reference
+        
+        //? add color inputs
+        let matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
+        matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = constNameToUse;
+        const constTag = matSettingItem.querySelector('.constTag');
+        constTag.title = constNamePopup;
+        constTag.innerHTML = `&nbsp;${constNameToUse}`;
+        /*
+        const inputs = Object.fromEntries(
+            Array.from(matSettingItem.querySelectorAll('.settingsInput'))
+            .map((inputElement, idx) => {
+                inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
+                return [['opacity', 'color'][idx], inputElement];
             })
-        ])
-    );
-    initializeMatByConst();
+        );
+        // apply default material settings
+        const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
+        inputs.opacity.value = defaultMatSetting.opacity;
+        inputs.opacity.placeholder = defaultMatSetting.opacity;
+        inputs.color.value = defaultMatSetting.color;
+        // add input children to object
+        sttgsMat.byType[matType] = inputs;
+        */
+
+        sttgsGroupMatbyConst.appendChild(matSettingItem);
+    }
 
     console.log(constList);
     console.log(surfList);
