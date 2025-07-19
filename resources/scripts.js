@@ -2575,8 +2575,10 @@ fromSlider.oninput = () => updateFromValue(fromSlider.value, heightSliderGroup);
 fromSlider.onmouseup = () => updateModel(force = true, source = 'fromSliderMouseUp');
 toSlider.oninput = () => updateToValue(toSlider.value, heightSliderGroup);
 toSlider.onmouseup = () => updateModel(force = true, source = 'toSliderMouseUp');
-fromInput.oninput = () => updateFromValue(fromInput.value, heightSliderGroup, true);
-toInput.oninput = () => updateToValue(toInput.value, heightSliderGroup, true);
+// fromInput.oninput = () => updateFromValue(fromInput.value, heightSliderGroup, true);
+fromInput.addEventListener('keydown', (event) => updateSliderInput(event, fromInput, true));
+// toInput.oninput = () => updateToValue(toInput.value, heightSliderGroup, true);
+toInput.addEventListener('keydown', (event) => updateSliderInput(event, toInput, false));
 
 fromInput.addEventListener('focusout', () => { fromInput.value = getSliderValues(heightSliderGroup)[0]; });
 toInput.addEventListener('focusout', () => { toInput.value = getSliderValues(heightSliderGroup)[1]; });
@@ -2606,10 +2608,20 @@ function getSliderValues(sliderGroup) {
         parseFloat(sliderGroup[1].value)
     ];
 }
+function updateSliderInput(event, inputfield, from) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        if (from)
+            updateFromValue(inputfield.value, heightSliderGroup);
+        else
+            updateToValue(inputfield.value, heightSliderGroup);
+    }
+    if (event.key === 'Escape') {
+        inputfield.value = getSliderValues(heightSliderGroup)[from ? 0 : 1];
+    }
+}
 function updateFromValue(fromVal, sliderGroup, forceUpdate = false) {
-    console.log(fromVal)
     let from = parseFloat(fromVal);
-    console.log(from)
     if (isNaN(from)) return;
     let to = parseFloat(sliderGroup[1].value);
     if (from > to - sliderGroup[4]) {
