@@ -1020,33 +1020,31 @@ function customOnMouseMove(event) {
     startX = newX;
     startY = newY;
 }
-CanvasContainer.onmousedown = function (event) {
+CanvasRenderer.onmousedown = function (event) {
     // event.preventDefault();
 
-    if (clickable && event.target.tagName.toLowerCase() !== 'button') {
-        startX = event.pageX;
-        startY = event.pageY;
+    startX = event.pageX;
+    startY = event.pageY;
 
-        if (event.button == 0) {
-            // 좌클릭
-            mouseLeft = true;
-            mouseMiddle = false;
-        }
-        if (event.button == 1 || event.button == 2) {
-            // 가운데 클릭
-            mouseMiddle = true;
-            mouseLeft = false;
-        }
+    if (event.button == 0) {
+        // 좌클릭
+        mouseLeft = true;
+        mouseMiddle = false;
+    }
+    if (event.button == 1 || event.button == 2) {
+        // 가운데 클릭
+        mouseMiddle = true;
+        mouseLeft = false;
+    }
 
-        document.addEventListener('mousemove', customOnMouseMove);
-        document.onmouseup = function (event) {
-            // event = event || window.event;
-            // event.preventDefault();
-            mouseLeft = false;
-            mouseMiddle = false;
-            if (camStepped) camera.azm = Math.round(camera.azm / 45) * 45;
-            document.removeEventListener('mousemove', customOnMouseMove);
-        }
+    document.addEventListener('mousemove', customOnMouseMove);
+    document.onmouseup = function (event) {
+        // event = event || window.event;
+        // event.preventDefault();
+        mouseLeft = false;
+        mouseMiddle = false;
+        if (camStepped) camera.azm = Math.round(camera.azm / 45) * 45;
+        document.removeEventListener('mousemove', customOnMouseMove);
     }
     // else {
     //     settingsPanelVisibility();
