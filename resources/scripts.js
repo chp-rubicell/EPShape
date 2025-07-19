@@ -100,7 +100,8 @@ DEFAULTS = {
     matSettings: {
         'templates': {
             'Opaque': { color: '#f5f5f5', opacity: 1.0 },
-            'Tranparent': { color: '#47dcff', opacity: 0.5 }
+            'Transparent': { color: '#47dcff', opacity: 0.5 },
+            'Shading': { color: '#f5f5f5', opacity: 0.8 }
         },
         'byType': {
             'Adiabatic': { color: '#f24b91', opacity: 0.8 },
@@ -220,7 +221,9 @@ const matGhost = new THREE.MeshBasicMaterial({
 });
 
 let matSettings = {
-    'byType': structuredClone(DEFAULTS.matSettings.byType)
+    'byType': structuredClone(DEFAULTS.matSettings.byType),
+    'byConst': {},
+    'byConstDefault': {}
 };
 
 const materials = {
@@ -236,7 +239,8 @@ const materials = {
         'Shading': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byType['Shading']),
         'Ground': new THREE.MeshLambertMaterial(DEFAULTS.matSettings.byType['Ground'])
     },
-    'byConst': {}
+    'byConst': {},
+    'byConstDefault': {}
 }
 for (const matGroup of Object.values(materials)) {
     for (const mat of Object.values(matGroup)) {
@@ -514,7 +518,7 @@ function changeMaterialBy(matBy) {
         }
     });
 
-    // materialBy = matBy;
+    materialBy = matBy;
 
     switch (matBy) {
         case 'byType':
@@ -553,7 +557,8 @@ const matKeysNotOverridden = ['Window', 'Door', 'Shading'];
 
 const sttgsMat = {
     'byType': {},
-    'byConst': {}
+    'byConst': {},
+    'byConstDefault': {}
 };
 //? initialize byType
 for (const [matType, matName] of Object.entries(matKeysbyType)) {
@@ -588,7 +593,6 @@ for (const [matType, matName] of Object.entries(matKeysbyType)) {
 function resetMaterials(matBy) {
     let resetByType = false;
     let resetByConst = false;
-
     if (matBy == 'all') {
         resetByType = true;
         resetByConst = true;
@@ -600,6 +604,7 @@ function resetMaterials(matBy) {
         return;
     }
 
+    //? byType
     if (resetByType) {
         for (const [matType, matInputs] of Object.entries(sttgsMat.byType)) {
             const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
@@ -610,8 +615,26 @@ function resetMaterials(matBy) {
             material.color = hexToRgb(defaultMatSetting.color);
         }
     }
+    //? byConst
     if (resetByConst) {
-        //reset materials
+        for (const [tag, matInputs] of Object.entries(sttgsMat.byConstDefault)) {
+            const template = matInputs.opacity.parentElement.dataset.template;
+            const defaultMatSetting = DEFAULTS.matSettings.templates[template];
+            matInputs.opacity.value = defaultMatSetting.opacity;
+            matInputs.color.value = defaultMatSetting.color;
+            const material = materials.byConstDefault[tag];
+            material.opacity = defaultMatSetting.opacity;
+            material.color = hexToRgb(defaultMatSetting.color);
+        }
+        for (const [constName, matInputs] of Object.entries(sttgsMat.byConst)) {
+            const template = matInputs.opacity.parentElement.dataset.template;
+            const defaultMatSetting = DEFAULTS.matSettings.templates[template];
+            matInputs.opacity.value = defaultMatSetting.opacity;
+            matInputs.color.value = defaultMatSetting.color;
+            const material = materials.byConst[constName];
+            material.opacity = defaultMatSetting.opacity;
+            material.color = hexToRgb(defaultMatSetting.color);
+        }
     }
     updateModel(force = true, source = 'resetMaterials');
 }
@@ -642,41 +665,71 @@ function updateMatColor(inputElement) {
     updateModel(force = true, source = 'updateMatColor');
 }
 
-function updateColorInputToggle() {
+function updateColorInputToggle(matBy) {
+    let resetByType = false;
+    let resetByConst = false;
+    if (matBy == 'all') {
+        resetByType = true;
+        resetByConst = true;
+    }
+    else if (matBy == 'byType') resetByType = true;
+    else if (matBy == 'byConst') resetByConst = true;
+    else {
+        console.error(`"${matBy}" is not a valid option for material show type!`);
+        return;
+    }
+
     //? byType
-    for (const [matType, matInputs] of Object.entries(sttgsMat.byType)) {
-        let [opacityOn, colorOn] = [true, true];
-        if (overrideMatOn) {
-            if (matType == 'Override') {
-                opacityOn = transparencyOn;
-                colorOn = true;
-            }
-            else {
-                if (matKeysNotOverridden.includes(matType)) {
-                    opacityOn = true;
+    if (resetByType) {
+        for (const [matType, matInputs] of Object.entries(sttgsMat.byType)) {
+            let [opacityOn, colorOn] = [true, true];
+            if (overrideMatOn) {
+                if (matType == 'Override') {
+                    opacityOn = transparencyOn;
                     colorOn = true;
                 }
                 else {
+                    if (matKeysNotOverridden.includes(matType)) {
+                        opacityOn = true;
+                        colorOn = true;
+                    }
+                    else {
+                        opacityOn = false;
+                        colorOn = false;
+                    }
+                }
+            }
+            else {
+                if (matType == 'Override') {
                     opacityOn = false;
                     colorOn = false;
                 }
+                else {
+                    if (matKeysNotOverridden.includes(matType)) opacityOn = true;
+                    else opacityOn = transparencyOn;
+                    colorOn = true;
+                }
             }
+            matInputs.opacity.disabled = !opacityOn;
+            matInputs.color.disabled = !colorOn;
         }
-        else {
-            if (matType == 'Override') {
-                opacityOn = false;
-                colorOn = false;
-            }
-            else {
-                if (matKeysNotOverridden.includes(matType)) opacityOn = true;
-                else opacityOn = transparencyOn;
-                colorOn = true;
-            }
-        }
-        matInputs.opacity.disabled = !opacityOn;
-        matInputs.color.disabled = !colorOn;
     }
     //? byConst
+    if (resetByConst) {
+        sttgsMat.byConstDefault.DefaultOpaque.opacity.disabled = !transparencyOn;
+        for (const [constName, matInputs] of Object.entries(sttgsMat.byConst)) {
+            const enabled = matSettings.byConst[constName].enabled;
+            let opacityOn = transparencyOn;
+            let colorOn = enabled;
+
+            const template = matInputs.opacity.parentElement.dataset.template;
+            if (template == 'Transparent') opacityOn = true;
+            if (!enabled) opacityOn = false;
+            
+            matInputs.opacity.disabled = !opacityOn;
+            matInputs.color.disabled = !colorOn;
+        }
+    }
 }
 
 //? 투명도 설정
@@ -684,7 +737,7 @@ let transparencyOn = DEFAULTS.transparencyOn;
 function turnOnTransparentMat(on) {
     transparencyOn = on;
     sttgsMatTrans.checked = on;
-    updateColorInputToggle();
+    updateColorInputToggle('all');
     updateModel(force = true, source = 'turnOnTransparentMat');
 }
 
@@ -695,7 +748,7 @@ let overrideMatOn = DEFAULTS.overrideMatOn;
 function overrideMaterials(on) {
     overrideMatOn = on;
     sttgsOverrideMat.checked = on;
-    updateColorInputToggle();
+    updateColorInputToggle('byType');
     updateModel(force = true, source = 'overrideMaterials');
 }
 
@@ -704,27 +757,84 @@ function overrideMaterials(on) {
 const sttgsGroupMatbyConst = document.getElementById('SttgGroupMatbyConst');
 const sttgsMatTemplatebyConst = document.getElementById('MatSettingsbyConst');
 
+//? initialize byConst Defaults
+const sttgGroupMatbyConstDefault = document.getElementById('SttgGroupMatbyConstDefault');
+for (const matSettingItem of Array.from(sttgGroupMatbyConstDefault.querySelectorAll('.settingsFlexSpan'))) {
+    const tag = matSettingItem.dataset.tag;
+    const inputs = Object.fromEntries(
+        Array.from(matSettingItem.querySelectorAll('.settingsInput'))
+        .map((inputElement, idx) => {
+            inputElement.name = `input${tag}${['Opacity', 'Color'][idx]}`;
+            return [['opacity', 'color'][idx], inputElement];
+        })
+    );
+    // apply default material settings
+    const defaultMatSetting = DEFAULTS.matSettings.templates[matSettingItem.dataset.template];
+    inputs.opacity.value = defaultMatSetting.opacity;
+    inputs.opacity.placeholder = defaultMatSetting.opacity;
+    inputs.color.value = defaultMatSetting.color;
+    // add input children to object
+    sttgsMat.byConstDefault[tag] = inputs;
+    matSettings.byConstDefault[tag] = {...defaultMatSetting};
+    materials.byConstDefault[tag] = new THREE.MeshPhongMaterial({
+        ...defaultMatSetting,
+        side: THREE.DoubleSide,
+        transparent: true
+    })
+}
+
 //? reset byConst
 function resetMatByConst() {
-    matSettings.byConst = DEFAULTS.matSettings.byConst;
-    materials.byConst = {
-        'Default': new THREE.MeshPhongMaterial(DEFAULTS.matSettings.byConst['Default'])
-    };
+    matSettings.byConst = {};
+    materials.byConst = {};
     sttgsMat.byConst = {};
     sttgsGroupMatbyConst.innerHTML = '';
 }
 
+//? add color inputs
+function addMatByConst(constName, constNamePopup, opaque=true) {
+    const matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
+    const matSettingSpan = matSettingItem.querySelector('.settingsFlexSpan');
+    matSettingSpan.dataset.tag = constName;
+    matSettingSpan.dataset.template = opaque ? 'Opaque' : 'Transparent';
+    const constTag = matSettingItem.querySelector('.constTag');
+    constTag.title = constNamePopup;
+    constTag.innerHTML = `&nbsp;${constName}`;
+    
+    const inputs = Object.fromEntries(
+        Array.from(matSettingItem.querySelectorAll('input'))
+        .map((inputElement, idx) => {
+            inputElement.name = `input${constName}${['Checkbox', 'Opacity', 'Color'][idx]}`;
+            return [['checkbox', 'opacity', 'color'][idx], inputElement];
+        })
+    );
+    // apply default material settings
+    inputs.checkbox.checked = false;
+    const matSetting = matSettings.byConst[constName];
+    inputs.opacity.value = matSetting.opacity;
+    inputs.opacity.placeholder = matSetting.opacity;
+    inputs.color.value = matSetting.color;
+    // add input children to object
+    sttgsMat.byConst[constName] = inputs;
+
+    sttgsGroupMatbyConst.appendChild(matSettingItem);
+}
+
+//? update material enabled
+function updateMatEnabled(checkbox) {
+    const constName = checkbox.parentElement.parentElement.dataset.tag;
+    matSettings.byConst[constName].enabled = checkbox.checked;
+    updateColorInputToggle('byConst');
+    updateModel(force = true, source = 'updateMatEnabled');
+}
+
 function toggleMatByConstAll(visible) {
-    /*
-    TODO
-    for (const [zoneName, zoneProp] of Object.entries(zoneList)) {
-        zoneProp.Visible = visible;
+    for (const [constName, matInputs] of Object.entries(sttgsMat.byConst)) {
+        matInputs.checkbox.checked = visible;
+        matSettings.byConst[constName].enabled = visible;
     }
-    for (const chkbox of settingsPanelBlockZones.querySelectorAll('input[type=checkbox]')) {
-        chkbox.checked = visible;
-    }
-    updateModel(force = true, source = 'changeZoneAll');
-    */
+    updateColorInputToggle('byConst');
+    updateModel(force = true, source = 'toggleMatByConstAll');
 }
 function updateColorInputByConstToggle() {}
 
@@ -735,6 +845,7 @@ function resetSettings() {
     turnOnDebug(DEFAULTS.debugOn);
     turnOnLineThickness(DEFAULTS.lineThicknessOn);
     updateLineThickness(DEFAULTS.lineThickness);
+    changeMaterialBy(DEFAULTS.materialBy);
     turnOnTransparentMat(DEFAULTS.transparencyOn);
     overrideMaterials(DEFAULTS.overrideMatOn);
     resetMaterials('all');
@@ -1709,10 +1820,7 @@ function parseIDF(code) {
 
     //? 재질 업데이트
     
-    // const surfConst = objSplit[iddInfo.indexOf('construction name')];
-    // if (!(surfConst in matSettings.byConst)) {
-    //     matSettings.byConst[surfConst] = {...DEFAULTS.matSettings.templates.Opaque};
-    // }
+    //? Surfaces
     const surfToSkip = [];
     for (const [surfName, surfProp] of Object.entries(surfList)) {
         if (surfName in surfToSkip) continue;
@@ -1745,41 +1853,72 @@ function parseIDF(code) {
             constNamePopup = constName;
         }
 
-        const matSetting = {...DEFAULTS.matSettings.templates.Opaque};
-        matSettings.byConst[constNameToUse] = matSetting
+        const matSetting = {...DEFAULTS.matSettings.templates.Opaque, enabled: false};
+        matSettings.byConst[constNameToUse] = matSetting;
 
         materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
-            ...matSetting,
+            color: matSetting.color,
+            opacity: matSetting.opacity,
+            side: THREE.DoubleSide,
+            transparent: true
+        })
+        if (constNameNotUsed != '') {
+            // add as a reference
+            matSettings.byConst[constNameNotUsed] = matSettings.byConst[constNameToUse];
+            materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];
+        }
+        
+        // add color inputs
+        addMatByConst(constNameToUse, constNamePopup);
+    }
+
+    //? Fenestrations
+    const fenToSkip = [];
+    for (const [fenName, fenProp] of Object.entries(fenList)) {
+        if (fenName in fenToSkip) continue;
+
+        const constName = fenProp.Construction;
+
+        if (constName in materials.byConst) continue;
+
+        let [constNameToUse, constNameNotUsed] = ['', ''];
+        let constNamePopup = '';
+        if (surfList[fenProp.SurfaceName].OutsideBC == 'surface') {
+            // if there is adjacent surface
+            const adjFenName = fenProp.OutsideBCObj;
+            fenToSkip.push(adjFenName);
+            const adjConstName = surfList[adjFenName.toLowerCase()].Construction;
+            if (constName.toLowerCase() == adjConstName.toLowerCase()) {
+                constNameToUse = constName;
+                constNamePopup = constName;
+            }
+            else {
+                // constName에 reversed가 들어있지 않는 한 constName을 대표로 사용
+                [constNameToUse, constNameNotUsed]
+                    = constName.toLowerCase().includes('reverse') ?
+                        [adjConstName, constName] : [constName, adjConstName];
+                constNamePopup = `${constNameToUse} / ${constNameNotUsed}`;
+            }
+        }
+        else {
+            constNameToUse = constName;
+            constNamePopup = constName;
+        }
+
+        const matSetting = {...DEFAULTS.matSettings.templates.Transparent, enabled: false};
+        matSettings.byConst[constNameToUse] = matSetting;
+
+        materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
+            color: matSetting.color,
+            opacity: matSetting.opacity,
             side: THREE.DoubleSide,
             transparent: true
         })
         if (constNameNotUsed != '')
             materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];  // add as a reference
         
-        //? add color inputs
-        let matSettingItem = sttgsMatTemplatebyConst.content.cloneNode(true);
-        matSettingItem.querySelector('.settingsFlexSpan').dataset.tag = constNameToUse;
-        const constTag = matSettingItem.querySelector('.constTag');
-        constTag.title = constNamePopup;
-        constTag.innerHTML = `&nbsp;${constNameToUse}`;
-        /*
-        const inputs = Object.fromEntries(
-            Array.from(matSettingItem.querySelectorAll('.settingsInput'))
-            .map((inputElement, idx) => {
-                inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
-                return [['opacity', 'color'][idx], inputElement];
-            })
-        );
-        // apply default material settings
-        const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
-        inputs.opacity.value = defaultMatSetting.opacity;
-        inputs.opacity.placeholder = defaultMatSetting.opacity;
-        inputs.color.value = defaultMatSetting.color;
-        // add input children to object
-        sttgsMat.byType[matType] = inputs;
-        */
-
-        sttgsGroupMatbyConst.appendChild(matSettingItem);
+        // add color inputs
+        addMatByConst(constNameToUse, constNamePopup, false);
     }
 
     console.log(constList);
@@ -2021,6 +2160,15 @@ function renderModel() {
                 }
             }
         }
+        else if (materialBy == 'byConst') {
+            const constName = surfProp.Construction;
+            if (matSettings.byConst[constName].enabled) {
+                matSurf = materials.byConst[constName];
+            }
+            else {
+                matSurf = materials.byConstDefault.DefaultOpaque;
+            }
+        }
         /*
         if (surfName.startsWith('front_pv')) {
             matSurf = new THREE.MeshLambertMaterial({color: '#163aba', side: THREE.DoubleSide})
@@ -2159,6 +2307,15 @@ function renderModel() {
                     break;
             }
         }
+        else if (materialBy == 'byConst') {
+            const constName = fenProp.Construction;
+            if (matSettings.byConst[constName].enabled) {
+                matFen = materials.byConst[constName];
+            }
+            else {
+                matFen = materials.byConstDefault.DefaultTransparent;
+            }
+        }
 
         matFen = matFen.clone();
         matFen.color = add_white_color_rgb(
@@ -2200,8 +2357,15 @@ function renderModel() {
 
         let shadeGeom = shadeProp.Geometries;
 
-        let matShade = materials.byType.Shading.clone();
-
+        let matShade;
+        if (materialBy == 'byType') {
+            matShade = materials.byType.Shading.clone();
+        }
+        else if (materialBy == 'byConst') {
+            matShade = materials.byConstDefault.DefaultShading;
+        }
+        
+        matShade = matShade.clone();
         if (shadingOn && isInsideHeightRange(shadeProp.ZBoundary)) {
             if (!transparencyOn) {
                 if (matShade.opacity < 1) {
