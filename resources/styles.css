@@ -393,6 +393,7 @@ button.glass:active, .customButton:focus {
     height: 18px;
     background-image: url('./imgs/close.png');
     background-size: 100% 100%;
+    transition: opacity 0.3s;
 }
 .settingsCloseBtn:hover {
     opacity: 0.5;
