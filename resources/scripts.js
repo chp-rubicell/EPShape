@@ -1,6 +1,6 @@
 /*
-TODO Materials by construction
 TODO Add loading icon when opening idf files
+TODO Add support for walls and windows object
 */
 //+ ------------------------------------------------------------------- +//
 //MARK: Basic Utilities
