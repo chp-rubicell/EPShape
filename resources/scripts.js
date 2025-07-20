@@ -98,6 +98,11 @@ DEFAULTS = {
     materialBy: 'byType',
     overrideMatOn: false,
     matSettings: {
+        'common': {
+            side: THREE.DoubleSide,
+            transparent: true,
+            alphaTest: 0.01
+        },
         'templates': {
             'DefaultOpaque': { color: '#f5f5f5', opacity: 1.0 },
             'DefaultTransparent': { color: '#47dcff', opacity: 0.5 },
@@ -216,9 +221,8 @@ shadowCatcherMat.opacity = 0.5;
 
 const matGhost = new THREE.MeshBasicMaterial({
     color: 0x000000,
-    side: THREE.DoubleSide,
-    transparent: true,
-    blending: THREE.AdditiveBlending
+    blending: THREE.AdditiveBlending,
+    ...DEFAULTS.matSettings.common
 });
 
 let matSettings = {
@@ -245,13 +249,9 @@ const materials = {
 }
 for (const matGroup of Object.values(materials)) {
     for (const mat of Object.values(matGroup)) {
-        mat.side = THREE.DoubleSide; // double side settings to materials
-        mat.transparent = true;
-        // if (mat.opacity < 1) {
-        //     mat.transparent = true;
-        //     //* mat.depthWrite = false;
-        // }
-        // mat.shadowSide = THREE.FrontSide;
+        for (const [key, prop] of Object.entries(DEFAULTS.matSettings.common)) {
+            mat[key] = prop;
+        }
     }
 }
 
@@ -459,7 +459,7 @@ function updateAbsoluteLineThickness() {
 updateAbsoluteLineThickness();
 function updateLineThickness(thickness) {
     if (!isNaN(thickness)) {
-        thickness = clamp(thickness, 1, MAXLINETHICKNESS);
+        thickness = clamp(thickness, 0, MAXLINETHICKNESS);
         lineThickness = thickness;
     }
     if (lineThicknessOn) {
@@ -780,8 +780,7 @@ for (const matSettingItem of Array.from(sttgGroupMatbyConstDefault.querySelector
     matSettings.byConstDefault[tag] = {...defaultMatSetting};
     materials.byConstDefault[tag] = new THREE.MeshPhongMaterial({
         ...defaultMatSetting,
-        side: THREE.DoubleSide,
-        transparent: true
+        ...DEFAULTS.matSettings.common
     })
 }
 
@@ -1870,8 +1869,7 @@ function parseIDF(code) {
         materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
             color: matSetting.color,
             opacity: matSetting.opacity,
-            side: THREE.DoubleSide,
-            transparent: true
+            ...DEFAULTS.matSettings.common
         })
         if (constNameNotUsed != '') {
             // add as a reference
@@ -1923,8 +1921,7 @@ function parseIDF(code) {
         materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
             color: matSetting.color,
             opacity: matSetting.opacity,
-            side: THREE.DoubleSide,
-            transparent: true
+            ...DEFAULTS.matSettings.common
         })
         if (constNameNotUsed != '')
             materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];  // add as a reference
