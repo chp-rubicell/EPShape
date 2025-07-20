@@ -2212,10 +2212,12 @@ function renderModel() {
             if (!transparencyOn) {
                 if (matSurf.opacity < 1) {
                     // matSurf.color = add_black_color_rgb(matSurf.color, matSurf.opacity);
+                    /*
                     matSurf.color = add_white_color_rgb(
                         add_black_color_hex(matSurf.color, matSurf.opacity),
                         1 - (1 - matSurf.opacity) / 2.5
                     );
+                    */
                     matSurf.opacity = 1;
                 }
                 matSurf.transparent = false;
@@ -2384,10 +2386,12 @@ function renderModel() {
                 if (matShade.opacity < 1) {
                     // matShade.color = add_black_color_rgb(matShade.color, matShade.opacity);
                     // matShade.color = add_white_color_rgb(matShade.color, matShade.opacity);
+                    /*
                     matShade.color = add_white_color_rgb(
                         add_black_color_hex(matShade.color, matShade.opacity),
                         1 - (1 - matShade.opacity) / 2.2
                     );
+                    */
                     matShade.opacity = 1;
                 }
                 matShade.transparent = false;
