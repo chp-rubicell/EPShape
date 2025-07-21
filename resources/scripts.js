@@ -105,9 +105,9 @@ DEFAULTS = {
         },
         'templates': {
             'DefaultOpaque': { color: '#f5f5f5', opacity: 1.0 },
-            'DefaultTransparent': { color: '#47dcff', opacity: 0.5 },
+            'DefaultTransparent': { color: '#f5f5f5', opacity: 0.5 },
             'Opaque': { color: '#f72568', opacity: 1.0 },
-            'Transparent': { color: '#f72568', opacity: 0.5 },
+            'Transparent': { color: '#f72568', opacity: 0.7 },
             'Shading': { color: '#f5f5f5', opacity: 0.8 }
         },
         'byType': {
