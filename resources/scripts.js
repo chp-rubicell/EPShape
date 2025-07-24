@@ -1584,7 +1584,7 @@ function parseIDF(code) {
         }
     }
     iddInfoLibrary = versionLibrary[versionCode];
-    console.log(iddInfoLibrary);
+    // console.log(iddInfoLibrary);
 
     //? North Axis 검사
     for (let i = 0; i < objectList.length; i++) {
@@ -1897,7 +1897,7 @@ function parseIDF(code) {
             // if there is adjacent surface
             const adjFenName = fenProp.OutsideBCObj;
             fenToSkip.push(adjFenName);
-            const adjConstName = surfList[adjFenName.toLowerCase()].Construction;
+            const adjConstName = fenList[adjFenName.toLowerCase()].Construction;
             if (constName.toLowerCase() == adjConstName.toLowerCase()) {
                 constNameToUse = constName;
                 constNamePopup = constName;
@@ -1932,8 +1932,8 @@ function parseIDF(code) {
 
     updateColorInputToggle('all');
 
-    console.log(surfList);
-    console.log(fenList);
+    // console.log(surfList);
+    // console.log(fenList);
     console.log("Done!");
     readSuccess = Object.keys(zoneList).length > 0;
 
