@@ -250,6 +250,9 @@ const materials = {
 for (const matGroup of Object.values(materials)) {
     for (const mat of Object.values(matGroup)) {
         for (const [key, prop] of Object.entries(DEFAULTS.matSettings.common)) {
+            if (key == 'transparent' && mat.opacity == 1) {
+                continue;  // don't set it to transparent if opacity is 1
+            }
             mat[key] = prop;
         }
     }
@@ -614,6 +617,7 @@ function resetMaterials(matBy) {
             const material = materials.byType[matType];
             material.opacity = defaultMatSetting.opacity;
             material.color = hexToRgb(defaultMatSetting.color);
+            material.transparent = (defaultMatSetting.opacity < 1);
         }
     }
     //? byConst
@@ -626,6 +630,7 @@ function resetMaterials(matBy) {
             const material = materials.byConstDefault[tag];
             material.opacity = defaultMatSetting.opacity;
             material.color = hexToRgb(defaultMatSetting.color);
+            material.transparent = (defaultMatSetting.opacity < 1);
         }
         for (const [constName, matInputs] of Object.entries(sttgsMat.byConst)) {
             const template = matInputs.opacity.parentElement.dataset.template;
@@ -635,6 +640,7 @@ function resetMaterials(matBy) {
             const material = materials.byConst[constName];
             material.opacity = defaultMatSetting.opacity;
             material.color = hexToRgb(defaultMatSetting.color);
+            material.transparent = (defaultMatSetting.opacity < 1);
         }
     }
     updateModel(force = true, source = 'resetMaterials');
@@ -652,6 +658,7 @@ function updateMatOpacity(e, inputfield) {
         inputfield.value = inputOpacity;
         matSettings[matBy][matTag].opacity = inputOpacity;
         materials[matBy][matTag].opacity = inputOpacity;
+        materials[matBy][matTag].transparent = (inputOpacity < 1);
         inputfield.blur();
         updateModel(force = true, source = 'updateMatOpacity');
     }
@@ -1871,6 +1878,7 @@ function parseIDF(code) {
             opacity: matSetting.opacity,
             ...DEFAULTS.matSettings.common
         })
+        if (matSetting.opacity == 1) materials.byConst[constNameToUse].transparent = false;
         if (constNameNotUsed != '') {
             // add as a reference
             matSettings.byConst[constNameNotUsed] = matSettings.byConst[constNameToUse];
@@ -1923,6 +1931,7 @@ function parseIDF(code) {
             opacity: matSetting.opacity,
             ...DEFAULTS.matSettings.common
         })
+        if (matSetting.opacity == 1) materials.byConst[constNameToUse].transparent = false;
         if (constNameNotUsed != '')
             materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];  // add as a reference
         
@@ -2330,10 +2339,10 @@ function renderModel() {
         }
 
         matFen = matFen.clone();
-        matFen.color = add_white_color_rgb(
+        /*matFen.color = add_white_color_rgb(
             add_black_color_hex(matFen.color, clamp(1 + 0.3 - matFen.opacity, 0, 1)),
             1 - clamp(matFen.opacity - 0.3, 0, 1) / 2.5
-        );
+        );*/
         /*
         if (!transparencyOn) {
             if (matFen.opacity < 1) {
