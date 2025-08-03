@@ -1143,8 +1143,8 @@ document.onkeyup = function (event) {
             }
             else {
                 panelVisibilityAll(-1);
-                if (idfName == '') settingsPanelVisibility(-1);
-                else settingsPanelVisibility(0);
+                // if (idfName == '') settingsPanelVisibility(-1);
+                // else settingsPanelVisibility(0);
             }
             break;
     }

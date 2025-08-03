@@ -36,8 +36,8 @@
     <script src="./resources/lib/iddLibrary.js"></script>
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
-    <!-- <script src="./resources/scripts.js" defer></script> -->
-    <script src="./resources/scripts-compiled.js?v=25_0803" defer></script>
+    <script src="./resources/scripts.js" defer></script>
+    <!-- <script src="./resources/scripts-compiled.js?v=25_0803" defer></script> -->
 </head>
 
 <body>
@@ -87,6 +87,7 @@
 
                 <div id="VisibilityPanel" data-panel-tag="visibility" class="glass defaultPanel panelCentered" style="width: 350px;">
                     <div class="panelTitle">Visibility</div>
+                    <div class="panelAlignButtonGroup"></div>
                     <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
 
                     <div id="VisibilityPanelContent" class="panelContent">
@@ -140,11 +141,7 @@
                 </div>
 
                 <div id="SettingsPanel" data-panel-tag="settings" class="glass defaultPanel panelCentered" style="width: 350px;">
-                    <div class="panelAlignButtonGroup">
-                        <div class="panelAlignButtonLeft" onclick="panelAlign(this.parentElement.parentElement, -1);"></div>
-                        <div class="panelAlignButtonCenter" onclick="panelAlign(this.parentElement.parentElement, 0);"></div>
-                        <div class="panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
-                    </div>
+                    <div class="panelAlignButtonGroup"></div>
                     <div class="settingsCloseBtn" onclick="settingsPanelVisibility(0);"></div>
 
                     <div id="SettingsPanelContent" class="panelContent">
@@ -405,6 +402,12 @@
 
     </div>
 
+    <template id="PanelAlignButtonGroupTemplate">
+        <div class="panelAlignButtonLeft" onclick="panelAlign(this.parentElement.parentElement, -1);"></div>
+        <div class="panelAlignButtonCenter" onclick="panelAlign(this.parentElement.parentElement, 0);"></div>
+        <div class="panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
+    </template>
+
     <script>
         /*
         console.log(
@@ -414,6 +417,7 @@
         );
         */
 
+        //? —— Screensize Related ——————
         const pad = 40;
         const minWidth = 550;
         const maxWidth = 1200;
@@ -470,6 +474,14 @@
             // CanvasRenderer.style.height = mainPanelWidth * canvHeight / canvWidth + 'px';
         }
         screenManager();
+        
+        //? —— Panel Align Button Related ——————
+        const panelAlignButtonGroupTemplate = document.getElementById('PanelAlignButtonGroupTemplate');
+        const panelAlignButtonGroups = document.querySelectorAll('.panelAlignButtonGroup');
+        panelAlignButtonGroups.forEach(element => {
+            const template = panelAlignButtonGroupTemplate.content.cloneNode(true);
+            element.appendChild(template);
+        });
     </script>
     <script>
         const hoverBtns = document.getElementsByClassName('hoverBtnWrapper');
@@ -494,6 +506,10 @@
             }
             else {
                 // 열기
+                // check panel open
+                if (panelOn['visibility'] + panelOn['settings'] + panelOn['help'] > 0) {
+                    return
+                }
                 let hoverBtnsToChange = [];
                 if (toggle == 0 && !readSuccess) {
                     // 오류
@@ -527,24 +543,21 @@
                 case -1:
                     // 모두 닫으려고 할 때
                     clickable = false;
-                    hoverBtnVisibility(-1);
+                    // hoverBtnVisibility(-1);
                     panelVisibility(settingsPanel, -1);
                     break;
-
                 case 0:
                     // 창이 열려있을 때
                     clickable = true;
-                    hoverBtnVisibility(1);
+                    // hoverBtnVisibility(1);
                     panelVisibility(settingsPanel, -1);
                     break;
-
                 case 1:
                     // 창이 닫혀있을 때
                     clickable = false;
-                    hoverBtnVisibility(-1);
+                    // hoverBtnVisibility(-1);
                     panelVisibility(settingsPanel, 1);
                     break;
-            
                 default:
                     break;
             }
@@ -591,6 +604,8 @@
             for (const panel of panels) {
                 panelVisibility(panel, toggle);
             }
+            console.log('on')
+            hoverBtnVisibility(1);
         }
 
         function panelAlign(panel, alignment=0) {
