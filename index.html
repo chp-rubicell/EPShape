@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0803">
+    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0803A">
     <script src="./resources/lib/three.js"></script>
     <script src="./resources/lib/LineMaterial.js"></script>
     <script src="./resources/lib/LineSegmentsGeometry.js"></script>
@@ -36,8 +36,8 @@
     <script src="./resources/lib/iddLibrary.js"></script>
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
-    <script src="./resources/scripts.js" defer></script>
-    <!-- <script src="./resources/scripts-compiled.js?v=25_0803" defer></script> -->
+    <!-- <script src="./resources/scripts.js" defer></script> -->
+    <script src="./resources/scripts-compiled.js?v=25_0803A" defer></script>
 </head>
 
 <body>
@@ -71,7 +71,7 @@
 
             <div id="CanvasContainer" oncontextmenu="return false;" style="position: relative; background-color: white;" draggable="false">
 
-                <div id="objectDisplay" class="whitemode" style="background-color: aqua;"></div>
+                <div id="objectDisplay" class="whitemode"></div>
 
                 <div id="fileHover" class="bg" style="background: radial-gradient(#000000a0, #00000000); z-index: 20; display: none;"><p id="fileHoverText">drop to load file</p></div>
                 
@@ -81,14 +81,14 @@
                 </div>
                 <div class="hoverBtnWrapper" style="right: 40px;">
                     <button id="SaveBtn" class="hoverBtn glass" title="Save as Image" onclick="exportImage();"></button>
-                    <button id="VisibilityBtn" class="hoverBtn glass" title="Visibility" onclick="panelVisibility(visibilityPanel, 1); hoverBtnVisibility(-1);"></button>
-                    <button id="SettingsBtn" class="hoverBtn glass" title="Settings" onclick="settingsPanelVisibility(1);"></button>
+                    <button id="VisibilityBtn" class="hoverBtn glass" title="Visibility" onclick="panelVisibility(visibilityPanel, 1); hoverBtnVisibility(-1); objectDisplayAlignUpdate(visibilityPanel);"></button>
+                    <button id="SettingsBtn" class="hoverBtn glass" title="Settings" onclick="panelVisibility(settingsPanel, 1); hoverBtnVisibility(-1); objectDisplayAlignUpdate(settingsPanel);"></button>
                 </div>
 
                 <div id="VisibilityPanel" data-panel-tag="visibility" class="glass defaultPanel panelCentered" style="width: 350px;">
                     <div class="panelTitle">Visibility</div>
                     <div class="panelAlignButtonGroup"></div>
-                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1); objectDisplayAlignUpdate();"></div>
 
                     <div id="VisibilityPanelContent" class="panelContent">
                         <div id="SettingsPanelBlockVisFilter" class="settingsPanelBlock">
@@ -142,7 +142,7 @@
 
                 <div id="SettingsPanel" data-panel-tag="settings" class="glass defaultPanel panelCentered" style="width: 350px;">
                     <div class="panelAlignButtonGroup"></div>
-                    <div class="settingsCloseBtn" onclick="settingsPanelVisibility(0);"></div>
+                    <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1); objectDisplayAlignUpdate();"></div>
 
                     <div id="SettingsPanelContent" class="panelContent">
 
@@ -486,8 +486,6 @@
     <script>
         const hoverBtns = document.getElementsByClassName('hoverBtnWrapper');
         const hoverBtnMargin = Number(getComputedStyle(hoverBtns[0]).margin.slice(0, -2));
-
-        const settingsPanel = document.getElementById('SettingsPanel');
         
         for (const hoverBtn of hoverBtns) {
             hoverBtn.classList.remove('fadeoutSlide');
@@ -498,6 +496,9 @@
         function hoverBtnVisibility(toggle) {
             if (toggle < 0) {
                 // 닫기
+                for (const hoverBtn of hoverBtns) {
+                    hoverBtn.blur();
+                }
                 for (const hoverBtn of hoverBtns) {
                     hoverBtn.style.top = - hoverBtn.clientHeight - hoverBtnMargin*2 + 'px';
                     hoverBtn.classList.remove('fadeinSlide');
@@ -527,47 +528,13 @@
                 }
             }
         }
-        
-        function settingsPanelVisibility(toggle=null) {
-            
-            for (const hoverBtn of hoverBtns) {
-                hoverBtn.blur();
-            }
-
-            if (toggle==undefined || toggle==null) {
-                if (clickable) toggle = 1;
-                else toggle = 0;
-            }
-
-            switch (toggle) {
-                case -1:
-                    // 모두 닫으려고 할 때
-                    clickable = false;
-                    // hoverBtnVisibility(-1);
-                    panelVisibility(settingsPanel, -1);
-                    break;
-                case 0:
-                    // 창이 열려있을 때
-                    clickable = true;
-                    // hoverBtnVisibility(1);
-                    panelVisibility(settingsPanel, -1);
-                    break;
-                case 1:
-                    // 창이 닫혀있을 때
-                    clickable = false;
-                    // hoverBtnVisibility(-1);
-                    panelVisibility(settingsPanel, 1);
-                    break;
-                default:
-                    break;
-            }
-        }
 
         const commandPanel = document.getElementById('CommandPanel');
         const visibilityPanel = document.getElementById('VisibilityPanel');
+        const settingsPanel = document.getElementById('SettingsPanel');
         const helpPanel = document.getElementById('HelpPanel');
         const copyPanel = document.getElementById('CopyPanel');
-        const panels = [commandPanel, visibilityPanel, helpPanel, copyPanel];
+        const panels = [commandPanel, visibilityPanel, settingsPanel, helpPanel, copyPanel];
         const panelOn = {
             'command': 0,
             'visibility': 0,
@@ -575,9 +542,6 @@
             'help': 0,
             'copy': 0
         };
-
-        settingsPanelVisibility(-1);
-        panelVisibilityAll(-1);
         
         function panelVisibility(panel, toggle=0) {
             if (toggle <= 0) {
@@ -604,8 +568,8 @@
             for (const panel of panels) {
                 panelVisibility(panel, toggle);
             }
-            console.log('on')
             hoverBtnVisibility(1);
+            objectDisplayAlignUpdate();
         }
 
         function panelAlign(panel, alignment=0) {
@@ -615,21 +579,33 @@
                     // left
                     panel.classList.add('panelLeftAligned');
                     break;
-                    
                 case 0:
                     // center
                     panel.classList.add('panelCentered');
                     break;
-            
                 case 1:
                     // right
                     panel.classList.add('panelRightAligned');
                     break;
-            
                 default:
                     break;
             }
+            objectDisplayAlignUpdate(panel);
         }
+
+        const objectDisplay = document.getElementById('objectDisplay');
+        function objectDisplayAlignUpdate(panel=null) {
+            if (panel && panel.classList.contains('panelLeftAligned')) {
+                objectDisplay.style.left = 'auto';
+                objectDisplay.style.right = '0px';
+            }
+            else {
+                objectDisplay.style.left = '';
+                objectDisplay.style.right = '';
+            }
+        }
+
+        panelVisibilityAll(-1);
 
     </script>
 

@@ -1052,9 +1052,6 @@ CanvasRenderer.onmousedown = function (event) {
         if (camStepped) camera.azm = Math.round(camera.azm / 45) * 45;
         document.removeEventListener('mousemove', customOnMouseMove);
     }
-    // else {
-    //     settingsPanelVisibility();
-    // }
 }
 document.addEventListener('onmouseleave', function () {
     document.removeEventListener('mousemove', customOnMouseMove);
@@ -1064,15 +1061,17 @@ document.addEventListener('onmouseleave', function () {
 //     CanvasContainer.removeEventListener('mousemove', customOnMouseMove);
 // }
 CanvasContainer.onwheel = function (event) {
-    if (clickable) {
+    /*if (clickable) {
         camera.radius -= event.wheelDeltaY / 100 * clamp((camera.radius / 50) ** 1.2, 1, Infinity);
-        // camera.zoom = event.wheelDeltaY / 210;
         updateCamera(force = true, source = 'onwheel');
-    }
+    }*/
+    camera.radius -= event.wheelDeltaY / 100 * clamp((camera.radius / 50) ** 1.2, 1, Infinity);
+    updateCamera(force = true, source = 'onwheel');
 }
 document.getElementById('PageWrapper').onwheel = function (event) {
     event = event || window.event;  //! deprecated?
-    if (event.target.id == 'CanvasRenderer' && clickable) {
+    // if (event.target.id == 'CanvasRenderer' && clickable) {
+    if (event.target.id == 'CanvasRenderer') {
         return false;
     }
 }
@@ -1143,8 +1142,6 @@ document.onkeyup = function (event) {
             }
             else {
                 panelVisibilityAll(-1);
-                // if (idfName == '') settingsPanelVisibility(-1);
-                // else settingsPanelVisibility(0);
             }
             break;
     }
@@ -1186,7 +1183,6 @@ window.onscroll() = function () {
 const raycaster = new THREE.Raycaster();
 raycaster.layers.set(1);
 const pointer = new THREE.Vector2();
-const objectDisplay = document.getElementById('objectDisplay');
 let lastHighlightedObj = null;
 let lastHighlightedObjMat = null;
 const matHighlighted = new THREE.MeshPhongMaterial({ color: '#ff0000', side: THREE.DoubleSide, opacity: 0.7, transparent: true });
@@ -1489,7 +1485,6 @@ function readFile(fileList) {
 function loadFile(code) {
     CanvasRenderer.removeEventListener('pointermove', objectHighlight);
     // CanvasRenderer.removeEventListener('pointerdown', objSelectionPointerDown);
-    settingsPanelVisibility(0);
     panelVisibilityAll(-1);
     if (!camFixed) {
         resetSettings();
@@ -1641,7 +1636,7 @@ function parseIDF(code) {
             if (!alerted) {
                 alerted = true;
                 idfName = '';
-                settingsPanelVisibility(-1);
+                panelVisibilityAll(-1);
                 window.alert('Currently only supports idf files using "BuildingSurface:Detailed".');
             }
             return;
