@@ -6,6 +6,7 @@ rgb(240, 245, 247), # f0f5f7
 
 :root {
     --slider-handle-size: 15px;
+    --panelMargin: 25px;
 }
 .lg-title {
     display: inline-block;
@@ -302,12 +303,10 @@ button.glass:active, .customButton:focus {
     flex-direction: column;
     /* height: calc(100% - 50px); */
     /* height: fit-content; */
-    max-height: -moz-calc(100% - 50px);
-    max-height: -webkit-calc(100% - 50px);
-    max-height: calc(100% - 50px);
+    max-height: -moz-calc(100% - var(--panelMargin)*2);
+    max-height: -webkit-calc(100% - var(--panelMargin)*2);
+    max-height: calc(100% - var(--panelMargin)*2);
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -318,6 +317,62 @@ button.glass:active, .customButton:focus {
     opacity: 0;
     background-color: rgba(240,245,247,0.75);
     line-height: 1.5;
+}
+.panelLeftAligned {
+    left: var(--panelMargin);
+    transform: translate(0, -50%);
+}
+.panelCentered {
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.panelRightAligned {
+    right: var(--panelMargin);
+    transform: translate(0, -50%);
+}
+.panelAlignButtonGroup {
+    position: absolute;
+    top: 0px;
+    right: 30px;
+    margin: 10px;
+    width: 40px;
+    height: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* opacity: 0.38; */
+    opacity: 0.5;
+}
+.panelAlignButtonLeft,
+.panelAlignButtonCenter,
+.panelAlignButtonRight {
+    width: 33.3333%;
+    height: 100%;
+    /* background-size: 100% 100%; */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: opacity 0.3s;
+}
+.panelAlignButtonLeft:hover,
+.panelAlignButtonCenter:hover,
+.panelAlignButtonRight:hover {
+    opacity: 0.5;
+}
+.panelAlignButtonLeft {
+    background-image: url('./imgs/alignleft.png');
+}
+.panelAlignButtonCenter {
+    background-image: url('./imgs/aligncenter.png');
+}
+.panelAlignButtonRight {
+    background-image: url('./imgs/alignright.png');
+}
+.panelLeftAligned .panelAlignButtonLeft,
+.panelCentered .panelAlignButtonCenter,
+.panelRightAligned .panelAlignButtonRight {
+    /* visibility: hidden; */
+    opacity: 0.2;
 }
 
 /* #SettingsContainer {

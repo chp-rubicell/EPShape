@@ -71,7 +71,7 @@
 
             <div id="CanvasContainer" oncontextmenu="return false;" style="position: relative; background-color: white;" draggable="false">
 
-                <div id="objectDisplay" class="whitemode"></div>
+                <div id="objectDisplay" class="whitemode" style="background-color: aqua;"></div>
 
                 <div id="fileHover" class="bg" style="background: radial-gradient(#000000a0, #00000000); z-index: 20; display: none;"><p id="fileHoverText">drop to load file</p></div>
                 
@@ -85,7 +85,7 @@
                     <button id="SettingsBtn" class="hoverBtn glass" title="Settings" onclick="settingsPanelVisibility(1);"></button>
                 </div>
 
-                <div id="VisibilityPanel" data-panel-tag="visibility" class="glass defaultPanel" style="width: 350px;">
+                <div id="VisibilityPanel" data-panel-tag="visibility" class="glass defaultPanel panelCentered" style="width: 350px;">
                     <div class="panelTitle">Visibility</div>
                     <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
 
@@ -139,7 +139,12 @@
                     </div>
                 </div>
 
-                <div id="SettingsPanel" data-panel-tag="settings" class="glass defaultPanel" style="width: 350px;">
+                <div id="SettingsPanel" data-panel-tag="settings" class="glass defaultPanel panelCentered" style="width: 350px;">
+                    <div class="panelAlignButtonGroup">
+                        <div class="panelAlignButtonLeft" onclick="panelAlign(this.parentElement.parentElement, -1);"></div>
+                        <div class="panelAlignButtonCenter" onclick="panelAlign(this.parentElement.parentElement, 0);"></div>
+                        <div class="panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
+                    </div>
                     <div class="settingsCloseBtn" onclick="settingsPanelVisibility(0);"></div>
 
                     <div id="SettingsPanelContent" class="panelContent">
@@ -270,7 +275,7 @@
                     </div>
                 </div>
 
-                <div id="HelpPanel" data-panel-tag="help" class="glass defaultPanel" style="width: 500px;">
+                <div id="HelpPanel" data-panel-tag="help" class="glass defaultPanel panelCentered" style="width: 500px;">
                     <div class="panelTitle">Help</div>
                     <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
 
@@ -304,7 +309,7 @@
                     </div>
                 </div>
 
-                <div id="CommandPanel" data-panel-tag="command" class="glass defaultPanel" style="width: 500px;">
+                <div id="CommandPanel" data-panel-tag="command" class="glass defaultPanel panelCentered" style="width: 500px;">
                     <div class="panelTitle">Commands</div>
                     <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
 
@@ -340,7 +345,7 @@
                     </div>
                 </div>
 
-                <div id="CopyPanel" data-panel-tag="copy" class="glass defaultPanel" style="width: 300px; padding: 60px 0px 60px;">
+                <div id="CopyPanel" data-panel-tag="copy" class="glass defaultPanel panelCentered" style="width: 300px; padding: 60px 0px 60px;">
                     <div class="panelTitle">Copy settings</div>
                     <div class="settingsCloseBtn" onclick="panelVisibility(this.parentElement, -1); hoverBtnVisibility(1);"></div>
 
@@ -585,6 +590,29 @@
         function panelVisibilityAll(toggle=0) {
             for (const panel of panels) {
                 panelVisibility(panel, toggle);
+            }
+        }
+
+        function panelAlign(panel, alignment=0) {
+            panel.classList.remove('panelLeftAligned', 'panelCentered', 'panelRightAligned');
+            switch (alignment) {
+                case -1:
+                    // left
+                    panel.classList.add('panelLeftAligned');
+                    break;
+                    
+                case 0:
+                    // center
+                    panel.classList.add('panelCentered');
+                    break;
+            
+                case 1:
+                    // right
+                    panel.classList.add('panelRightAligned');
+                    break;
+            
+                default:
+                    break;
             }
         }
 
