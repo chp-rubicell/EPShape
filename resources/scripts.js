@@ -1060,7 +1060,7 @@ document.addEventListener('onmouseleave', function () {
 //     event = event || window.event;
 //     CanvasContainer.removeEventListener('mousemove', customOnMouseMove);
 // }
-CanvasContainer.onwheel = function (event) {
+CanvasRenderer.onwheel = function (event) {
     /*if (clickable) {
         camera.radius -= event.wheelDeltaY / 100 * clamp((camera.radius / 50) ** 1.2, 1, Infinity);
         updateCamera(force = true, source = 'onwheel');
