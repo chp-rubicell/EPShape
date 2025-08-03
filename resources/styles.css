@@ -462,7 +462,7 @@ button.glass:active, .customButton:focus {
     /* margin: 10px; */
     display: block;
     /* margin: 15px 0px 15px; */
-    margin: 0px 0px 15px;
+    margin: 15px 0px 0px;
     padding: 10px 25px 10px;
     border-radius: 6px;
     width: 100%;
@@ -476,8 +476,8 @@ button.glass:active, .customButton:focus {
     overflow: hidden;
     font-size: 1em;
 }
-.settingsPanelBlock:last-child {
-    margin-bottom: 0;
+.settingsPanelBlock:first-child {
+    margin-top: 0;
 }
 .settingsPanelBlock > span, .settingsPanelBlock > label  {
     padding-top: 0.1ex;
