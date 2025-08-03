@@ -463,6 +463,8 @@ button.glass:active, .customButton:focus {
 }
 .settingsCloseBtn:hover {
     opacity: 0.5;
+}
+.settingsCloseBtn:active {
     background-size: 90% 90%;
 }
 #SettingsPanel::before {
