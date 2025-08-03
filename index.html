@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0803A">
+    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0803B">
     <script src="./resources/lib/three.js"></script>
     <script src="./resources/lib/LineMaterial.js"></script>
     <script src="./resources/lib/LineSegmentsGeometry.js"></script>
@@ -403,9 +403,9 @@
     </div>
 
     <template id="PanelAlignButtonGroupTemplate">
-        <div class="panelAlignButtonLeft" onclick="panelAlign(this.parentElement.parentElement, -1);"></div>
-        <div class="panelAlignButtonCenter" onclick="panelAlign(this.parentElement.parentElement, 0);"></div>
-        <div class="panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
+        <div class="panelAlignButton panelAlignButtonLeft" onclick="panelAlign(this.parentElement.parentElement, -1);"></div>
+        <div class="panelAlignButton panelAlignButtonCenter" onclick="panelAlign(this.parentElement.parentElement, 0);"></div>
+        <div class="panelAlignButton panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
     </template>
 
     <script>

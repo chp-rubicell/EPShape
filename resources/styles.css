@@ -333,31 +333,38 @@ button.glass:active, .customButton:focus {
 .panelAlignButtonGroup {
     position: absolute;
     top: 0px;
-    right: 30px;
+    right: 32px;
     margin: 10px;
-    width: 40px;
+    width: 38px;
     height: 18px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    /* justify-content: center; */
+    justify-content: space-between;
     /* opacity: 0.38; */
-    opacity: 0.5;
 }
-.panelAlignButtonLeft,
-.panelAlignButtonCenter,
-.panelAlignButtonRight {
-    width: 33.3333%;
+.panelAlignButton {
+    /* width: 33.3333%; */
+    aspect-ratio: 1 / 2;
     height: 100%;
-    /* background-size: 100% 100%; */
-    background-size: contain;
+    border: 2px solid transparent;  /* for bigger clicking area */
+    /* background-color: #ff000050; */
+    background-size: 100% 100%;
+    /* background-size: contain; */
     background-repeat: no-repeat;
     background-position: center center;
-    transition: opacity 0.3s;
-}
-.panelAlignButtonLeft:hover,
-.panelAlignButtonCenter:hover,
-.panelAlignButtonRight:hover {
+    transition: opacity 0.2s, background-size 0.2s;
     opacity: 0.5;
+}
+.panelAlignButton:hover {
+    opacity: 0.8;
+    /* transform: scale(1, 0.8); */
+    background-size: 100% 80%;
+}
+.panelAlignButtonCenter:hover {
+    /* transform: scale(1.2, 0.8); */
+    background-size: 120% 85%;
 }
 .panelAlignButtonLeft {
     background-image: url('./imgs/alignleft.png');
@@ -372,7 +379,9 @@ button.glass:active, .customButton:focus {
 .panelCentered .panelAlignButtonCenter,
 .panelRightAligned .panelAlignButtonRight {
     /* visibility: hidden; */
-    opacity: 0.2;
+    opacity: 0.25;
+    /* transform: scale(1, 1); */
+    background-size: 100% 100%;
 }
 
 /* #SettingsContainer {
@@ -448,10 +457,13 @@ button.glass:active, .customButton:focus {
     height: 18px;
     background-image: url('./imgs/close.png');
     background-size: 100% 100%;
-    transition: opacity 0.3s;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transition: opacity 0.2s, background-size 0.2s;
 }
 .settingsCloseBtn:hover {
     opacity: 0.5;
+    background-size: 90% 90%;
 }
 #SettingsPanel::before {
     content: "Settings";
