@@ -345,35 +345,41 @@ button.glass:active, .customButton:focus {
     /* opacity: 0.38; */
 }
 .panelAlignButton {
+    position: relative;
     /* width: 33.3333%; */
     aspect-ratio: 1 / 2;
     height: 100%;
     border: 2px solid transparent;  /* for bigger clicking area */
-    /* background-color: #ff000050; */
-    background-size: 100% 100%;
-    /* background-size: contain; */
-    background-repeat: no-repeat;
-    background-position: center center;
-    transition: opacity 0.2s, background-size 0.2s;
     opacity: 0.5;
 }
-.panelAlignButton:hover {
-    opacity: 0.8;
-    /* transform: scale(1, 0.8); */
-    background-size: 100% 80%;
+/* button texture */
+.panelAlignButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s, transform 0.3s;
 }
-.panelAlignButtonCenter:hover {
-    /* transform: scale(1.2, 0.8); */
-    background-size: 120% 85%;
-}
-.panelAlignButtonLeft {
+.panelAlignButtonLeft::before {
     background-image: url('./imgs/alignleft.png');
 }
-.panelAlignButtonCenter {
+.panelAlignButtonCenter::before {
     background-image: url('./imgs/aligncenter.png');
 }
-.panelAlignButtonRight {
+.panelAlignButtonRight::before {
     background-image: url('./imgs/alignright.png');
+}
+.panelAlignButton:hover::before {
+    opacity: 0.8;
+    transform: scale(1, 0.8);
+}
+.panelAlignButtonCenter:hover::before {
+    transform: scale(1.2, 0.85);
 }
 .panelLeftAligned .panelAlignButtonLeft,
 .panelCentered .panelAlignButtonCenter,
@@ -455,17 +461,27 @@ button.glass:active, .customButton:focus {
     margin: 10px;
     width: 18px;
     height: 18px;
-    background-image: url('./imgs/close.png');
-    background-size: 100% 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
     transition: opacity 0.2s, background-size 0.2s;
 }
-.settingsCloseBtn:hover {
+/* closeBtn texture */
+.settingsCloseBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./imgs/close.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.settingsCloseBtn:hover::before {
     opacity: 0.5;
 }
-.settingsCloseBtn:active {
-    background-size: 90% 90%;
+.settingsCloseBtn:active::before {
+    transform: scale(0.9);
 }
 #SettingsPanel::before {
     content: "Settings";
