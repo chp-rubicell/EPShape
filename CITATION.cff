@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: EPShape (EnergyPlus Shape Viewer)
+message: >-
+  If you use this software and find it helpful, please cite
+  it using the metadata from this file.
+type: software
+authors:
+  - given-names: Chul-Hong
+    family-names: Park
+    email: chulhong.park@snu.ac.kr
+    orcid: 'https://orcid.org/0009-0003-4716-8169'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.16790188
+repository-code: 'https://github.com/chp-rubicell/EPShape'
+url: 'https://chp-rubicell.github.io/epshape'
+abstract: >-
+  EPShape (EnergyPlus Shape Viewer) is a 3D interactive
+  web-based shape viewer for EnergyPlus Input Data Files
+  (.idf) and is a crucial tool for intuitively understanding
+  and checking the IDF model.
+keywords:
+  - EnergyPlus
+  - viewer
+  - idf
+  - EP
+  - shape
+license: MIT
