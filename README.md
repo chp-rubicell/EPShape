@@ -20,7 +20,6 @@
 - **Compatibility** : Inspect properties of surfaces, fenestrations, and shadings by simply mousing over objects.
 - **Customization** : Offers extensive customizations for not only convenient model checking but also rendering high-quality image files fit for various purposes.
 
-
 ## Usage
 
 ### Basic navigation
@@ -32,11 +31,61 @@
 </p>
 
 <p align="center">
+    <img src="./doc/screenshots/camera.jpg" width="80%" />
+    <br>
+    Use the left mouse to rotate the camera and the right or middle mouse to pan the camera.
+</p>
+
+### Inspect model
+
+<p align="center">
     <img src="./doc/screenshots/inspect.jpg" width="80%" />
     <br>
     You can mouseover any object to see its properties (name, construction, zone, etc.).
 </p>
 
+<p align="center">
+    <img src="./doc/screenshots/vis-zones.jpg" width="45%" />
+    <img src="./doc/screenshots/vis-height.jpg" width="45%" />
+    <br>
+    Toggle visibility of zones individually or by the height range.
+</p>
+
+### Customizations
+
+<p align="center">
+    <img src="./doc/screenshots/set.jpg" width="80%" />
+    <br>
+    Various customization options are provided.
+</p>
+
+<p align="center">
+    <img src="./doc/screenshots/set-surftype.jpg" width="45%" />
+    <img src="./doc/screenshots/set-const.jpg" width="45%" />
+    <br>
+    Materials can be customized based on either surface types or constructions.
+</p>
+
+### Additional functionalities
+
+<p align="center">
+    <img src="./doc/screenshots/copyset.jpg" width="80%" />
+    <br>
+    Settings can be copied and pasted for repeatability.
+</p>
+
+<p align="center">
+    <img src="./doc/screenshots/cmd.jpg" width="40%" />
+    <img src="./doc/screenshots/cmd-help.jpg" width="40%" />
+    <br>
+    Additional settings and functionalities are available via the command prompt.<br>(Type <code>help</code> for more information)
+</p>
+
+<p align="center">
+    <img src="./doc/screenshots/help.jpg" width="80%" />
+    <br>
+    For more information, press the help ('?') button in the upper right corner.
+</p>
 
 ## Acknowledgement
 
