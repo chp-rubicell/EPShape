@@ -1,13 +1,20 @@
 <p align="center">
     <a href="https://chp-rubicell.github.io/epshape">
         <!-- <img src="https://github.com/chp-rubicell/EPEdit.js/blob/main/doc/epedit.svg" width="256" alt="EPEdit.js"><br/> -->
-        <img src="./doc/epshape.svg" width="480" alt="EPEdit.js"><br/>
-        <img src="https://img.shields.io/badge/-Try Out Yourself-black.svg?style=for-the-badge&colorB=9EE3FF" alt="Downloads">
+        <img src="./doc/epshape.svg" width="480" alt="EPEdit.js">
     </a>
+    <br>
+    <a href="https://doi.org/10.5281/zenodo.16790187"><img src="https://zenodo.org/badge/1008724171.svg" alt="DOI"></a>
 </p>
 
 <p align="center">
     <img src="doc/screenshots/home.jpg" width="80%" />
+</p>
+
+<p align="center">
+    <a href="https://chp-rubicell.github.io/epshape">
+        <img src="https://img.shields.io/badge/-TRY OUT YOURSELF-black.svg?style=for-the-badge&colorB=9EE3FF" alt="Try out yourself">
+    </a>
 </p>
 
 **EPShape** is a 3D interactive web-based shape viewer for EnergyPlus Input Data Files (`.idf`) and is a crucial tool for intuitively understanding and checking the IDF model.
