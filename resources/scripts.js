@@ -2943,26 +2943,32 @@ function settingsCode(tag, code = undefined) {
                 return transparencyOn ? '1' : '0';
             }
             break;
-        //? Override materials
-        case 'om':
+        //? Materials
+        case 'ms':
             if (code) {
                 // load setting
-                overrideMaterials(code == '1');
+                const ms = code.split('/');
+                const overMat = ms.shift();
+                overrideMaterials(overMat == '1');
+                const matTypes = Object.keys(matKeysbyType);
+                for (const [matIdx, matSttgStr] of ms.entries()) {
+                    const matSttg = matSttgStr.split('|');
+                    const matType = matTypes[matIdx];
+                    const inputs = sttgsMat.byType[matType];
+                    inputs.opacity.value = parseFloat(matSttg[0]);
+                    updateMatOpacity(true, inputs.opacity);
+                    inputs.color.value = '#' + matSttg[1];
+                    updateMatColor(inputs.color);
+                }
             }
             else {
                 // copy setting
-                return overrideMatOn ? '1' : '0';
-            }
-            break;
-        //? Window opacity
-        case 'wo':
-            if (code) {
-                // load setting
-                updateWindowOpacity(parseFloat(code));
-            }
-            else {
-                // copy setting
-                return String(windowOpacity);
+                let ms = [(overrideMatOn ? '1' : '0')];
+                for (const matType of Object.keys(matKeysbyType)) {
+                    let matSttg = matSettings.byType[matType];
+                    ms.push(`${matSttg.opacity}|${matSttg.color.replace('#', '')}`);
+                }
+                return ms.join('/');
             }
             break;
         //? Edge thickness
