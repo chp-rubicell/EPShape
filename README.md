@@ -4,8 +4,10 @@
         <img src="./doc/epshape.svg" width="480" alt="EPEdit.js">
     </a>
     <br>
-    <a href="https://doi.org/10.5281/zenodo.16790187"><img src="https://zenodo.org/badge/1008724171.svg" alt="DOI"></a>
+    <a href="https://doi.org/10.5281/zenodo.16790187"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.16790187-F7CA3E?style=flat-square&cacheSeconds=600
+    " alt="10.5281/zenodo.16790187"></a>
 </p>
+
 
 <p align="center">
     <img src="doc/screenshots/home.jpg" width="80%" />
