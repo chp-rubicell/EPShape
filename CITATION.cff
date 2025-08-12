@@ -14,7 +14,7 @@ authors:
     orcid: 'https://orcid.org/0009-0003-4716-8169'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.16790188
+    value: 10.5281/zenodo.16790187
 repository-code: 'https://github.com/chp-rubicell/EPShape'
 url: 'https://chp-rubicell.github.io/epshape'
 abstract: >-
