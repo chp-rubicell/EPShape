@@ -4,7 +4,7 @@
         <img src="./doc/epshape.svg" width="480" alt="EPEdit.js">
     </a>
     <br>
-    <a href="https://doi.org/10.5281/zenodo.16790187"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.16790187-F7CA3E?style=flat-square&cacheSeconds=600
+    <a href="https://doi.org/10.5281/zenodo.16790187"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.16790187-F7CA3E.svg?style=flat-square&cacheSeconds=600
     " alt="10.5281/zenodo.16790187"></a>
 </p>
 
@@ -103,3 +103,4 @@ Made using [three.js](https://github.com/mrdoob/three.js).
 ## License
 
 Distributed under the [MIT License](LICENSE).
+
