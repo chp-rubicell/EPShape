@@ -116,6 +116,7 @@ h4 {
 }
 a, a:visited {color: #f0f5f790;}
 a:hover {color: #f0f5f7cc;}
+a.imgshield {text-decoration: none;}
 
 
 #fileHover p {
