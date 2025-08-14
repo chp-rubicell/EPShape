@@ -27,7 +27,7 @@
 - **View IDF model shapes** : Parse the shape information (zones, surfaces, fenestrations, etc.) defined in the `.idf` file and display them in an interactive viewer.
 - **Web-based** : Works in modern browsers without the need for installation or dependencies.
 - **Compatibility** : Compatible with a wide range of EnergyPlus versions (8.9.0 ~).
-- **Compatibility** : Inspect properties of surfaces, fenestrations, and shadings by simply mousing over objects.
+- **Model checking** : Inspect properties of surfaces, fenestrations, and shadings by simply mousing over objects.
 - **Customization** : Offers extensive customizations for not only convenient model checking but also rendering high-quality image files fit for various purposes.
 
 ## Usage
