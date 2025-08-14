@@ -99,7 +99,7 @@
 
 ## Acknowledgement
 
-Made using [three.js](https://github.com/mrdoob/three.js).
+Made using [three.js](https://github.com/mrdoob/three.js) and [earcut](https://github.com/mapbox/earcut).
 
 ## License
 
