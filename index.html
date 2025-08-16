@@ -37,7 +37,7 @@
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
     <!-- <script src="./resources/scripts.js" defer></script> -->
-    <script src="./resources/scripts-compiled.js?v=25_0811" defer></script>
+    <script src="./resources/scripts-compiled.js?v=25_0817" defer></script>
 </head>
 
 <body>
@@ -400,7 +400,7 @@
                     </a>
                     <br>
                     <a href="https://chp-rubicell.github.io/" target="_blank" rel="noopener noreferrer">chp-rubicell.github.io</a><b>&nbsp;&nbsp;|&nbsp;&nbsp;</b><a href="mailto:chulhong.park@snu.ac.kr">chulhong.park@snu.ac.kr</a><br>
-                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-08-11</a></b>
+                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-08-17</a></b>
                 </small></p>
             </div>
 
@@ -430,6 +430,11 @@
         const panelWidth = 1280;
         const panelHeight = 800;
         let canvMult = 1;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const mult = urlParams.get('mult');
+        if (mult) canvMult = mult;
+        /*
         if (window.location.hash) {
             hashStr = window.location.hash.replace('#', '').toLowerCase();
             hashVal = parseFloat(hashStr);
@@ -438,6 +443,7 @@
             }
             if (hashStr.endsWith('c')) {}
         }
+        */
         console.log('Canvas multiplier: ' + canvMult);
         const canvWidth = parseInt(panelWidth * canvMult);
         const canvHeight = parseInt(panelHeight * canvMult);

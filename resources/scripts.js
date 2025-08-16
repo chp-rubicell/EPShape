@@ -141,6 +141,9 @@ DEFAULTS = {
     shadowMapSize: 1024,
     shadowOffset: new Array(45, 90),
     // scene
+    camerafov: 30,
+    camerafar: 1000,
+    maxZoom: 950,
     sceneObjectKeys: ['surfMesh']
 }
 
@@ -268,7 +271,7 @@ scene.background = null;
 
 // const camera = new THREE.PerspectiveCamera(fov=30, aspect=canvWidth / canvHeight, near=0.1, far=1000);
 // const camera = new THREE.PerspectiveCamera({fov:30, aspect:canvWidth / canvHeight, near:0.1, far:1000});
-const camera = new THREE.PerspectiveCamera(30, canvWidth / canvHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(DEFAULTS.camerafov, canvWidth / canvHeight, 0.1, DEFAULTS.camerafar);
 camera.up = new THREE.Vector3(0, 0, 1);
 
 // const lightDirect = new THREE.DirectionalLight(0xffffff, 1);
@@ -874,6 +877,11 @@ function resetSettings() {
     shadowMapSize = DEFAULTS.shadowMapSize;
     shadowOffset = [...DEFAULTS.shadowOffset];  // 얕은 복사
     turnOnShadow(DEFAULTS.shadowOn);
+    camera.fov = DEFAULTS.camerafov;
+    camera.far = DEFAULTS.camerafar;
+    maxZoom = DEFAULTS.maxZoom;
+    camera.far = maxZoom + 50;
+    camera.updateProjectionMatrix();
     updateModelLock = false;
     updateModel(force = true, source = 'resetSettings');
 }
@@ -932,7 +940,7 @@ function polarCoord(alt, azm) {
         Math.sin(altR));
 }
 
-let maxZoom = 950;
+let maxZoom = DEFAULTS.maxZoom;
 let lastRendered = Date.now();
 function updateCamera(force = false, source = null) {
     // if (camera.alt > 90) camera.alt = 90;
