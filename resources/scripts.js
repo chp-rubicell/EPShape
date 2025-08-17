@@ -3106,7 +3106,7 @@ function settingsCode(tag, code = undefined) {
 }
 
 function copySettings() {
-    let clipboardCode = '##EPPrevSttgs##;';
+    let clipboardCode = '##EPShpSttgs##;';
     for (const chkbox of copyPanel.querySelectorAll('input')) {
         if (chkbox.checked) {
             const tag = chkbox.dataset.tag;
@@ -3120,13 +3120,13 @@ function copySettings() {
 }
 
 function loadSettings() {
-    // const clipboardCode = '##EPPrevSttgs##;mt:0;wo:0.8;et:3;st:1;ss:45/90/1024/1/3/0;cp:10/0/0;';  //! for test
-    // const clipboardCode = '##EPPrevSttgs##;mt:1;wo:0.3;et:5;st:0;ss:45/90/1024/1/0/0;dg:0;cp:24.9555/16.6369/5.9436;ca:20;cz:-30;cr:91.72790319951721;';  //! for test
+    // const clipboardCode = '##EPShpSttgs##;mt:0;wo:0.8;et:3;st:1;ss:45/90/1024/1/3/0;cp:10/0/0;';  //! for test
+    // const clipboardCode = '##EPShpSttgs##;mt:1;wo:0.3;et:5;st:0;ss:45/90/1024/1/0/0;dg:0;cp:24.9555/16.6369/5.9436;ca:20;cz:-30;cr:91.72790319951721;';  //! for test
     navigator.clipboard.readText()
         .then(clipboardCode => {
-            if (clipboardCode.startsWith('##EPPrevSttgs##;')) {
+            if (clipboardCode.startsWith('##EPShpSttgs##;')) {
                 for (const codepair of clipboardCode.split(';')) {
-                    if (codepair != '##EPPrevSttgs##' && codepair != '') {
+                    if (codepair != '##EPShpSttgs##' && codepair != '') {
                         const [tag, code] = codepair.split(':');
                         settingsCode(tag, code);
                     }

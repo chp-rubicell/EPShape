@@ -432,8 +432,8 @@
         let canvMult = 1;
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        const mult = urlParams.get('mult');
-        if (mult) canvMult = mult;
+        const mult = parseFloat(urlParams.get('mult'));
+        if (!isNaN(mult)) canvMult = mult;
         /*
         if (window.location.hash) {
             hashStr = window.location.hash.replace('#', '').toLowerCase();
