@@ -2,6 +2,7 @@
 #%%
 
 import re
+import json
 
 def format_to_str(items, level=0):
 
@@ -34,9 +35,13 @@ def format_to_str(items, level=0):
 
 #%%
 
-version_list = ['7_2_0', '8_0_0', '8_1_0', '8_2_0', '8_3_0', '8_4_0', '8_5_0',
-                '8_6_0', '8_7_0', '8_8_0', '8_9_0', '9_0_0', '9_1_0', '9_2_0',
-                '9_3_0', '9_4_0', '9_5_0', '9_6_0', '22_1_0', '22_2_0']
+version_list = ['7_2_0',
+                '8_0_0', '8_1_0', '8_2_0', '8_3_0', '8_4_0',
+                '8_5_0', '8_6_0', '8_7_0', '8_8_0', '8_9_0',
+                '9_0_0', '9_1_0', '9_2_0', '9_3_0', '9_4_0',
+                '9_5_0', '9_6_0',
+                '22_1_0', '22_2_0', '23_1_0', '23_2_0', '24_1_0',
+                '24_2_0', '25_1_0']
 
 test_string = r'''
 ZoneGroup,
@@ -121,7 +126,12 @@ for version in version_list:
 
 print(library)
 
+#%%
+
+# lib_str = str(library)
+lib_str = json.dumps(library, separators=(',', ':'))
+
 with open('../resources/lib/iddLibrary.js', 'w', encoding='utf-8') as file:
-    file.write('const versionLibrary = ' + str(library) + ';')
+    file.write('const versionLibrary = ' + lib_str + ';')
 
 #%%
