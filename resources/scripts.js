@@ -2750,7 +2750,7 @@ function runCommand(command = '') {
             let log = command.match(/(\S+)\s+(\S+)/);
             let commandName = log[1];
             let commandVal = log[2];
-            lastCommand = commandName + ' ';
+            lastCommand = commandName + ' ' + commandVal;
             switch (commandName) {
                 case 'test':
                     console.log('TEST! -', commandVal);
@@ -2796,7 +2796,7 @@ function runCommand(command = '') {
                         commandFail();
                         return;
                     }
-                    direction = commandVal.match(/[a-z]+$/);
+                    [, direction, nosaveflag] = commandVal.match(/([a-z]+)(\*?)$/);
                     if (direction == 'cw') {
                         clockwise = true;
                     }
@@ -2807,7 +2807,7 @@ function runCommand(command = '') {
                         commandFail();
                         return;
                     }
-                    animateFrame(totalFrames, animateCameraHorizontal, clockwise);
+                    animateFrame(totalFrames, animateCameraHorizontal, (nosaveflag == '*'), clockwise);
                     break;
                 case 'animateheight':
                     totalFrames = parseInt(commandVal);
@@ -2815,7 +2815,7 @@ function runCommand(command = '') {
                         commandFail();
                         return;
                     }
-                    direction = commandVal.match(/[a-z]+$/);
+                    [, direction, nosaveflag] = commandVal.match(/([a-z]+)(\*?)$/);
                     if (direction == 'up') {
                         bottomToTop = true;
                     }
@@ -2826,7 +2826,7 @@ function runCommand(command = '') {
                         commandFail();
                         return;
                     }
-                    animateFrame(totalFrames, animateVisibleHeight, bottomToTop);
+                    animateFrame(totalFrames, animateVisibleHeight, (nosaveflag == '*'), bottomToTop);
                     break;
                 //? Model
                 //? Shadows
@@ -3149,10 +3149,11 @@ function loadSettings() {
  * 
  * @param {number} totalFrames total number of frames
  * @param {function} animationFunc function that adjusts the frame, should take currentFrame, totalFrame, and args as inputs
+ * @param {boolean} nosave if true, the frames are animated without saving as a zip
  * @param {...any} animateFuncArgs additional inputs for the animationFunc
  * @returns 
  */
-function animateFrame(totalFrames = 60, animationFunc, ...animateFuncArgs) {
+function animateFrame(totalFrames = 60, animationFunc, nosave, ...animateFuncArgs) {
 
     if (idfName == '') {
         return;
@@ -3175,8 +3176,10 @@ function animateFrame(totalFrames = 60, animationFunc, ...animateFuncArgs) {
     function generateFrames() {
         if (currentFrame < totalFrames) {
             // Capture the current state of the canvas
-            const frame = captureFrame();
-            frames.push(frame);
+            if (!nosave) {
+                const frame = captureFrame();
+                frames.push(frame);
+            }
             // animate the camera using the given animationFunc function
             animationFunc(currentFrame, totalFrames, ...animateFuncArgs)
             updateCamera(force = true, source = 'animateCameraHorizontal');
@@ -3184,7 +3187,7 @@ function animateFrame(totalFrames = 60, animationFunc, ...animateFuncArgs) {
             currentFrame++;
         } else {
             // Once all frames are captured, save them as a ZIP file
-            saveFramesAsZip();
+            if (!nosave) saveFramesAsZip();
         }
     }
 

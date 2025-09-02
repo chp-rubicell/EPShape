@@ -37,7 +37,7 @@
     <script src="./resources/lib/exampleIDF.js"></script>
     <script src="./resources/lib/jszip.min.js"></script>
     <!-- <script src="./resources/scripts.js" defer></script> -->
-    <script src="./resources/scripts-compiled.js?v=25_0817" defer></script>
+    <script src="./resources/scripts-compiled.js?v=25_0902" defer></script>
 </head>
 
 <body>
@@ -400,7 +400,7 @@
                     </a>
                     <br>
                     <a href="https://chp-rubicell.github.io/" target="_blank" rel="noopener noreferrer">chp-rubicell.github.io</a><b>&nbsp;&nbsp;|&nbsp;&nbsp;</b><a href="mailto:chulhong.park@snu.ac.kr">chulhong.park@snu.ac.kr</a><br>
-                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-08-17</a></b>
+                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-09-02</a></b>
                 </small></p>
             </div>
 
@@ -444,9 +444,10 @@
             if (hashStr.endsWith('c')) {}
         }
         */
-        console.log('Canvas multiplier: ' + canvMult);
-        const canvWidth = parseInt(panelWidth * canvMult);
-        const canvHeight = parseInt(panelHeight * canvMult);
+       console.log(`Canvas multiplier: ${canvMult}`);
+       const canvWidth = parseInt(panelWidth * canvMult);
+       const canvHeight = parseInt(panelHeight * canvMult);
+       console.log(`Canvas resolution: ${canvWidth}×${canvHeight}`);
 
         const MainPanel = document.getElementById('MainPanel');
         const CanvasContainer = document.getElementById("CanvasContainer");
