@@ -3232,11 +3232,11 @@ function animateVisibleHeight(currentFrame, totalFrames, bottomToTop) {
     const zmin = boundary[0][2];
     const zmax = boundary[1][2];
     if (bottomToTop) {
-        const toVal = (zmax - zmin) * currentFrame / totalFrames + zmin;
+        const toVal = (zmax - zmin) * currentFrame / (totalFrames-1) + zmin;
         updateToValue(toVal, heightSliderGroup, true);
     }
     else {
-        const toVal = (zmax - zmin) * (1 - currentFrame / totalFrames) + zmin;
+        const toVal = (zmax - zmin) * (1 - currentFrame / (totalFrames-1)) + zmin;
         updateToValue(toVal, heightSliderGroup, true);
     }
 }
