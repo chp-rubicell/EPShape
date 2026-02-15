@@ -9,7 +9,7 @@
     <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    
+
     <meta name="title" property="og:title" content="Rubicell EP Shape Viewer">
     <meta name="author" content="Chul-Hong Park">
     <meta name="description" property="og:description" content="Shape Viewer for EnergyPlus models">
@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=25_0904">
+    <link rel="stylesheet" type="text/css" href="resources/styles.css?v=26_0215">
     <script src="./resources/lib/three.js"></script>
     <script src="./resources/lib/LineMaterial.js"></script>
     <script src="./resources/lib/LineSegmentsGeometry.js"></script>
@@ -74,7 +74,7 @@
                 <div id="objectDisplay" class="whitemode"></div>
 
                 <div id="fileHover" class="bg" style="background: radial-gradient(#000000a0, #00000000); z-index: 20; display: none;"><p id="fileHoverText">drop to load file</p></div>
-                
+
 
                 <div class="hoverBtnWrapper" style="right: 0px;">
                     <button id="HelpBtn" class="hoverBtn glass" title="Help" onclick="panelVisibility(helpPanel, 1); hoverBtnVisibility(-1);"></button>
@@ -102,7 +102,7 @@
 
                         <div id="VisByZones" class="settingsPanelBlock">
                             <h5>Zones</h5>
-                    
+
                             <center>
                                 <button class="settingsPanelButton" onclick="changeZoneAll(true);">Show all</button>
                                 <button class="settingsPanelButton" onclick="changeZoneAll(false);">Hide all</button>
@@ -114,11 +114,11 @@
 
                         <div id="VisByHeight" class="settingsPanelBlock" style="display: none;">
                             <h5>Height Range</h5>
-                    
+
                             <center>
                                 <button class="settingsPanelButton" onclick="resetSliderValue();">Reset</button>
                             </center>
-                            
+
                             <div class="RangeSliderContainer">
                                 <div class="SlidersControl">
                                     <div id="SliderBackground"></div>
@@ -148,7 +148,7 @@
 
                         <div id="SettingsPanelBlockBackground" class="settingsPanelBlock">
                             <h5>Background</h5>
-                    
+
                             <center>
                                 <button class="settingsPanelButton changeBackgroundColorBtn" onclick="changeBackgroundColor(0, this);">Black</button>
                                 <button class="settingsPanelButton changeBackgroundColorBtn changeBgColorBtnHighlighted" onclick="changeBackgroundColor(1, this);" disabled>White</button>
@@ -158,7 +158,7 @@
 
                         <div class="settingsPanelBlock">
                             <h5>Visual</h5>
-                    
+
                             <label style="padding-right: 10px;">
                                 <input id="SttgsShading" type="checkbox" onclick="turnOnShading(this.checked);" checked /> Shading</font>
                             </label>
@@ -186,7 +186,7 @@
                             </label>
                         </div>
 
-                        
+
                         <div id="SettingsPanelBlockMatBy" class="settingsPanelBlock">
                             <h5>Materials by</h5>
                             <center>
@@ -222,7 +222,7 @@
 
                         <div id="SettingsPanelBlockMatbyConst" class="settingsPanelBlock" style="display: none;">
                             <h5>Constructions</h5>
-                    
+
                             <center>
                                 <button class="settingsPanelButton" onclick="resetMaterials('byConst');">Reset</button>
                                 <button class="settingsPanelButton" onclick="toggleMatByConstAll(true);">Select all</button>
@@ -354,7 +354,7 @@
                                 <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, true);">Select all</button>
                                 <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, false);">Deselect all</button>
                             </center>
-                    
+
                             <label><input type="checkbox" data-tag="zv" checked> Zone visibility filter type</label>
                             <label><input type="checkbox" data-tag="sh" checked> Shading visibility</label>
                             <label><input type="checkbox" data-tag="et" checked> Edge thickness</label>
@@ -372,7 +372,7 @@
                                 <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, true);">Select all</button>
                                 <button class="settingsPanelButton" onclick="toggleCopyCheckboxes(this.parentElement.parentElement, false);">Deselect all</button>
                             </center>
-                    
+
                             <label><input type="checkbox" data-tag="cp" checked> Camera base position</label>
                             <label><input type="checkbox" data-tag="ca" checked> Camera altitude</label>
                             <label><input type="checkbox" data-tag="cz" checked> Camera azimuth</label>
@@ -392,13 +392,32 @@
                 <div class="separator"></div>
                 <h4><small>DEVELOPED BY</small><b>&nbsp;&nbsp;Chul-Hong Park</b></h4>
                 <p><small>
-                    <a href="https://chp-rubicell.github.io/" target="_blank" rel="noopener noreferrer">chp-rubicell.github.io</a><b>&nbsp;&nbsp;|&nbsp;&nbsp;</b><a href="mailto:chulhong.park@snu.ac.kr">chulhong.park@snu.ac.kr</a>
-                    <br>
-                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-09-02</a></b>
-                    <br>
+                    <a class="imgshield" href="https://doi.org/10.5281/zenodo.16790187">
+                        <img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.16790187-9EE3FF?style=flat-square&cacheSeconds=600"
+                            alt="https://doi.org/10.5281/zenodo.16790187">
+                    </a><a class="imgshield shield-button" href="javascript:void(0);" onclick="copyToClipboard(this, 'doi.org/10.5281/zenodo.16790187')">
+
+
+                        <span class="shield-icon-group">
+
+                            <svg class="shield-icon copy-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                            </svg>
+
+                            <svg class="shield-icon check-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                        </span>
+
+                    </a>&nbsp;
                     <a class="imgshield" href="https://github.com/chp-rubicell/EPShape">
                         <img src="https://img.shields.io/badge/EPShape-gray?style=flat-square&logo=github&logoColor=white" alt="EPShape">
-                    </a>
+                    </a><br>
+                    <a href="https://chp-rubicell.github.io/" target="_blank"
+                        rel="noopener noreferrer">chp-rubicell.github.io</a><b>&nbsp;&nbsp;|&nbsp;&nbsp;</b><a
+                        href="mailto:chulhong.park@snu.ac.kr">chulhong.park@snu.ac.kr</a><br>
+                    UPDATED ON<b>&nbsp;&nbsp;<a style="text-decoration: none;" href="resources/updatelog.html">2025-09-02</a></b>
                 </small></p>
             </div>
 
@@ -412,6 +431,19 @@
         <div class="panelAlignButton panelAlignButtonRight" onclick="panelAlign(this.parentElement.parentElement, 1);"></div>
     </template>
 
+    <script>
+        //? —— Copy to clipboard Button ——————
+        function copyToClipboard(btnElement, textToCopy) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                btnElement.classList.add('copied');
+                setTimeout(() => {
+                    btnElement.classList.remove('copied');
+                }, 1000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
     <script>
         /*
         console.log(
@@ -453,7 +485,7 @@
 
         CanvasContainer.style.width = panelWidth+"px";
         CanvasContainer.style.height = panelHeight+"px";
-        
+
         let mainPanelWidth = 0;
         let mainPanelHeight = 0;
 
@@ -485,7 +517,7 @@
             // CanvasRenderer.style.height = mainPanelWidth * canvHeight / canvWidth + 'px';
         }
         screenManager();
-        
+
         //? —— Panel Align Button Related ——————
         const panelAlignButtonGroupTemplate = document.getElementById('PanelAlignButtonGroupTemplate');
         const panelAlignButtonGroups = document.querySelectorAll('.panelAlignButtonGroup');
@@ -497,13 +529,13 @@
     <script>
         const hoverBtns = document.getElementsByClassName('hoverBtnWrapper');
         const hoverBtnMargin = Number(getComputedStyle(hoverBtns[0]).margin.slice(0, -2));
-        
+
         for (const hoverBtn of hoverBtns) {
             hoverBtn.classList.remove('fadeoutSlide');
         }
         hoverBtns[0].style.top = '0px';
         hoverBtns[0].classList.add('fadeinSlide');
-        
+
         function hoverBtnVisibility(toggle) {
             if (toggle < 0) {
                 // 닫기
@@ -553,7 +585,7 @@
             'help': 0,
             'copy': 0
         };
-        
+
         function panelVisibility(panel, toggle=0) {
             if (toggle <= 0) {
                 // 창 닫으려고 할 때

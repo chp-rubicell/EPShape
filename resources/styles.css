@@ -121,7 +121,63 @@ a.imgshield {
     margin-block-start: 0.6em;
     text-decoration: none;
 }
+/*+ -------------------------------------------------------------- +*/
+.shield-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    /* border-radius: 3px; */
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #fff;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    /* Prevent text selection */
+    user-select: none;
+}
 
+.shield-icon-group {
+    height: 100%;
+    background-color: #555;
+    /* Default Blue */
+    padding: 0 3px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s;
+}
+
+.shield-icon {
+    width: 14px;
+    height: 14px;
+    display: block; /* Removes SVG vertical alignment quirks */
+}
+
+/* STATE: COPIED */
+.shield-button.copied .shield-icon-group {
+    background-color: #9EE3FF;
+    /* Shields.io Green */
+}
+
+/* Toggle Icons */
+.check-icon {
+    display: none;
+}
+
+.shield-button.copied .copy-icon {
+    display: none;
+    color: white;
+}
+
+.shield-button.copied .check-icon {
+    display: block;
+    color: black;
+}
+
+/*+ -------------------------------------------------------------- +*/
 
 #fileHover p {
     position: absolute;
@@ -619,7 +675,7 @@ button.glass:active, .customButton:focus {
     opacity:0.7;
 }
 .settingsPanelBlock ul {
-    list-style: disc outside none; 
+    list-style: disc outside none;
     padding-left: 2em;
     padding-inline-start: 20px;
     margin-block-end: 0;
