@@ -128,7 +128,7 @@ Viewport resolution can be adjusted through a URL parameter `mult`. When connect
 
 <p align="center">
     Example for the multiplier of 1.5 : <a href="https://chp-rubicell.github.io/epshape?mult=1.5">
-        https://chp-rubicell.github.io/epshape<b><u>?mult=1.5</u></b>
+        https://chp-rubicell.github.io/epshape<b>?mult=1.5</b>
     </a>
 </p>
 
@@ -171,6 +171,10 @@ Currently available commands are as follows:
 ## Acknowledgement
 
 This viewer was developed using [three.js](https://github.com/mrdoob/three.js) and [earcut](https://github.com/mapbox/earcut).
+
+## Source code
+
+All files required to run the software are available in this repository as well as on [Zenodo](https://doi.org/10.5281/zenodo.16790187).
 
 ## License
 
