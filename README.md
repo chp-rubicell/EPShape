@@ -89,8 +89,7 @@ upper right corner.
 - Visibility of shading surfaces can be toggled.
 - Edge thickness can be adjusted.
 - How hidden objects (zones and shading surfaces) are displayed can be customized. 'disable', 'wireframe', and 'ghost' options are available.
-- Shadows can be turned on for better visuals. More advanced settings regarding shadows are available through the command prompt.
-  <!-- TODO -->
+- Shadows can be turned on for better visuals. More advanced settings regarding shadows are available through the [command prompt](https://github.com/chp-rubicell/EPShape?tab=readme-ov-file#command-prompt).
 - Transparency in materials can be disabled (does not apply to windows, doors, and shading surfaces).
 - The 'Debug' option toggles the axes (x: red, y: green, z: blue)
   as well as the north axis of the building in green, dashed line.
