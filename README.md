@@ -11,7 +11,7 @@
 
 
 <p align="center">
-    <img src="doc/screenshots/home.jpg" width="80%" />
+    <img src="doc/screenshots/hero.png" width="80%" />
 </p>
 
 <p align="center">
