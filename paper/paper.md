@@ -1,6 +1,6 @@
 # Summary
 
-EPShape (https://chp-rubicell.github.io/epshape) is an open-source, web-based application designed for the visualization and inspection of EnergyPlus building energy models. It offers a range of view customization capabilities that enable comprehensive shape analysis, effective model inspection, and highly configurable renderings suitable for various analytical and presentation purposes. EnergyPlus Input Data Files (`.idf`) can be parsed by simply dragging and dropping them onto the viewer, allowing users to examine building geometry as well as various model components and properties (e.g., thermal zones, surfaces, fenestrations, and constructions).
+EPShape ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)) is an open-source, web-based application designed for the visualization and inspection of EnergyPlus building energy models. It offers a range of view customization capabilities that enable comprehensive shape analysis, effective model inspection, and highly configurable renderings suitable for various analytical and presentation purposes. EnergyPlus Input Data Files (`.idf`) can be parsed by simply dragging and dropping them onto the viewer, allowing users to examine building geometry as well as various model components and properties (e.g., thermal zones, surfaces, fenestrations, and constructions).
 
 ![EPShape screenshot.\label{fig:hero}](hero.png){ width=65% }
 
@@ -16,7 +16,7 @@ EPShape was developed to address these limitations. EPShape is a lightweight, we
 
 # Software description
 
-EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Detailed descriptions and documentation are available in the GitHub repository (https://github.com/chp-rubicell/EPShape). The source code is also archived in the Zenodo repository (https://doi.org/10.5281/zenodo.16790187).
+EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Detailed descriptions and documentation are available in the GitHub repository ([https://github.com/chp-rubicell/EPShape](https://github.com/chp-rubicell/EPShape)). The source code is also archived in the Zenodo repository ([https://doi.org/10.5281/zenodo.16790187](https://doi.org/10.5281/zenodo.16790187)).
 
 ![The ability to toggle visibility of objects is crucial when inspecting models with a large number of zones. Visibilities of zones can be toggled individually, by specified height ranges, or both.\label{fig:vis}](vis.png){ width=95% }
 
@@ -26,6 +26,6 @@ EPShape provides a wide range of tools that enable efficient model inspection an
 
 # Software design
 
-EPShape was developed in JavaScript and is deployed as a GitHub Pages web application  (https://chp-rubicell.github.io/epshape). The libraries `three.js` [@threejs] and `earcut` [@earcut] were used for 3D rendering and surface triangulation, respectively. Although EPShape was primarily designed as a web-based application for ease of access and use, all functionalities are implemented in client-side JavaScript, and thus it can also be readily executed locally with `index.html` and the accompanying files located in the `resources/` directory.
+EPShape was developed in JavaScript and is deployed as a GitHub Pages web application  ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)). The libraries `three.js` [@threejs] and `earcut` [@earcut] were used for 3D rendering and surface triangulation, respectively. Although EPShape was primarily designed as a web-based application for ease of access and use, all functionalities are implemented in client-side JavaScript, and thus it can also be readily executed locally with `index.html` and the accompanying files located in the `resources/` directory.
 
 # References
