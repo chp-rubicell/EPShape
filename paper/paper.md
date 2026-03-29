@@ -1,3 +1,24 @@
+---
+title: 'EPShape: EnergyPlus Shape Viewer'
+tags:
+  - EnergyPlus
+  - Shape viewer
+  - IDF
+  - Geometry
+  - JavaScript
+  - Web tool
+authors:
+  - given-names: Chul-Hong
+    surname: Park
+    orcid: 0009-0003-4716-8169
+    affiliation: 1
+affiliations:
+ - name: Department of Architecture and Architectural Engineering, College of Engineering, Seoul National University, South Korea
+   index: 1
+date: 29 March 2026
+bibliography: paper.bib
+---
+
 # Summary
 
 EPShape ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)) is an open-source, web-based application designed for the visualization and inspection of EnergyPlus building energy models. It offers a range of view customization capabilities that enable comprehensive shape analysis, effective model inspection, and highly configurable renderings suitable for various analytical and presentation purposes. EnergyPlus Input Data Files (`.idf`) can be parsed by simply dragging and dropping them onto the viewer, allowing users to examine building geometry as well as various model components and properties (e.g., thermal zones, surfaces, fenestrations, and constructions).
