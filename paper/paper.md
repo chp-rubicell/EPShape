@@ -33,7 +33,7 @@ The IDF format relies on a flat, sequential architecture without any hierarchica
 
 Despite these challenges, there has been a notable lack of accessible tools within the building energy modeling domain capable of directly and easily visualizing and inspecting `.idf` files. While existing modeling tools such as DesignBuilder [@designbuilder], OpenStudio [@openstudio], and Rhino with Honeybee [@ladybugtools] offer integrated viewers and inspectors for modeling purposes, these programs exhibit several limitations, including restricted support for externally generated `.idf` files, substantial installation and configuration requirements, and, in some cases,  paid licensing constraints. Furthermore, variations in IDF formats across EnergyPlus versions frequently result in compatibility issues, requiring multiple separate installations to support different EnergyPlus versions.
 
-EPShape was developed to address these limitations. EPShape is a lightweight, web-based application that works in modern web browsers without the need for installation or dependencies. It supports a broad range of EnergyPlus versions (tested for 8.9.0 and later) and offers extensive customization features for both efficient model inspection and the generation of high-quality renders fit for academic publications and presentations.
+EPShape was developed to address these limitations. EPShape is a lightweight, web-based application that works in modern web browsers without the need for installation or dependencies. It supports a broad range of EnergyPlus versions (tested for 8.9.0 and later) and offers extensive customization features for both efficient model inspection and the generation of high-quality renders fit for academic publications and presentations. EPShape intended for use by building energy modelers, particularly architects, engineers, and researchers in the building energy domain, across both academic and industry contexts.
 
 # Software description
 
@@ -47,6 +47,6 @@ EPShape provides a wide range of tools that enable efficient model inspection an
 
 # Software design
 
-EPShape was developed in JavaScript and is deployed as a GitHub Pages web application  ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)). The libraries `three.js` [@threejs] and `earcut` [@earcut] were used for 3D rendering and surface triangulation, respectively. Although EPShape was primarily designed as a web-based application for ease of access and use, all functionalities are implemented in client-side JavaScript, and thus it can also be readily executed locally with `index.html` and the accompanying files located in the `resources/` directory.
+EPShape was developed in JavaScript and is deployed as a GitHub Pages web application ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)). The libraries `three.js` [@threejs] and `earcut` [@earcut] were used for 3D rendering and surface triangulation, respectively. Although EPShape was primarily designed as a web-based application for ease of access and use, all functionalities are implemented in client-side JavaScript, and thus it can also be readily executed locally with `index.html` and the accompanying files located in the `resources/` directory.
 
 # References
