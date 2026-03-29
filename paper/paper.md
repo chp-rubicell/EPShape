@@ -31,7 +31,7 @@ Although the EnergyPlus Input Data File (IDF) is a text-based format, interpreti
 
 The IDF format relies on a flat, sequential architecture without any hierarchical organization. As a result, dependencies between properties (e.g., thermal zones, building surfaces, and constructions) are not explicitly represented, requiring jumping back and forth to identify related entities, which makes model interpretation highly unintuitive. This difficulty is further exacerbated for geometric data, where each surface is defined by a series of vertices specified in three-dimensional Cartesian coordinates (X, Y, Z), making direct comprehension impractical without dedicated visualization tools.
 
-Despite these challenges, there has been a notable lack of accessible tools within the building energy modeling domain capable of directly and easily visualizing and inspecting `.idf` files. While existing modeling tools such as DesignBuilder [@designbuilder], OpenStudio [@openstudio], and Rhino with Honeybee [@ladybugtools] offer integrated viewers and inspectors for modeling purposes, these programs exhibit several limitations, including restricted support for externally generated `.idf` files, substantial installation and configuration requirements, and, in some cases, paid licensing constraints. Furthermore, variations in IDF formats across EnergyPlus versions frequently result in compatibility issues, requiring multiple separate installations to support different EnergyPlus versions.
+Despite these challenges, there has been a notable lack of accessible tools within the building energy modeling domain capable of directly and easily visualizing and inspecting `.idf` files. While existing modeling tools such as DesignBuilder [@designbuilder], OpenStudio [@openstudio], and Rhino with Honeybee [@roudsari2013ladybug] offer integrated viewers and inspectors for modeling purposes, these programs exhibit several limitations, including restricted support for externally generated `.idf` files, substantial installation and configuration requirements, and, in some cases, paid licensing constraints. Furthermore, variations in IDF formats across EnergyPlus versions frequently result in compatibility issues, requiring multiple separate installations to support different EnergyPlus versions.
 
 EPShape was developed to address these limitations. EPShape is a lightweight, web-based application that works in modern web browsers without the need for installation or dependencies. It supports a broad range of EnergyPlus versions (tested for 8.9.0 and later) and offers extensive customization features for both efficient model inspection and the generation of high-quality renders fit for academic publications and presentations. EPShape intended for use by building energy modelers, particularly architects, engineers, and researchers in the building energy domain, across both academic and industry contexts.
 
@@ -55,7 +55,7 @@ EPShape uses `three.js` [@threejs] to render 3D previews. When parsing the IDF f
 
 The data structures consist of `zoneList`, `surfList`, `fenList`, and `shadeList`, and the properties stored inside each entry are listed below:
 
-**Zone object properties [(e.g., `zoneList['zoneName1']`)]**
+**Zone object properties** (e.g., `zoneList['zoneName1']`):
 
 - `Surfaces` : An array of surface names belonging to this zone.
 - `Origin`
@@ -63,7 +63,7 @@ The data structures consist of `zoneList`, `surfList`, `fenList`, and `shadeList
 - `Visible`
 - `ZBoundary` : An array of $(z_{min}, z_{max})$ boundary that is used for efficient checking when visibility mode is set to 'height range'.
 
-**Surface object properties [(e.g., `surfList['surfName1']`)]**
+**Surface object properties** (e.g., `surfList['surfName1']`):
 
 - `SurfaceType`
 - `Construction`
@@ -79,9 +79,7 @@ The data structures consist of `zoneList`, `surfList`, `fenList`, and `shadeList
 - `EdgeObjects2` : `THREE.LineMaterial` objects that are similar to `EdgeObjects`, but have physical thicknesses that can be adjusted. Only used when 'Edge thickness' is turned on in the Settings panel.
 - `ShadowObjects` : Invisible, shadow-casting meshes.
 
-![Surface components.\label{fig:surf}](surf.png){ width=95% }
-
-**Fenestration object properties [(e.g., `fenList['fenName1']`)]**
+**Fenestration object properties** (e.g., `fenList['fenName1']`):
 
 - `SurfaceType`
 - `Construction`
@@ -93,7 +91,7 @@ The data structures consist of `zoneList`, `surfList`, `fenList`, and `shadeList
 - `EdgeObjects`
 - `EdgeObjects2`
 
-**Shading object properties [(e.g., `shadeList['shadeName1']`)]**
+**Shading object properties** (e.g., `shadeList['shadeName1']`):
 
 - `VerticeNumber`
 - `Vertices`
