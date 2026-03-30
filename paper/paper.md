@@ -21,13 +21,13 @@ bibliography: paper.bib
 
 # Summary
 
-EPShape ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)) is an open-source, web-based application designed for the visualization and inspection of EnergyPlus building energy models. It offers a range of view customization capabilities that enable comprehensive shape analysis, effective model inspection, and highly configurable renderings suitable for various analytical and presentation purposes. EnergyPlus Input Data Files (`.idf`) can be parsed by simply dragging and dropping them onto the viewer, allowing users to examine building geometry as well as various model components and properties (e.g., thermal zones, surfaces, fenestrations, and constructions).
+EPShape ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)) is an open-source, web-based application designed for the visualization and inspection of EnergyPlus [@energyplus] building energy models. It offers a range of view customization capabilities that enable comprehensive shape analysis, effective model inspection, and highly configurable renderings suitable for various analytical and presentation purposes. EnergyPlus Input Data Files (`.idf`) can be parsed by simply dragging and dropping them onto the viewer, allowing users to examine building geometry as well as various model components and properties (e.g., thermal zones, surfaces, fenestrations, and constructions).
 
 ![EPShape screenshot.\label{fig:hero}](hero.png){ width=70% }
 
 # Statement of need
 
-EnergyPlus [@energyplus] is a powerful, open-source, whole-building energy simulation engine developed and maintained by the U.S. Department of Energy (DOE). It is designed to model a building's energy consumption (including heating, cooling, lighting, ventilation, and plug loads) as well as its water use. It is widely applied across a range of use cases, including building design optimization, model predictive HVAC control, code compliance, and retrofit analysis.
+EnergyPlus is a powerful, open-source, whole-building energy simulation engine developed and maintained by the U.S. Department of Energy (DOE). It is designed to model a building's energy consumption (including heating, cooling, lighting, ventilation, and plug loads) as well as its water use. It is widely applied across a range of use cases, including building design optimization, model predictive HVAC control, code compliance, and retrofit analysis.
 
 Despite its capabilities, EnergyPlus presents notable usability challenges. As a console-based engine, it relies on the EnergyPlus Input Data File (IDF), a text-based format, for model definition. The IDF format follows a flat, sequential architecture without any hierarchical organization. As a result, dependencies between properties (e.g., thermal zones, building surfaces, and constructions) are not explicitly represented, requiring jumping back and forth to identify related entities, which makes model interpretation highly unintuitive. This difficulty is further exacerbated for geometric data, where each surface is defined by a series of vertices specified in three-dimensional Cartesian coordinates (X, Y, Z), making direct comprehension impractical without dedicated visualization tools.
 
@@ -37,7 +37,7 @@ EPShape was developed to address these limitations. EPShape is a lightweight, we
 
 # Software description
 
-EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Few examples are displayed in the following figures. Detailed descriptions and documentation are available in the GitHub repository ([https://github.com/chp-rubicell/EPShape](https://github.com/chp-rubicell/EPShape)). The source code is also archived in the Zenodo repository ([https://doi.org/10.5281/zenodo.16790187](https://doi.org/10.5281/zenodo.16790187)).
+EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Few examples are displayed in the following figures. Detailed descriptions and documentation are available in the [GitHub repository](https://github.com/chp-rubicell/EPShape). The source code is also archived in the [Zenodo repository](https://doi.org/10.5281/zenodo.16790187).
 
 ![The ability to toggle visibility of objects is crucial when inspecting models with a large number of zones. Visibilities of zones can be toggled individually, by specified height ranges, or both.\label{fig:vis}](vis.png)
 
