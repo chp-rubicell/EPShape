@@ -39,16 +39,6 @@ EPShape was developed to address these limitations. EPShape is a lightweight, we
 
 Several programs are available for IDF visualization. EnergyPlus [@energyplus] natively supports `.dxf` file export from the `.idf` file, which can be viewed using CAD software. However, this does not preserve the zone- or construction-related information and does not support direct visualization of `.idf` files. OpenStudio [@openstudio] supports importing `.idf` files for geometry visualization, but requires installation of a version matching the corresponding EnergyPlus version of the `.idf` file. Rhino, in combination with the Honeybee plugin [@roudsari2013ladybug], can import `.idf` file geometry as Rhino Breps, although this workflow involves a relatively complex setup process and requires a paid Rhino license.
 
-# Software description
-
-EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Few examples are displayed in the following figures. Detailed descriptions and documentation are available in the [GitHub repository](https://github.com/chp-rubicell/EPShape). The source code is also archived in the [Zenodo repository](https://doi.org/10.5281/zenodo.16790187).
-
-![The ability to toggle visibility of objects is crucial when inspecting models with a large number of zones. Visibilities of zones can be toggled individually, by specified height ranges, or both.\label{fig:vis}](vis.png)
-
-![Various view customization options are provided for effective model inspection, as well as to enable rendering of the viewport into image files suitable for diverse purposes.\label{fig:set}](set.png)
-
-![Surfaces can be colored based on either surface type or construction. The opacity and color of individual materials can be adjusted, enabling highlighting of specific constructions of interest for model inspection and debugging purposes.\label{fig:settype}](set-type.png)
-
 # Software design
 
 EPShape was developed in JavaScript and is deployed as a GitHub Pages web application ([https://chp-rubicell.github.io/epshape](https://chp-rubicell.github.io/epshape)). Although EPShape was primarily designed as a web-based application for ease of access and use, all functionalities are implemented in client-side JavaScript, and thus it can also be readily executed locally with `index.html` and the accompanying files located in the `resources/` directory.
@@ -57,52 +47,47 @@ Pre-processed `Energy+.idd` (Input Data Dictionary) files containing index infor
 
 EPShape uses `three.js` [@threejs] to render 3D previews. When parsing the IDF file, 3D representations of the objects are created and are stored in the data structures. This process includes adding holes to the building surfaces containing fenestration surfaces, triangulation of surfaces using `earcut` [@earcut], creating edge objects, shadow-casting objects, and so on. Finally, the 3D objects are pushed to the viewer to be rendered. The frame is updated whenever the camera is adjusted through mouse inputs, objects are highlighted, materials are changed, zone visibilities are toggled, and so on. In order to reduce computation, the data structures hold the 3D geometries and not the final meshes, which are created with appropriate materials whenever the model configuration is updated (view customization change, zone visibility toggle, etc.).
 
-The data structures consist of `zoneList`, `surfList`, `fenList`, and `shadeList`, and the properties stored inside each entry are listed below:
+EPShape provides a wide range of tools that enable efficient model inspection and flexible rendering customization. Few examples are displayed in the following figures. Detailed descriptions and documentation are available in the [GitHub repository](https://github.com/chp-rubicell/EPShape). The source code is also archived in the [Zenodo repository](https://doi.org/10.5281/zenodo.16790187).
 
-**Zone object properties** (e.g., `zoneList['zoneName1']`):
+- Visibility of shading surfaces can be toggled.
+- Edge thickness can be adjusted.
+- How hidden objects (zones and shading surfaces) are displayed can be customized. 'disable', 'wireframe', and 'ghost' options are available.
+- Shadows can be turned on for better visuals. More advanced settings regarding shadows are available through the [command prompt](https://github.com/chp-rubicell/EPShape?tab=readme-ov-file#command-prompt).
+- Transparency in materials can be disabled (does not apply to windows, doors, and shading surfaces).
+- The 'Debug' option toggles the axes (x: red, y: green, z: blue)
+  as well as the north axis of the building in green, dashed line.
 
-- `Surfaces` : An array of surface names belonging to this zone.
-- `Origin`
-- `NDirection`
-- `Visible`
-- `ZBoundary` : An array of $(z_{min}, z_{max})$ boundary that is used for efficient checking when visibility mode is set to 'height range'.
+![The ability to toggle visibility of objects is crucial when inspecting models with a large number of zones. Visibilities of zones can be toggled individually, by specified height ranges, or both.\label{fig:vis}](vis.png)
 
-**Surface object properties** (e.g., `surfList['surfName1']`):
+![Various view customization options are provided for effective model inspection, as well as to enable rendering of the viewport into image files suitable for diverse purposes.\label{fig:set}](set.png)
 
-- `SurfaceType`
-- `Construction`
-- `ZoneName` : Zone name to which the surface belongs.
-- `OutsideBC` : 'Outside Boundary Condition' of the surface.
-- `OutsideBCObj` : 'Outside Boundary Condition Object' of the surface.
-- `VerticeNumber`
-- `Vertices` : An $(n, 3)$ array of vertices.
-- `Fenestrations` : An array of fenestration names belonging to this surface.
-- `ZBoundary`
-- `Geometries` : `THREE.BufferGeometry` objects of the surface that are triangulated w/ holes for fenestrations.
-- `EdgeObjects` : `THREE.LineBasicMaterial` objects for showing edges.
-- `EdgeObjects2` : `THREE.LineMaterial` objects that are similar to `EdgeObjects`, but have physical thicknesses that can be adjusted. Only used when 'Edge thickness' is turned on in the Settings panel.
-- `ShadowObjects` : Invisible, shadow-casting meshes.
+![Surfaces can be colored based on either surface type or construction. The opacity and color of individual materials can be adjusted, enabling highlighting of specific constructions of interest for model inspection and debugging purposes.\label{fig:settype}](set-type.png)
 
-**Fenestration object properties** (e.g., `fenList['fenName1']`):
+![Settings can be copied and pasted for repeatability. Press `ctrl+shift+c` to select which settings or properties to be copied. A string of code containing the settings will be copied to the clipboard. Pasting this string to the viewer using `ctrl+shift+v` will apply the copied settings to the current viewport.\label{fig:copyset}](copyset.png){ width=50% }
 
-- `SurfaceType`
-- `Construction`
-- `SurfaceName`
-- `OutsideBCObj`
-- `VerticeNumber`
-- `Vertices`
-- `Geometries` : `THREE.BufferGeometry` objects of the fenestration surface (triangulated).
-- `EdgeObjects`
-- `EdgeObjects2`
+Additional settings and features are available via the **command prompt**. Hitting the `/` key to open the command prompt input field. Currently available commands are as follows:
 
-**Shading object properties** (e.g., `shadeList['shadeName1']`):
+**Basics**
 
-- `VerticeNumber`
-- `Vertices`
-- `ZBoundary`
-- `Geometries`
-- `EdgeObjects`
-- `ShadowObjects`
+- `help` : See the list of available commands.
+- `↑` (up arrow) : Insert the last executed command.
+
+**Camera**
+
+- `camerafar (num)` : Set the camera frustum far plane (how far from the camera to be rendered) to `(num)`. Default is 1000.
+- `maxzoom (num)` : Set the max camera zoom distance to `(num)`. Default is 950.
+- `camerafov (num)` : Set the field of view (FOV) of the camera to `(num)`°. Default is 30.
+- `animatecamera (num)(cw|ccw)` : Export `(num)` animated frames of the camera rotating in clockwise (`cw`) or counterclockwise (`ccw`) direction.
+- `animateheight (num)(up|dn)` : Export `(num)` animated frames of the building slice swiping from bottom to up (`up`) or top to bottom (`dn`).
+
+**Shadows**
+
+- `shadowalt (num)` : Set the altitude of the shadow's light source to `(num)`°. Default is 45.
+- `shadowazm (num)` : Set the azimuth (relative to the camera) of the shadow's light source to `(num)`°. Default is 90.
+- `shadowmapsize (num)` : Set the resolution of the shadow map size to `(num)`×`(num)`. Default is 1024.
+- `shadowradius (num)` : Set the shadow's blur to `(num)`×`(num)`. Default is 1.
+- `shadowheight (num)` : Set the height (z) of the shadow-catching plane to `(num)`m. Default is 0.
+- `selfshadow (on|off)` : Toggle self shadow (casting shadow on itself). Default is `off`.
 
 # Research impact statement
 
