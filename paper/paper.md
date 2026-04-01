@@ -37,7 +37,7 @@ EPShape was developed to address these limitations. EPShape is a lightweight, we
 
 # State of the field
 
-Several programs are available for IDF visualization. EnergyPlus [@energyplus] natively supports `.dxf` file export from the `.idf` file, which can be viewed using CAD softwares. OpenStudio [@openstudio] supports importing `.idf` files for geometry visualization, but requires installation of a version matching the corresponding EnergyPlus version of the `.idf` file. Rhino, in combination with the Honeybee plugin [@roudsari2013ladybug], can import `.idf` file geometry as Rhino Breps, although this workflow involves a relatively complex setup process and requires a paid Rhino license.
+Several programs are available for IDF visualization. EnergyPlus [@energyplus] natively supports `.dxf` file export from the `.idf` file, which can be viewed using CAD software. However, this does not preserve the zone- or construction-related information and does not support direct visualization of `.idf` files. OpenStudio [@openstudio] supports importing `.idf` files for geometry visualization, but requires installation of a version matching the corresponding EnergyPlus version of the `.idf` file. Rhino, in combination with the Honeybee plugin [@roudsari2013ladybug], can import `.idf` file geometry as Rhino Breps, although this workflow involves a relatively complex setup process and requires a paid Rhino license.
 
 # Software description
 
