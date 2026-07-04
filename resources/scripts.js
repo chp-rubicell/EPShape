@@ -581,10 +581,10 @@ for (const [matType, matName] of Object.entries(matKeysbyType)) {
 
     const inputs = Object.fromEntries(
         Array.from(matSettingItem.querySelectorAll('.settingsInput'))
-        .map((inputElement, idx) => {
-            inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
-            return [['opacity', 'color'][idx], inputElement];
-        })
+            .map((inputElement, idx) => {
+                inputElement.name = `input${matType}${['Opacity', 'Color'][idx]}`;
+                return [['opacity', 'color'][idx], inputElement];
+            })
     );
     // apply default material settings
     const defaultMatSetting = DEFAULTS.matSettings.byType[matType];
@@ -736,7 +736,7 @@ function updateColorInputToggle(matBy) {
             const template = matInputs.opacity.parentElement.dataset.template;
             if (template == 'Transparent') opacityOn = true;
             if (!enabled) opacityOn = false;
-            
+
             matInputs.opacity.disabled = !opacityOn;
             matInputs.color.disabled = !colorOn;
         }
@@ -775,10 +775,10 @@ for (const matSettingItem of Array.from(sttgGroupMatbyConstDefault.querySelector
     const tag = matSettingItem.dataset.tag;
     const inputs = Object.fromEntries(
         Array.from(matSettingItem.querySelectorAll('.settingsInput'))
-        .map((inputElement, idx) => {
-            inputElement.name = `inputMatByType${tag}${['Opacity', 'Color'][idx]}`;
-            return [['opacity', 'color'][idx], inputElement];
-        })
+            .map((inputElement, idx) => {
+                inputElement.name = `inputMatByType${tag}${['Opacity', 'Color'][idx]}`;
+                return [['opacity', 'color'][idx], inputElement];
+            })
     );
     // apply default material settings
     const defaultMatSetting = DEFAULTS.matSettings.templates[matSettingItem.dataset.template];
@@ -787,7 +787,7 @@ for (const matSettingItem of Array.from(sttgGroupMatbyConstDefault.querySelector
     inputs.color.value = defaultMatSetting.color;
     // add input children to object
     sttgsMat.byConstDefault[tag] = inputs;
-    matSettings.byConstDefault[tag] = {...defaultMatSetting};
+    matSettings.byConstDefault[tag] = { ...defaultMatSetting };
     materials.byConstDefault[tag] = new THREE.MeshPhongMaterial({
         ...defaultMatSetting,
         ...DEFAULTS.matSettings.common
@@ -812,13 +812,13 @@ function addMatByConst(constName, constNamePopup, opaque=true) {
     const matSettingSpan = matSettingItem.querySelector('.settingsFlexSpan');
     matSettingSpan.dataset.tag = constName;
     matSettingSpan.dataset.template = opaque ? 'Opaque' : 'Transparent';
-    
+
     const inputs = Object.fromEntries(
         Array.from(matSettingItem.querySelectorAll('input'))
-        .map((inputElement, idx) => {
-            inputElement.name = `inputMatByConst${constName}${['Checkbox', 'Opacity', 'Color'][idx]}`;
-            return [['checkbox', 'opacity', 'color'][idx], inputElement];
-        })
+            .map((inputElement, idx) => {
+                inputElement.name = `inputMatByConst${constName}${['Checkbox', 'Opacity', 'Color'][idx]}`;
+                return [['checkbox', 'opacity', 'color'][idx], inputElement];
+            })
     );
 
     // connect label with checkbox
@@ -858,7 +858,7 @@ function toggleMatByConstAll(visible) {
     updateColorInputToggle('byConst');
     updateModel(force = true, source = 'toggleMatByConstAll');
 }
-function updateColorInputByConstToggle() {}
+function updateColorInputByConstToggle() { }
 
 /** 모델 불러올 때 설정 초기화 */
 function resetSettings() {
@@ -1095,27 +1095,29 @@ document.onkeydown = function (event) {
     const key = event.key.toLowerCase();
     const code = event.code;
     // if (key == '/' || commandOn) event.preventDefault();  //TODO
-    if (key == '/') event.preventDefault();
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && (code === 'KeyC' || code === 'KeyV')) {
+        event.preventDefault();
+        if (idfName !== '') {
+            if (code === 'KeyC') {
+                panelVisibility(copyPanel, 1);
+            }
+            if (code === 'KeyV') {
+                loadSettings();
+            }
+        }
+    }
+    if (key === '/') event.preventDefault();
     if (event.shiftKey) shiftKey = true;
     if (mouseLeft && event.shiftKey) {
         camStepped = true;
         updateCamera(force = true, source = 'onkeydown');
     }
-    if (!commandOn && event.target.tagName.toLowerCase() != 'input') {
-        if (idfName !== '' && code == 'KeyS') {
+    if (!commandOn && event.target.tagName.toLowerCase() !== 'input') {
+        if (idfName !== '' && code === 'KeyS') {
             exportImage();
         }
-        if (code == 'KeyR') {
+        if (code === 'KeyR') {
             centerCamera();
-        }
-        if (idfName !== '' && event.ctrlKey && event.shiftKey && (code == 'KeyC' || code == 'KeyV')) {
-            event.preventDefault();
-            if (code == 'KeyC') {
-                panelVisibility(copyPanel, 1);
-            }
-            if (code == 'KeyV') {
-                loadSettings();
-            }
         }
     }
 }
@@ -1838,7 +1840,7 @@ function parseIDF(code) {
     // }
 
     //? 재질 업데이트
-    
+
     //? Surfaces
     addMatByConstSeparator();
     const surfToSkip = [];
@@ -1873,7 +1875,7 @@ function parseIDF(code) {
             constNamePopup = constName;
         }
 
-        const matSetting = {...DEFAULTS.matSettings.templates.Opaque, enabled: false};
+        const matSetting = { ...DEFAULTS.matSettings.templates.Opaque, enabled: false };
         matSettings.byConst[constNameToUse] = matSetting;
 
         materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
@@ -1887,7 +1889,7 @@ function parseIDF(code) {
             matSettings.byConst[constNameNotUsed] = matSettings.byConst[constNameToUse];
             materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];
         }
-        
+
         // add color inputs
         addMatByConst(constNameToUse, constNamePopup);
     }
@@ -1926,7 +1928,7 @@ function parseIDF(code) {
             constNamePopup = constName;
         }
 
-        const matSetting = {...DEFAULTS.matSettings.templates.Transparent, enabled: false};
+        const matSetting = { ...DEFAULTS.matSettings.templates.Transparent, enabled: false };
         matSettings.byConst[constNameToUse] = matSetting;
 
         materials.byConst[constNameToUse] = new THREE.MeshPhongMaterial({
@@ -1937,7 +1939,7 @@ function parseIDF(code) {
         if (matSetting.opacity == 1) materials.byConst[constNameToUse].transparent = false;
         if (constNameNotUsed != '')
             materials.byConst[constNameNotUsed] = materials.byConst[constNameToUse];  // add as a reference
-        
+
         // add color inputs
         addMatByConst(constNameToUse, constNamePopup, false);
     }
@@ -2098,7 +2100,7 @@ function addModel() {
         let edgeGeom = new THREE.BufferGeometry().setFromPoints(points);
         shadeList[shadeName].EdgeObjects = new THREE.Line(edgeGeom, matEdge);
         //? pipe로 그릴 때
-        // var edgeGeom = 
+        // var edgeGeom =
 
         let shadeShadGeom = triangulatedSurfacefromVertlist(shadeProp.Vertices);
         let shadoeShadObj = new THREE.Mesh(shadeShadGeom, matGhost);
@@ -2296,7 +2298,7 @@ function renderModel() {
         }
     }
 
-    // Fenestration 렌더링 
+    // Fenestration 렌더링
     let fenToSkip = [];
     for (const [fenName, fenProp] of Object.entries(fenList)) {
 
@@ -2388,7 +2390,7 @@ function renderModel() {
         else if (materialBy == 'byConst') {
             matShade = materials.byConstDefault.Shading;
         }
-        
+
         matShade = matShade.clone();
         if (shadingOn && isInsideHeightRange(shadeProp.ZBoundary)) {
             if (!transparencyOn) {
@@ -2678,8 +2680,8 @@ function fillSlider(fromNormalized, toNormalized, sliderBackground) {
         ${sliderColor} 0%,
         ${sliderColor} ${fromNormalized * 100}%,
         ${rangeColor} ${fromNormalized * 100}%,
-        ${rangeColor} ${toNormalized * 100}%, 
-        ${sliderColor} ${toNormalized * 100}%, 
+        ${rangeColor} ${toNormalized * 100}%,
+        ${sliderColor} ${toNormalized * 100}%,
         ${sliderColor} 100%)`;
 }
 
@@ -2710,6 +2712,7 @@ function commandListenerVisibility(toggle = 0) {
             commandListener.classList.remove('CommandFail');
             commandListener.classList.remove('CommandSuccess');
             commandListener.focus();
+            break;
     }
 }
 
@@ -3146,12 +3149,12 @@ function loadSettings() {
 //MARK: Animation
 
 /**
- * 
+ *
  * @param {number} totalFrames total number of frames
  * @param {function} animationFunc function that adjusts the frame, should take currentFrame, totalFrame, and args as inputs
  * @param {boolean} nosave if true, the frames are animated without saving as a zip
  * @param {...any} animateFuncArgs additional inputs for the animationFunc
- * @returns 
+ * @returns
  */
 function animateFrame(totalFrames = 60, animationFunc, nosave, ...animateFuncArgs) {
 
